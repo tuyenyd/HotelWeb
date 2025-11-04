@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Trang / Liên hệ - NiceAdmin Bootstrap Template</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Apr 20 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center">
+            <img src="assets/img/logo.png" alt="Logo">
+            <span class="d-none d-lg-block">Hotel</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><div class="search-bar">
+    <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Tìm kiếm đặt phòng, khách hàng..." title="Nhập từ khóa tìm kiếm">
+        <button type="submit" title="Tìm kiếm"><i class="bi bi-search"></i></button>
+    </form>
+</div><nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+            <a class="nav-link nav-icon search-bar-toggle " href="#">
+                <i class="bi bi-search"></i>
+            </a>
+        </li><li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            <span class="badge bg-primary badge-number">3</span>
+        </a><ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+        <li class="dropdown-header">
+            Bạn có 3 thông báo mới
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">Xem tất cả</span></a>
+        </li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-exclamation-circle text-warning"></i>
+            <div>
+                <h4>Đặt phòng mới</h4>
+                <p>Khách hàng Nguyễn Văn A vừa đặt phòng Deluxe</p>
+                <p>5 phút trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-x-circle text-danger"></i>
+            <div>
+                <h4>Hủy đặt phòng</h4>
+                <p>Đặt phòng #2457 đã bị hủy</p>
+                <p>2 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-check-circle text-success"></i>
+            <div>
+                <h4>Phản hồi mới</h4>
+                <p>Bạn có 2 đánh giá mới từ khách hàng</p>
+                <p>4 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li class="dropdown-footer">
+            <a href="#">Hiển thị tất cả thông báo</a>
+        </li>
+    </ul></li><li class="nav-item dropdown pe-3">
+
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/profile-img.jpg" alt="Hồ sơ" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2" id="profileName">Đang tải...</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+                <h6 id="profileDropdownName">...</h6>
+                <span id="profileDropdownRole">...</span>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-person"></i>
+                    <span>Hồ sơ của tôi</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-gear"></i>
+                    <span>Cài đặt tài khoản</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="#" id="logoutButton">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </li>
+        </ul></li></ul>
+</nav>
+  </header><!-- Kết thúc Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+      <ul class="sidebar-nav" id="sidebar-nav">
+
+          <li class="nav-item">
+              <a class="nav-link " href="index.html">
+                  <i class="bi bi-house-door"></i>
+                  <span>Bảng Điều Khiển</span>
+              </a>
+          </li><!-- Kết thúc Điều hướng Bảng Điều Khiển -->
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#booking-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-calendar-check"></i><span>Quản lý Đặt phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="booking-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                  <li>
+                      <a href="tatcadatphong.html">
+                          <i class="bi bi-circle"></i><span>Tất cả đặt phòng</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="checkin.html">
+                          <i class="bi bi-circle"></i><span>Check-in</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="checkout.html">
+                          <i class="bi bi-circle"></i><span>Check-out</span>
+                      </a>
+                  </li>
+              </ul>
+          </li><!-- Kết thúc Điều hướng Đặt phòng -->
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#room-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-door-closed"></i><span>Quản lý Phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="room-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                  <li>
+                      <a href="danhsachphong.html">
+                          <i class="bi bi-circle"></i><span>Danh sách phòng</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="loaiphong.html">
+                          <i class="bi bi-circle"></i><span>Loại phòng</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="tinhtrangphong.html">
+                          <i class="bi bi-circle"></i><span>Tình trạng phòng</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="giaphong.html">
+                          <i class="bi bi-circle"></i><span>Giá phòng</span>
+                      </a>
+                  </li>
+              </ul>
+          </li><!-- Kết thúc Điều hướng Phòng -->
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#customer-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-people"></i><span>Quản lý Khách hàng</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="customer-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                  <li>
+                      <a href="danhsachkhachhang.html">
+                          <i class="bi bi-circle"></i><span>Danh sách khách hàng</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="chuongtrinhthanhvien.html">
+                          <i class="bi bi-circle"></i><span>Chương trình thành viên</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="danhgia&phanhoi.html">
+                          <i class="bi bi-circle"></i><span>Đánh giá & Phản hồi</span>
+                      </a>
+                  </li>
+              </ul>
+          </li><!-- Kết thúc Điều hướng Khách hàng -->
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="baocao&thongke.html">
+                  <i class="bi bi-bar-chart"></i>
+                  <span>Báo cáo & Thống kê</span>
+              </a>
+          </li><!-- Kết thúc Điều hướng Báo cáo -->
+          <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-cash-coin"></i><span>Tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="finance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                  <li>
+                      <a href="finance-invoices.html">
+                          <i class="bi bi-circle"></i><span>Hóa đơn</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="finance-payments.html">
+                          <i class="bi bi-circle"></i><span>Thanh toán</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="finance-revenue.html">
+                          <i class="bi bi-circle"></i><span>Doanh thu</span>
+                      </a>
+                  </li>
+              </ul>
+          </li><!-- Kết thúc Điều hướng Tài chính -->
+
+          <li class="nav-heading">Trang</li>
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="users-profile.html">
+                  <i class="bi bi-person"></i>
+                  <span>Hồ sơ</span>
+              </a>
+          </li><!-- Kết thúc Trang Hồ sơ -->
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="pages-contact.html">
+                  <i class="bi bi-envelope"></i>
+                  <span>Liên hệ</span>
+              </a>
+          </li><!-- Kết thúc Trang Liên hệ -->
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="users.html">
+                  <i class="bi bi-person-gear"></i>
+                  <span>Nhân viên</span>
+              </a>
+          </li>
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="taikhoan.html">
+                  <i class="bi bi-person-badge"></i>
+                  <span>Tài khoản</span>
+              </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="settings.html">
+                  <i class="bi bi-gear"></i>
+                  <span>Cài đặt</span>
+              </a>
+          </li>
+      </ul>
+
+  </aside><!-- Kết thúc Sidebar -->
+
+
+  <main id="main" class="main">
+
+    <div class="pagetitle d-flex justify-content-between align-items-center">
+      <h1>Liên hệ</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+          <li class="breadcrumb-item">Trang</li>
+          <li class="breadcrumb-item active">Liên hệ</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section contact">
+
+      <div class="row gy-4">
+
+        <div class="col-xl-6">
+
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="info-box card">
+                <i class="bi bi-geo-alt"></i>
+                <h3>Địa chỉ</h3>
+                <p>A108 Adam Street,<br>New York, NY 535022</p>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="info-box card">
+                <i class="bi bi-telephone"></i>
+                <h3>Gọi cho chúng tôi</h3>
+                <p>+1 5589 55488 55<br>+1 6678 254445 41</p>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="info-box card">
+                <i class="bi bi-envelope"></i>
+                <h3>Email</h3>
+                <p>info@example.com<br>contact@example.com</p>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="info-box card">
+                <i class="bi bi-clock"></i>
+                <h3>Giờ mở cửa</h3>
+                <p>Thứ Hai - Thứ Sáu<br>9:00 - 17:00</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-xl-6">
+          <div class="card p-4">
+            <form action="forms/contact.php" method="post" class="php-email-form">
+              <div class="row gy-4">
+
+                <div class="col-md-6">
+                  <input type="text" name="name" class="form-control" placeholder="Tên của bạn" required>
+                </div>
+
+                <div class="col-md-6 ">
+                  <input type="email" class="form-control" name="email" placeholder="Email của bạn" required>
+                </div>
+
+                <div class="col-md-12">
+                  <input type="text" class="form-control" name="subject" placeholder="Chủ đề" required>
+                </div>
+
+                <div class="col-md-12">
+                  <textarea class="form-control" name="message" rows="6" placeholder="Nội dung" required></textarea>
+                </div>
+
+                <div class="col-md-12 text-center">
+                  <div class="loading">Loading</div>
+                  <div class="error-message"></div>
+                  <div class="sent-message">Tin nhắn của bạn đã được gửi. Cảm ơn!</div>
+
+                  <button type="submit">Gửi</button>
+                </div>
+
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+      <!-- All the links in the footer should remain intact. -->
+      <!-- You can delete the links only if you purchased the pro version. -->
+      <!-- Licensing information: https://bootstrapmade.com/license/ -->
+      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="assets/vendor/echarts/echarts.min.js"></script>
+  <script src="assets/vendor/quill/quill.js"></script>
+  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/auth.js"></script>
+
+</body>
+
+</html>
+

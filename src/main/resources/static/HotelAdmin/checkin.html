@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Check-in - HotelAdmin</title>
+    <link href="assets/img/img.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        .checkin-card {
+            border-left: 4px solid #0dcaf0; /* Info color for check-in */
+            transition: all 0.3s ease;
+        }
+        .checkin-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        /* CSS for stats (removed) is gone */
+        .overdue-booking { /* Changed from urgent-booking */
+            border-left: 4px solid #dc3545 !important; /* Danger color for overdue */
+            animation: pulse 1.5s infinite alternate;
+        }
+        @keyframes pulse {
+            from { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+            to { box-shadow: 0 0 0 5px rgba(220, 53, 69, 0); }
+        }
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 0.875rem;
+        }
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 0.35em 0.65em;
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        .alert-custom {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+        }
+        /* Style for checked-in cards (optional) */
+        .checked-in-card {
+            border-left-color: #198754 !important; /* Success color */
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center">
+            <img src="assets/img/logo.png" alt="Logo">
+            <span class="d-none d-lg-block">Hotel</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><div class="search-bar">
+    <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Tìm kiếm đặt phòng, khách hàng..." title="Nhập từ khóa tìm kiếm">
+        <button type="submit" title="Tìm kiếm"><i class="bi bi-search"></i></button>
+    </form>
+</div><nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+            <a class="nav-link nav-icon search-bar-toggle " href="#">
+                <i class="bi bi-search"></i>
+            </a>
+        </li><li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            <span class="badge bg-primary badge-number">3</span>
+        </a><ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+        <li class="dropdown-header">
+            Bạn có 3 thông báo mới
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">Xem tất cả</span></a>
+        </li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-exclamation-circle text-warning"></i>
+            <div>
+                <h4>Đặt phòng mới</h4>
+                <p>Khách hàng Nguyễn Văn A vừa đặt phòng Deluxe</p>
+                <p>5 phút trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-x-circle text-danger"></i>
+            <div>
+                <h4>Hủy đặt phòng</h4>
+                <p>Đặt phòng #2457 đã bị hủy</p>
+                <p>2 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-check-circle text-success"></i>
+            <div>
+                <h4>Phản hồi mới</h4>
+                <p>Bạn có 2 đánh giá mới từ khách hàng</p>
+                <p>4 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li class="dropdown-footer">
+            <a href="#">Hiển thị tất cả thông báo</a>
+        </li>
+    </ul></li><li class="nav-item dropdown pe-3">
+
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/profile-img.jpg" alt="Hồ sơ" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2" id="profileName">Đang tải...</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+                <h6 id="profileDropdownName">...</h6>
+                <span id="profileDropdownRole">...</span>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-person"></i>
+                    <span>Hồ sơ của tôi</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-gear"></i>
+                    <span>Cài đặt tài khoản</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="#" id="logoutButton">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </li>
+        </ul></li></ul>
+</nav>
+</header><aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item"><a class="nav-link collapsed" href="index.html"><i class="bi bi-house-door"></i><span>Bảng Điều Khiển</span></a></li>
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#booking-nav" data-bs-toggle="collapse" href="#"><i class="bi bi-calendar-check"></i><span>Quản lý Đặt phòng</span><i class="bi bi-chevron-down ms-auto"></i></a>
+            <ul id="booking-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+                <li><a href="tatcadatphong.html"><i class="bi bi-circle"></i><span>Tất cả đặt phòng</span></a></li>
+                <li><a href="checkin.html" class="active"><i class="bi bi-circle"></i><span>Check-in</span></a></li>
+                <li><a href="checkout.html"><i class="bi bi-circle"></i><span>Check-out</span></a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#room-nav" data-bs-toggle="collapse" href="#"><i class="bi bi-door-closed"></i><span>Quản lý Phòng</span><i class="bi bi-chevron-down ms-auto"></i></a>
+            <ul id="room-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li><a href="danhsachphong.html"><i class="bi bi-circle"></i><span>Danh sách phòng</span></a></li>
+                <li><a href="loaiphong.html"><i class="bi bi-circle"></i><span>Loại phòng</span></a></li>
+                <li><a href="tinhtrangphong.html"><i class="bi bi-circle"></i><span>Tình trạng phòng</span></a></li>
+                <li><a href="giaphong.html"><i class="bi bi-circle"></i><span>Giá phòng</span></a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#customer-nav" data-bs-toggle="collapse" href="#"><i class="bi bi-people"></i><span>Quản lý Khách hàng</span><i class="bi bi-chevron-down ms-auto"></i></a>
+            <ul id="customer-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li><a href="danhsachkhachhang.html"><i class="bi bi-circle"></i><span>Danh sách khách hàng</span></a></li>
+                <li><a href="chuongtrinhthanhvien.html"><i class="bi bi-circle"></i><span>Chương trình thành viên</span></a></li>
+                <li><a href="danhgia&phanhoi.html"><i class="bi bi-circle"></i><span>Đánh giá & Phản hồi</span></a></li>
+            </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link collapsed" href="baocao&thongke.html"><i class="bi bi-bar-chart"></i><span>Báo cáo & Thống kê</span></a></li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#"><i class="bi bi-cash-coin"></i><span>Tài chính</span><i class="bi bi-chevron-down ms-auto"></i></a>
+            <ul id="finance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li><a href="finance-invoices.html"><i class="bi bi-circle"></i><span>Hóa đơn</span></a></li>
+                <li><a href="finance-payments.html"><i class="bi bi-circle"></i><span>Thanh toán</span></a></li>
+                <li><a href="finance-revenue.html"><i class="bi bi-circle"></i><span>Doanh thu</span></a></li>
+            </ul>
+        </li>
+        <li class="nav-heading">Trang</li>
+        <li class="nav-item"><a class="nav-link collapsed" href="users-profile.html"><i class="bi bi-person"></i><span>Hồ sơ</span></a></li>
+        <li class="nav-item"><a class="nav-link collapsed" href="pages-contact.html"><i class="bi bi-envelope"></i><span>Liên hệ</span></a></li>
+        <li class="nav-item"><a class="nav-link collapsed" href="users.html"><i class="bi bi-person-gear"></i><span>Nhân viên</span></a></li>
+        <li class="nav-item"><a class="nav-link collapsed" href="taikhoan.html"><i class="bi bi-person-badge"></i><span>Tài khoản</span></a></li>
+        <li class="nav-item"><a class="nav-link collapsed" href="settings.html"><i class="bi bi-gear"></i><span>Cài đặt</span></a></li>
+    </ul>
+</aside><main id="main" class="main">
+    <div class="pagetitle d-flex justify-content-between align-items-center">
+        <h1>Check-in</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                <li class="breadcrumb-item">Quản lý Đặt phòng</li>
+                <li class="breadcrumb-item active">Check-in</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title">Danh sách chờ check-in</h5>
+                            <div><button class="btn btn-outline-primary" onclick="loadCheckins(true)"><i class="bi bi-arrow-clockwise"></i> Làm mới</button></div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-3"><label class="form-label">Từ ngày</label><input type="date" class="form-control" id="filterCheckinDateFrom"></div>
+                            <div class="col-md-3"><label class="form-label">Đến ngày</label><input type="date" class="form-control" id="filterCheckinDateTo"></div>
+                            <div class="col-md-3">
+                                <label class="form-label">Trạng thái Check-in</label>
+                                <select class="form-select" id="filterCheckinStatus">
+                                    <option value="all" selected>Tất cả chờ & quá hạn</option>
+                                    <option value="pending">Chờ check-in</option>
+                                    <option value="overdue">Quá hạn</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end"><button class="btn btn-primary w-100" id="filterBtn">Lọc</button></div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Loại phòng</label>
+                                <select class="form-select" id="filterRoomType">
+                                    <option value="" selected>Tất cả loại phòng</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5"><label class="form-label">Tìm kiếm</label><input type="text" class="form-control" placeholder="Mã đặt phòng, tên, SĐT..." id="searchInput"></div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="showOverdueOnly">
+                                    <label class="form-check-label" for="showOverdueOnly">Chỉ hiển thị quá hạn</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="loading-spinner" id="loadingSpinner"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Đang tải...</span></div><p class="mt-2">Đang tải dữ liệu...</p></div>
+
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="checkinContainer">
+                        </div>
+
+                        <div class="empty-state d-none" id="emptyState"><i class="bi bi-calendar-x"></i><h4>Không có đặt phòng chờ check-in</h4><p>Không tìm thấy đặt phòng nào có trạng thái "Đã xác nhận" phù hợp.</p><button class="btn btn-primary" onclick="resetFilters()"><i class="bi bi-arrow-clockwise"></i> Đặt lại bộ lọc</button></div>
+
+                        <nav aria-label="Page navigation" id="paginationContainer"><ul class="pagination justify-content-center" id="pagination"></ul></nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div class="modal fade" id="bookingDetailModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Chi tiết đặt phòng</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="bookingDetailContent"></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button><button type="button" class="btn btn-primary" onclick="processCheckinFromDetail()">Tiến hành Check-in</button></div></div></div></div>
+
+<div class="modal fade" id="checkinModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Xác nhận Check-in</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="row"><div class="col-md-6"><h6>Thông tin khách hàng</h6><div class="mb-3" id="checkinCustomerInfo"></div></div><div class="col-md-6"><h6>Thanh toán</h6><div class="mb-3" id="checkinPaymentInfo"></div></div></div><hr><div class="mb-3"><label class="form-label">Ghi chú check-in</label><textarea class="form-control" rows="3" id="checkinNotes" placeholder="Ghi chú về tình trạng phòng, yêu cầu đặc biệt..."></textarea></div><div class="form-check mb-3"><input class="form-check-input" type="checkbox" id="confirmCheckin"><label class="form-check-label" for="confirmCheckin">Xác nhận khách hàng đã nhận phòng và thanh toán đầy đủ (nếu cần)</label></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-success" id="checkinConfirmBtn">Xác nhận Check-in</button></div></div></div></div>
+
+<footer id="footer" class="footer"><div class="copyright">&copy; Bản quyền <strong><span>HotelAdmin</span></strong>. Tất cả các quyền được bảo lưu</div><div class="credits">Thiết kế bởi <a href="#">Nhóm Phát triển</a></div></footer>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+    // === CẤU HÌNH VÀ BIẾN TOÀN CỤC ===
+    const API_BASE_URL = '/api/admin'; // Địa chỉ gốc API
+    let allCheckinBookings = []; // Dữ liệu gốc từ API
+    let filteredCheckins = []; // Dữ liệu đã lọc để hiển thị
+    let currentProcessingBooking = null; // Booking đang được xử lý (view detail/checkin)
+    let roomTypes = []; // Lưu danh sách loại phòng
+
+    // Biến phân trang
+    let currentPage = 0;
+    const itemsPerPage = 6;
+    let totalPages = 0;
+
+    // === KHỞI TẠO TRANG ===
+    document.addEventListener('DOMContentLoaded', async () => {
+        if (!localStorage.getItem('jwtToken')) {
+            alert('Bạn chưa đăng nhập.');
+            window.location.href = '/HotelAdmin/pages-login.html';
+            return;
+        }
+        initializePageDefaults();
+        await loadRoomTypes(); // Tải loại phòng trước
+        setupEventListeners();
+        await loadCheckins(true); // Tải dữ liệu lần đầu
+    });
+
+    function initializePageDefaults() {
+        // Set default date range (e.g., today)
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('filterCheckinDateFrom').value = today;
+        document.getElementById('filterCheckinDateTo').value = today;
+    }
+
+    async function loadRoomTypes() {
+        try {
+            const response = await fetchWithAuth(`${API_BASE_URL}/room-types`);
+            if (!response.ok) throw new Error('Lỗi tải loại phòng');
+            roomTypes = await response.json();
+
+            const select = document.getElementById('filterRoomType');
+            select.innerHTML = '<option value="" selected>Tất cả loại phòng</option>'; // Reset
+            roomTypes.forEach(rt => {
+                select.innerHTML += `<option value="${rt.id}">${rt.name}</option>`;
+            });
+        } catch (error) {
+            console.error("Lỗi tải loại phòng:", error);
+            showAlert('Không thể tải danh sách loại phòng.', 'danger');
+        }
+    }
+
+    function setupEventListeners() {
+        // Debounced search
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                applyFiltersAndFetch();
+            }, 300);
+        });
+
+        // Filter button
+        document.getElementById('filterBtn').onclick = applyFiltersAndFetch;
+
+        // Other filters trigger refetch
+        document.getElementById('filterCheckinStatus').addEventListener('change', applyFiltersAndFetch);
+        document.getElementById('filterRoomType').addEventListener('change', applyFiltersAndFetch);
+        document.getElementById('filterCheckinDateFrom').addEventListener('change', applyFiltersAndFetch);
+        document.getElementById('filterCheckinDateTo').addEventListener('change', applyFiltersAndFetch);
+        document.getElementById('showOverdueOnly').addEventListener('change', applyFiltersAndFetch);
+
+        // Event delegation for action buttons
+        document.getElementById('checkinContainer').addEventListener('click', handleCheckinActions);
+
+        // Check-in confirmation button
+        document.getElementById('checkinConfirmBtn').onclick = confirmCheckinAction;
+    }
+
+    // === TẢI VÀ HIỂN THỊ DỮ LIỆU ===
+
+    // === TẢI VÀ HIỂN THỊ DỮ LIỆU (ĐÃ SỬA LỖI GỬI PARAMETER) ===
+    async function loadCheckins(resetPage = false) {
+        showLoading();
+        if (resetPage) currentPage = 0;
+
+        const params = new URLSearchParams();
+        params.append('page', currentPage);
+        params.append('size', itemsPerPage);
+        params.append('sort', 'checkInDate,asc'); // Sắp xếp theo ngày check-in tăng dần
+        params.append('status', 'CONFIRMED'); // CHỈ LẤY ĐƠN ĐÃ XÁC NHẬN
+
+        // --- Lấy giá trị bộ lọc từ UI ---
+        const fromDate = document.getElementById('filterCheckinDateFrom').value;
+        const toDate = document.getElementById('filterCheckinDateTo').value;
+        const roomTypeId = document.getElementById('filterRoomType').value;
+        const searchTerm = document.getElementById('searchInput').value.trim(); // Lấy giá trị tìm kiếm
+        const checkinStatusFilter = document.getElementById('filterCheckinStatus').value;
+        const showOverdueOnly = document.getElementById('showOverdueOnly').checked;
+
+        // --- Thêm bộ lọc vào params NẾU CÓ GIÁ TRỊ ---
+        if (fromDate) params.append('checkinFrom', fromDate);
+        if (toDate) params.append('checkinTo', toDate);
+        if (roomTypeId) params.append('roomTypeId', roomTypeId);
+
+        // === SỬA LỖI TẠI ĐÂY ===
+        // Chỉ thêm tham số 'search' nếu searchTerm không rỗng
+        if (searchTerm) {
+            params.append('search', searchTerm); // Gửi đúng tên tham số là 'search'
+        }
+        // ========================
+
+        // Bộ lọc 'checkinStatus' và 'showOverdueOnly' sẽ được xử lý phía client sau khi fetch
+
+        try {
+            // Sử dụng endpoint /search
+            const response = await fetchWithAuth(`${API_BASE_URL}/bookings?${params.toString()}`);
+
+            if (!response.ok) {
+                // Xử lý lỗi (giữ nguyên như code cũ của bạn)
+                let errorMsg = 'Lỗi tải danh sách check-in.';
+                try {
+                    const errorData = await response.json();
+                    errorMsg = errorData.message || errorMsg;
+                } catch(e) {}
+                throw new Error(errorMsg);
+            }
+
+            const pageData = await response.json();
+            allCheckinBookings = pageData.content || [];
+            totalPages = pageData.totalPages || 0;
+
+            // Apply client-side filters for checkin status (pending/overdue)
+            applyClientSideFilters(checkinStatusFilter, showOverdueOnly);
+
+            renderCheckins(); // Render the filtered data
+            renderPagination(pageData);
+            // HÀM updateStatistics() ĐÃ BỊ XÓA
+
+        } catch (error) {
+            console.error('Lỗi khi tải check-ins:', error);
+            showAlert(error.message || 'Có lỗi xảy ra khi tải dữ liệu.', 'danger');
+            document.getElementById('checkinContainer').innerHTML = ''; // Clear content on error
+            document.getElementById('pagination').innerHTML = '';
+            showEmptyStateIfNeeded();
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // Hàm mới để áp dụng bộ lọc client-side (pending/overdue)
+    function applyClientSideFilters(checkinStatusFilter, showOverdueOnly) {
+        const todayStr = new Date().toISOString().split('T')[0];
+        filteredCheckins = allCheckinBookings.filter(booking => {
+            const isOverdue = booking.check_in_date < todayStr;
+            const currentCheckinStatus = isOverdue ? 'overdue' : 'pending';
+
+            if (showOverdueOnly && !isOverdue) {
+                return false;
+            }
+            if (checkinStatusFilter !== 'all' && currentCheckinStatus !== checkinStatusFilter) {
+                return false;
+            }
+            return true;
+        });
+    }
+
+
+    // Trigger refetch when filters change
+    function applyFiltersAndFetch() {
+        loadCheckins(true); // Reset to page 0 and refetch
+    }
+
+    function renderCheckins() {
+        const container = document.getElementById('checkinContainer');
+        container.innerHTML = ''; // Clear previous items
+
+        if (filteredCheckins.length === 0) {
+            showEmptyStateIfNeeded();
+            return;
+        }
+
+        hideEmptyState();
+        const fragment = document.createDocumentFragment();
+        filteredCheckins.forEach(booking => {
+            const checkinElement = createCheckinElement(booking);
+            fragment.appendChild(checkinElement);
+        });
+        container.appendChild(fragment);
+    }
+
+    function createCheckinElement(booking) {
+        const colDiv = document.createElement('div');
+        // ===== 🌟 ĐÃ SỬA LỖI LAYOUT BƯỚC 2 🌟 =====
+        colDiv.className = 'col'; // Sửa từ 'col-xl-6 mb-4' thành 'col'
+
+        const todayStr = new Date().toISOString().split('T')[0];
+        // === SỬA TÊN CỘT ===
+        const isOverdue = booking.checkin < todayStr; // Use booking.checkin
+        const checkinStatus = isOverdue ? 'overdue' : 'pending';
+
+        // Gán nội dung thẻ (giữ nguyên)
+        colDiv.innerHTML = `
+        <div class="card checkin-card ${isOverdue ? 'overdue-booking' : ''}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+
+                        <h6 class="card-title mb-1">${booking.code || 'N/A'}</h6>
+                        <small class="text-muted">Ngày check-in: ${formatDate(booking.checkin)}</small>
+                    </div>
+                    <div>
+                        <span class="badge ${getCheckinStatusBadgeClass(checkinStatus)} status-badge">
+                            ${getCheckinStatusText(checkinStatus)}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="customer-info mb-3">
+                    <div class="d-flex align-items-center mb-2">
+
+                         <div class="customer-avatar ${getAvatarColor(getInitials(booking.customer || ''))} me-2">
+                            ${getInitials(booking.customer || '?')}
+                        </div>
+                        <div>
+                            <div class="fw-bold">${booking.customer || 'N/A'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="booking-info">
+                    <div >
+                        <div class="row">
+
+                            <div class="fw-bold">${booking.roomType || 'N/A'} ${booking.roomNumber || 'N/A'}</div>
+                        </div><br>
+                        <div class="row">
+                            <small class="text-muted">Thời gian</small>
+
+                            <div>${formatDate(booking.checkin)} - ${formatDate(booking.checkout)}</div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="checkin-actions mt-3">
+                    <div class="btn-group w-100">
+
+                        <button class="btn btn-sm btn-outline-primary" data-booking-id="${booking.id}">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-success" data-booking-id="${booking.id}">
+                            <i class="bi bi-check-circle"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-warning" data-phone="${booking.phone || ''}">
+                            <i class="bi bi-telephone"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+        return colDiv;
+    }
+
+    // === XỬ LÝ HÀNH ĐỘNG ===
+
+    function handleCheckinActions(e) {
+        const button = e.target.closest('button');
+        if (!button) return;
+
+        const bookingId = button.dataset.bookingId;
+        const phone = button.dataset.phone;
+
+        if (button.classList.contains('btn-outline-primary') && bookingId) {
+            viewBookingDetail(bookingId);
+        } else if (button.classList.contains('btn-success') && bookingId) {
+            openCheckinModal(bookingId);
+        } else if (button.classList.contains('btn-outline-warning') && phone) {
+            callCustomer(phone);
+        }
+    }
+
+    async function viewBookingDetail(bookingId) {
+        showLoading();
+        try {
+            // Find in the current list first
+            let booking = filteredCheckins.find(b => b.id == bookingId); // Use filtered list
+
+            // If not found (e.g., loaded via different filter), fetch directly
+            if (!booking) {
+                console.log(`Booking ${bookingId} not in current filter, fetching details...`)
+                const response = await fetchWithAuth(`${API_BASE_URL}/bookings/${bookingId}`);
+                if (!response.ok) throw new Error('Không tìm thấy chi tiết đặt phòng.');
+                booking = await response.json(); // Use the fetched details
+            }
+
+            currentProcessingBooking = booking; // Store the correct booking object
+
+            const modalContent = document.getElementById('bookingDetailContent');
+            // === SỬA TÊN CỘT ===
+            modalContent.innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Thông tin khách hàng</h6>
+                    <div class="mb-3">
+                        <strong>Họ tên:</strong> ${booking.customer || 'N/A'}<br>
+                        <strong>SĐT:</strong> ${booking.phone || 'N/A'}<br>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h6>Thông tin đặt phòng</h6>
+                    <div class="mb-3">
+                        <strong>Mã đặt phòng:</strong> ${booking.code || 'N/A'}<br>
+                        <strong>Phòng:</strong> ${booking.roomType || 'N/A'} ${booking.roomNumber || 'N/A'}<br>
+                        <strong>Thời gian:</strong> ${formatDate(booking.checkin)} - ${formatDate(booking.checkout)}<br>
+                        <strong>Số đêm:</strong> ${calculateNights(booking.checkin, booking.checkout)} đêm<br>
+                        <strong>Số khách:</strong> ${(booking.soNguoiLon)} người lớn,${(booking.soTreEm)} trẻ em<br>
+                        <strong>Tổng tiền:</strong> ${formatCurrency(booking.total || 0)}<br>
+                        <strong>Trạng thái:</strong> <span class="badge bg-success">${getStatusText(booking.status)}</span>
+                    </div>
+                </div>
+            </div>
+
+            ${booking.notes ? `<div class="row"><div class="col-12"><h6>Ghi chú</h6><p>${booking.notes}</p></div></div>` : ''}
+        `;
+
+            new bootstrap.Modal(document.getElementById('bookingDetailModal')).show();
+        } catch(error){
+            showAlert(error.message || 'Lỗi khi xem chi tiết.', 'danger');
+        } finally {
+            hideLoading();
+        }
+    }
+    // Function to trigger check-in modal from detail modal
+    function processCheckinFromDetail() {
+        const detailModal = bootstrap.Modal.getInstance(document.getElementById('bookingDetailModal'));
+        if (detailModal) detailModal.hide();
+
+        // Ensure currentProcessingBooking is set
+        if (currentProcessingBooking) {
+            // Use setTimeout to allow the first modal to fully hide
+            setTimeout(() => {
+                openCheckinModal(currentProcessingBooking.id);
+            }, 300); // Adjust timeout if needed
+        } else {
+            showAlert('Không có thông tin đặt phòng để check-in.', 'warning');
+        }
+    }
+
+
+    function openCheckinModal(bookingId) {
+        // Find booking data using the CORRECT list (filteredCheckins)
+        const booking = filteredCheckins.find(b => b.id == bookingId); // Use filtered list
+        if (!booking) {
+            showAlert('Không tìm thấy thông tin đặt phòng trong danh sách hiện tại!', 'danger');
+            return;
+        }
+        currentProcessingBooking = booking; // Store for confirmation
+
+        // === SỬA TÊN CỘT ===
+        document.getElementById('checkinCustomerInfo').innerHTML = `
+        <strong>Họ tên:</strong> ${booking.customer || 'N/A'}<br>
+        <strong>SĐT:</strong> ${booking.phone || 'N/A'}<br>
+        <strong>Phòng:</strong> ${booking.roomType || 'N/A'} ${booking.roomNumber || 'N/A'}<br>
+        <strong>Thời gian:</strong> ${formatDate(booking.checkin)} - ${formatDate(booking.checkout)}
+    `;
+        document.getElementById('checkinPaymentInfo').innerHTML = `
+        <strong class="text-primary">Tổng tiền: ${formatCurrency(booking.total || 0)}</strong><br>
+        <small>(Kiểm tra thanh toán nếu cần)</small>
+    `;
+
+        document.getElementById('confirmCheckin').checked = false;
+        document.getElementById('checkinNotes').value = '';
+
+        new bootstrap.Modal(document.getElementById('checkinModal')).show();
+    }
+    async function confirmCheckinAction() {
+        if (!document.getElementById('confirmCheckin').checked) {
+            showAlert('Vui lòng xác nhận các thông tin trước khi check-in!', 'warning');
+            return;
+        }
+        if (!currentProcessingBooking) {
+            showAlert('Lỗi: Không tìm thấy thông tin đặt phòng đang xử lý!', 'danger');
+            return;
+        }
+
+        const bookingId = currentProcessingBooking.id;
+        const checkinNotes = document.getElementById('checkinNotes').value; // Get notes if needed
+
+        showLoading(); // Show loading indicator
+        const checkinModalInstance = bootstrap.Modal.getInstance(document.getElementById('checkinModal'));
+
+
+        try {
+            // Call API to update status
+            const response = await fetchWithAuth(`${API_BASE_URL}/bookings/${bookingId}/status`, {
+                method: 'PATCH',
+                body: JSON.stringify({ status: 'CHECKED_IN' }) // Update status to CHECKED_IN
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Lỗi khi cập nhật trạng thái check-in.');
+            }
+
+            // Successfully checked in
+            if(checkinModalInstance) checkinModalInstance.hide(); // Hide modal on success
+
+            showAlert('Check-in thành công!', 'success');
+            await loadCheckins(true); // Refresh list
+
+        } catch (error) {
+            console.error('Lỗi khi xác nhận check-in:', error);
+            showAlert(error.message || 'Có lỗi xảy ra trong quá trình check-in.', 'danger');
+        } finally {
+            hideLoading(); // Hide loading indicator
+        }
+    }
+
+
+    function callCustomer(phone) {
+        if (phone) {
+            showAlert(`Đang gọi đến số: ${phone}... (Giả lập)`, 'info');
+            // In a real app, you might trigger a call using a browser extension or API
+            // window.location.href = `tel:${phone}`; // This might work on mobile
+        } else {
+            showAlert('Không có số điện thoại để gọi.', 'warning');
+        }
+    }
+
+    // === PHÂN TRANG ===
+
+    function renderPagination(pageData) {
+        const paginationUl = document.getElementById('pagination');
+        paginationUl.innerHTML = ''; // Clear old pagination
+        totalPages = pageData.totalPages || 0;
+        currentPage = pageData.number || 0;
+
+        if (totalPages <= 1) return; // No pagination needed for 0 or 1 page
+
+        // Previous Button
+        paginationUl.innerHTML += `
+            <li class="page-item ${pageData.first ? 'disabled' : ''}">
+                <a class="page-link" href="#" aria-label="Previous" onclick="changePage(${currentPage - 1}); return false;">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>`;
+
+        // Page Numbers (simplified example: show current, +/- 1, first, last)
+        const maxPagesToShow = 5; // Adjust as needed
+        let startPage = Math.max(0, currentPage - Math.floor(maxPagesToShow / 2));
+        let endPage = Math.min(totalPages - 1, startPage + maxPagesToShow - 1);
+        // Adjust startPage if endPage is at the limit
+        if (endPage === totalPages - 1) {
+            startPage = Math.max(0, endPage - maxPagesToShow + 1);
+        }
+
+
+        if (startPage > 0) {
+            paginationUl.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(0); return false;">1</a></li>`;
+            if (startPage > 1) paginationUl.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            paginationUl.innerHTML += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i + 1}</a>
+                </li>`;
+        }
+
+        if (endPage < totalPages - 1) {
+            if (endPage < totalPages - 2) paginationUl.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+            paginationUl.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${totalPages - 1}); return false;">${totalPages}</a></li>`;
+        }
+
+
+        // Next Button
+        paginationUl.innerHTML += `
+            <li class="page-item ${pageData.last ? 'disabled' : ''}">
+                <a class="page-link" href="#" aria-label="Next" onclick="changePage(${currentPage + 1}); return false;">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>`;
+    }
+
+    function changePage(page) {
+        if (page < 0 || page >= totalPages) return;
+        currentPage = page;
+        loadCheckins(false); // Fetch data for the new page
+    }
+
+    // === CẬP NHẬT THỐNG KÊ (ĐÃ BỊ XÓA) ===
+
+    // === HÀM TIỆN ÍCH ===
+    function showLoading() { document.getElementById('loadingSpinner').style.display = 'block'; }
+    function hideLoading() { document.getElementById('loadingSpinner').style.display = 'none'; }
+    function showEmptyStateIfNeeded() {
+        const container = document.getElementById('checkinContainer');
+        const emptyState = document.getElementById('emptyState');
+        const paginationContainer = document.getElementById('paginationContainer');
+        if (container.children.length === 0) {
+            emptyState.classList.remove('d-none');
+            paginationContainer.classList.add('d-none');
+        } else {
+            emptyState.classList.add('d-none');
+            paginationContainer.classList.remove('d-none');
+        }
+    }
+    function hideEmptyState() { document.getElementById('emptyState').classList.add('d-none'); }
+
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        try {
+            // Assuming dateString is 'YYYY-MM-DD'
+            const [year, month, day] = dateString.split('-');
+            return `${day}/${month}/${year}`;
+        } catch (e) {
+            console.warn("Lỗi format ngày:", dateString);
+            return dateString; // Return original if format fails
+        }
+    }
+    function calculateNights(checkinStr, checkoutStr) {
+        try {
+            const checkin = new Date(checkinStr + 'T00:00:00');
+            const checkout = new Date(checkoutStr + 'T00:00:00');
+            const diffTime = Math.abs(checkout - checkin);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays > 0 ? diffDays : 1; // Ensure at least 1 night
+        } catch (e) {
+            return '?';
+        }
+    }
+    function formatCurrency(amount) {
+        if (amount == null || isNaN(amount)) return '0 VNĐ';
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+    }
+    function getCheckinStatusBadgeClass(status) { // Status here is 'pending' or 'overdue'
+        return status === 'overdue' ? 'bg-danger' : 'bg-warning';
+    }
+    function getCheckinStatusText(status) { // Status here is 'pending' or 'overdue'
+        return status === 'overdue' ? 'Quá hạn' : 'Chờ check-in';
+    }
+    function getStatusText(apiStatus) { // For detail modal using API status
+        const texts = {
+            'PENDING': 'Đang chờ', 'CONFIRMED': 'Đã xác nhận', 'CHECKED_IN': 'Đã check-in',
+            'CHECKED_OUT': 'Đã check-out', 'CANCELLED': 'Đã hủy'
+        };
+        return texts[apiStatus] || apiStatus;
+    }
+
+    function getInitials(name) {
+        if (!name) return '?';
+        return name.split(' ').map(w => w ? w[0] : '').join('').toUpperCase().slice(0, 2);
+    }
+    function getAvatarColor(initials) {
+        const colors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-info', 'bg-danger', 'bg-secondary', 'bg-dark'];
+        // Simple hash function for consistent color based on initials
+        let hash = 0;
+        for (let i = 0; i < initials.length; i++) {
+            hash = initials.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const index = Math.abs(hash % colors.length);
+        return colors[index];
+    }
+    function showAlert(message, type = 'info') { // Default to 'info'
+        const existingAlert = document.getElementById('dynamicAlert');
+        if(existingAlert) existingAlert.remove();
+
+        const alert = document.createElement('div');
+        alert.id = 'dynamicAlert';
+        alert.className = `alert alert-${type} alert-dismissible fade show alert-custom`;
+        alert.setAttribute('role', 'alert');
+        alert.innerHTML = `
+            <i class="bi ${type === 'success' ? 'bi-check-circle-fill' : type === 'warning' ? 'bi-exclamation-triangle-fill' : type === 'danger' ? 'bi-exclamation-octagon-fill' : 'bi-info-circle-fill'} me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        document.body.appendChild(alert);
+
+        // Auto-dismiss after 5 seconds
+        setTimeout(() => {
+            const currentAlert = document.getElementById('dynamicAlert');
+            if (currentAlert) {
+                bootstrap.Alert.getOrCreateInstance(currentAlert).close();
+            }
+        }, 5000);
+    }
+
+    // HÀM fetchWithAuth (Được gọi bởi các hàm khác)
+    async function fetchWithAuth(url, options = {}) {
+        const token = localStorage.getItem('jwtToken');
+        if (!token) {
+            console.error('Không tìm thấy token. Đang chuyển về trang đăng nhập.');
+            alert('Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.');
+            window.location.href = '/HotelAdmin/pages-login.html';
+            throw new Error('Chưa đăng nhập');
+        }
+
+        const headers = new Headers(options.headers || {});
+        // Thêm Content-Type nếu là POST/PUT/PATCH và có body
+        if (options.body && !headers.has('Content-Type')) {
+            headers.append('Content-Type', 'application/json');
+        }
+        headers.append('Authorization', `Bearer ${token}`);
+
+        const updatedOptions = { ...options, headers: headers };
+        const response = await fetch(url, updatedOptions);
+
+        if (response.status === 401 || response.status === 403) {
+            console.error('Lỗi 401/403. Token có thể hết hạn hoặc không hợp lệ.');
+            alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+            localStorage.removeItem('jwtToken');
+            window.location.href = '/HotelAdmin/pages-login.html';
+            throw new Error('Phiên đăng nhập hết hạn');
+        }
+        return response;
+    }
+</script>
+</body>
+</html>

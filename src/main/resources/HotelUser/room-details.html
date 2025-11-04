@@ -1,0 +1,507 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Chi tiết Phòng</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <!-- =======================================================
+    * Tên mẫu: Grandoria
+    * URL mẫu: https://bootstrapmade.com/grandoria-bootstrap-hotel-template/
+    * Cập nhật: 29/07/2025 với Bootstrap v5.3.7
+    * Tác giả: BootstrapMade.com
+    * Giấy phép: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+<body class="room-details-page">
+
+<header id="header" class="header sticky-top">
+
+  <div class="branding d-flex align-items-cente">
+
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <!-- Bỏ ghi chú dòng dưới nếu bạn muốn sử dụng logo hình ảnh -->
+        <img src="assets/img/img_1.png" alt="logo">
+        <h1 class="sitename">Hotel</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="about.html">Giới thiệu</a></li>
+          <li><a href="rooms.html">Phòng</a></li>
+          <li><a href="amenities.html">Tiện ích</a></li>
+          <li><a href="location.html">Vị trí</a></li>
+          <li class="dropdown"><a href="#"><span>Trang</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="room-details.html" class="active">Chi tiết phòng</a></li>
+              <li><a href="restaurant.html">Nhà hàng</a></li>
+              <li><a href="offers.html">Ưu đãi</a></li>
+              <li><a href="hotel-events.html">Sự kiện</a></li>
+              <li><a href="gallery.html">Thư viện ảnh</a></li>
+              <li><a href="booking.html">Đặt phòng</a></li>
+              <li><a href="terms.html">Điều khoản</a></li>
+              <li><a href="privacy.html">Chính sách bảo mật</a></li>
+            </ul>
+          </li>
+          <li><a href="contact.html">Liên hệ</a></li>
+            <li><a href="pages-login.html">Đăng nhập</a></li>
+            <li><a href="pages-register.html">Đăng ký</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+
+  </div>
+
+</header>
+
+<main class="main">
+
+    <!-- Tiêu đề trang -->
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Chi tiết Phòng</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li class="current">Chi tiết Phòng</li>
+                </ol>
+            </nav>
+        </div>
+    </div><!-- Kết thúc Tiêu đề trang -->
+
+    <!-- Phần Chi tiết Phòng -->
+    <section id="room-details" class="room-details section">
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+            <!-- Tiêu đề Phòng với Hình ảnh và Thông tin Cơ bản -->
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-7" data-aos="fade-right" data-aos-delay="200">
+                    <div class="room-header-image">
+                        <img src="assets/img/hotel/room-15.webp" alt="Suite Cao cấp Hướng Thành phố" class="img-fluid rounded">
+                        <div class="room-badge">
+                            <span class="text-white">Suite Cao cấp</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5" data-aos="fade-left" data-aos-delay="300">
+                    <div class="room-header-content">
+                        <div class="room-rating mb-3">
+                            <span class="rating-score">4.8</span>
+                            <div class="stars">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                            <span class="reviews-count">(127 đánh giá)</span>
+                        </div>
+                        <h1 class="room-title">Suite Cao cấp Hướng Thành phố</h1>
+                        <p class="room-tagline">Trải nghiệm sự sang trọng với tầm nhìn thành phố tuyệt đẹp và tiện nghi cao cấp</p>
+                        <div class="room-capacity mb-4">
+                            <div class="capacity-item">
+                                <i class="bi bi-people"></i>
+                                <span>Tối đa 4 khách</span>
+                            </div>
+                            <div class="capacity-item">
+                                <i class="bi bi-grid"></i>
+                                <span>79 m²</span>
+                            </div>
+                            <div class="capacity-item">
+                                <i class="bi bi-bed"></i>
+                                <span>Giường King + Ghế sofa giường</span>
+                            </div>
+                        </div>
+                        <div class="room-price">
+                            <span class="price-amount">9.200.000 VNĐ</span>
+                            <span class="price-period">mỗi đêm</span>
+                        </div>
+                        <a href="booking.html" class="btn btn-book-now">Đặt ngay</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thư viện Hình ảnh Phòng -->
+            <div class="room-gallery mb-5" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="section-subtitle mb-4">Thư viện Hình ảnh Phòng</h3>
+                <div class="gallery-grid">
+                    <div class="gallery-main">
+                        <a href="assets/img/hotel/room-12.webp" class="glightbox">
+                            <img src="assets/img/hotel/room-12.webp" alt="Nội thất Suite" class="img-fluid">
+                        </a>
+                    </div>
+                    <div class="gallery-thumbnails">
+                        <a href="assets/img/hotel/room-8.webp" class="glightbox">
+                            <img src="assets/img/hotel/room-8.webp" alt="Tầm nhìn Phòng ngủ" class="img-fluid">
+                        </a>
+                        <a href="assets/img/hotel/room-6.webp" class="glightbox">
+                            <img src="assets/img/hotel/room-6.webp" alt="Khu vực Sinh hoạt" class="img-fluid">
+                        </a>
+                        <a href="assets/img/hotel/room-18.webp" class="glightbox">
+                            <img src="assets/img/hotel/room-18.webp" alt="Tầm nhìn Thành phố" class="img-fluid">
+                        </a>
+                        <a href="assets/img/hotel/dining-4.webp" class="glightbox">
+                            <img src="assets/img/hotel/dining-4.webp" alt="Phòng tắm" class="img-fluid">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mô tả Phòng -->
+            <div class="row mb-5">
+                <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
+                    <div class="room-description">
+                        <h3 class="section-subtitle">Tổng quan về Phòng</h3>
+                        <p>Đắm mình trong trải nghiệm sang trọng đỉnh cao với Suite Cao cấp Hướng Thành phố. Không gian rộng rãi này có cửa sổ kính từ trần đến sàn, mang đến tầm nhìn toàn cảnh thành phố Hà Nội, tạo nên một bầu không khí thanh lịch, lý tưởng cho các kỳ nghỉ lãng mạn hoặc gia đình. Không gian sinh hoạt được thiết kế tinh tế, kết hợp giữa sự thoải mái hiện đại và nét quyến rũ đô thị, với nội thất cao cấp và các chi tiết thiết kế chu đáo.</p>
+                        <p>Suite bao gồm khu vực sinh hoạt riêng với ghế ngồi thoải mái, bàn làm việc dành cho khách công tác, và ban công riêng nơi bạn có thể thưởng thức cà phê sáng trong khi ngắm nhìn thành phố. Phòng ngủ có giường King-size sang trọng với chăn ga cao cấp, đảm bảo giấc ngủ ngon, trong khi ghế sofa giường ở khu vực sinh hoạt cung cấp chỗ ở bổ sung cho tối đa hai khách.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="highlight-box">
+                        <div class="highlight-icon">
+                            <i class="bi bi-star"></i>
+                        </div>
+                        <h4>Trải nghiệm Cao cấp</h4>
+                        <p>"Suite đẹp nhất mà chúng tôi từng ở. Tầm nhìn thành phố thật sự ngoạn mục và sự chăm chút đến từng chi tiết là tuyệt vời."</p>
+                        <div class="quote-author">
+                            <span>- Minh Anh, Khách đã xác nhận</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tiện nghi và Đặc điểm -->
+            <div class="room-amenities mb-5" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="section-subtitle mb-4">Tiện nghi Phòng</h3>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="amenity-category">
+                            <h5>Giấc ngủ</h5>
+                            <ul>
+                                <li><i class="bi bi-check2"></i> Giường King-size</li>
+                                <li><i class="bi bi-check2"></i> Chăn ga cao cấp</li>
+                                <li><i class="bi bi-check2"></i> Gối lông vũ</li>
+                                <li><i class="bi bi-check2"></i> Rèm chống sáng</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="amenity-category">
+                            <h5>Công nghệ</h5>
+                            <ul>
+                                <li><i class="bi bi-check2"></i> WiFi tốc độ cao</li>
+                                <li><i class="bi bi-check2"></i> TV thông minh 55 inch</li>
+                                <li><i class="bi bi-check2"></i> Loa Bluetooth</li>
+                                <li><i class="bi bi-check2"></i> Cổng sạc USB</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="amenity-category">
+                            <h5>Tiện nghi</h5>
+                            <ul>
+                                <li><i class="bi bi-check2"></i> Điều hòa nhiệt độ</li>
+                                <li><i class="bi bi-check2"></i> Tủ lạnh mini</li>
+                                <li><i class="bi bi-check2"></i> Máy pha cà phê</li>
+                                <li><i class="bi bi-check2"></i> Két an toàn</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="amenity-category">
+                            <h5>Phòng tắm</h5>
+                            <ul>
+                                <li><i class="bi bi-check2"></i> Phòng tắm đá cẩm thạch</li>
+                                <li><i class="bi bi-check2"></i> Vòi sen mưa</li>
+                                <li><i class="bi bi-check2"></i> Mỹ phẩm cao cấp</li>
+                                <li><i class="bi bi-check2"></i> Sàn sưởi ấm</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin dạng Tab -->
+            <div class="room-tabs mb-5" data-aos="fade-up" data-aos-delay="200">
+                <ul class="nav nav-tabs" id="room-detailsRoomTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="room-details-policies-tab" data-bs-toggle="tab" data-bs-target="#room-details-policies" type="button" role="tab">Chính sách</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="room-details-location-tab" data-bs-toggle="tab" data-bs-target="#room-details-location" type="button" role="tab">Vị trí</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="room-details-services-tab" data-bs-toggle="tab" data-bs-target="#room-details-services" type="button" role="tab">Dịch vụ</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="room-detailsRoomTabsContent">
+                    <div class="tab-pane fade show active" id="room-details-policies" role="tabpanel">
+                        <div class="tab-content-wrapper">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h6>Nhận phòng / Trả phòng</h6>
+                                    <p>Nhận phòng: 15:00<br>Trả phòng: 11:00</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6>Hủy phòng</h6>
+                                    <p>Hủy miễn phí trong vòng 24 giờ trước khi đến</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6>Thú cưng</h6>
+                                    <p>Cho phép mang thú cưng với phí bổ sung</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="room-details-location" role="tabpanel">
+                        <div class="tab-content-wrapper">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Địa điểm Gần đó</h6>
+                                    <ul>
+                                        <li>Công viên Cầu Giấy - 1,5 km</li>
+                                        <li>Bảo tàng Dân tộc học Việt Nam - 2,5 km</li>
+                                        <li>Trung tâm Thương mại Vincom Bắc Từ Liêm - 1,8 km</li>
+                                        <li>Lăng Chủ tịch Hồ Chí Minh - 5 km</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Giao thông</h6>
+                                    <ul>
+                                        <li>Dịch vụ đưa đón sân bay</li>
+                                        <li>Đỗ xe có nhân viên - 580.000 VNĐ/đêm</li>
+                                        <li>Giao thông công cộng gần đó</li>
+                                        <li>Quầy cho thuê xe tại sảnh</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="room-details-services" role="tabpanel">
+                        <div class="tab-content-wrapper">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h6>Lễ tân</h6>
+                                    <p>Dịch vụ lễ tân 24/7 hỗ trợ đặt chỗ và tư vấn</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6>Dịch vụ Phòng</h6>
+                                    <p>Có sẵn từ 6:00 sáng đến 11:00 tối hàng ngày</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6>Dọn phòng</h6>
+                                    <p>Dịch vụ dọn phòng hàng ngày và dịch vụ gấp chăn buổi tối</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tùy chọn Bổ sung -->
+            <div class="room-addons mb-5" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="section-subtitle mb-4">Nâng cao Trải nghiệm Lưu trú</h3>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="addon-card">
+                            <div class="addon-icon">
+                                <i class="bi bi-cup-hot"></i>
+                            </div>
+                            <h5>Gói Bữa sáng</h5>
+                            <p>Bắt đầu ngày mới với tiệc buffet sáng đặc trưng với các nguyên liệu tươi ngon địa phương</p>
+                            <div class="addon-price">+815.000 VNĐ mỗi người</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="addon-card">
+                            <div class="addon-icon">
+                                <i class="bi bi-flower1"></i>
+                            </div>
+                            <h5>Truy cập Spa</h5>
+                            <p>Thưởng thức quyền truy cập không giới hạn vào các tiện ích spa cao cấp trong suốt thời gian lưu trú</p>
+                            <div class="addon-price">+1.750.000 VNĐ mỗi ngày</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="addon-card">
+                            <div class="addon-icon">
+                                <i class="bi bi-airplane"></i>
+                            </div>
+                            <h5>Đưa đón Sân bay</h5>
+                            <p>Chuyển bằng xe sang trọng riêng đến và đi từ sân bay</p>
+                            <div class="addon-price">+2.215.000 VNĐ khứ hồi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kêu gọi Đặt phòng -->
+            <div class="booking-cta" data-aos="fade-up" data-aos-delay="200">
+                <div class="booking-card">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h4>Sẵn sàng đặt phòng của bạn?</h4>
+                            <p>Trải nghiệm sự sang trọng và thoải mái trong Suite Cao cấp Hướng Thành phố. Đặt ngay để tạo nên những kỷ niệm khó quên.</p>
+                        </div>
+                        <div class="col-lg-4 text-center text-lg-end">
+                            <div class="price-display">
+                                <span class="price">9.200.000 VNĐ</span>
+                                <span class="period">mỗi đêm</span>
+                            </div>
+                            <a href="booking.html" class="btn btn-primary btn-lg">Kiểm tra Tình trạng Phòng</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section><!-- /Phần Chi tiết Phòng -->
+
+</main>
+
+<footer id="footer" class="footer position-relative dark-background">
+
+    <div class="footer-top">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6 footer-about">
+                    <a href="index.html" class="logo d-flex align-items-center">
+                        <span class="sitename">Grandoria</span>
+                    </a>
+                    <div class="footer-contact pt-3">
+                        <p>298 Cầu Diễn, Phường Minh Khai</p>
+                        <p>Quận Bắc Từ Liêm, Hà Nội</p>
+                        <p class="mt-3"><strong>Điện thoại:</strong> <span>+84 24 3765 5121</span></p>
+                        <p><strong>Email:</strong> <span>info@haui.edu.vn</span></p>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-3 footer-links">
+                    <h4>Liên kết hữu ích</h4>
+                    <ul>
+                        <li><a href="#">Trang chủ</a></li>
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Dịch vụ</a></li>
+                        <li><a href="#">Điều khoản dịch vụ</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-3 footer-links">
+                    <h4>Dịch vụ của chúng tôi</h4>
+                    <ul>
+                        <li><a href="#">Thiết kế web</a></li>
+                        <li><a href="#">Phát triển web</a></li>
+                        <li><a href="#">Quản lý sản phẩm</a></li>
+                        <li><a href="#">Tiếp thị</a></li>
+                        <li><a href="#">Thiết kế đồ họa</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-3 footer-links">
+                    <h4>Hic solutasetp</h4>
+                    <ul>
+                        <li><a href="#">Molestiae accusamus iure</a></li>
+                        <li><a href="#">Excepturi dignissimos</a></li>
+                        <li><a href="#">Suscipit distinctio</a></li>
+                        <li><a href="#">Dilecta</a></li>
+                        <li><a href="#">Sit quas consectetur</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-3 footer-links">
+                    <h4>Nobis illum</h4>
+                    <ul>
+                        <li><a href="#">Ipsam</a></li>
+                        <li><a href="#">Laudantium dolorum</a></li>
+                        <li><a href="#">Dinera</a></li>
+                        <li><a href="#">Trodelas</a></li>
+                        <li><a href="#">Flexo</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright text-center">
+        <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+
+            <div class="d-flex flex-column align-items-center align-items-lg-start">
+                <div>
+                    © Bản quyền <strong><span>MyWebsite</span></strong>. Tất cả quyền được bảo lưu
+                </div>
+                <div class="credits">
+                    <!-- Tất cả liên kết trong chân trang phải được giữ nguyên. -->
+                    <!-- Bạn chỉ có thể xóa liên kết nếu đã mua phiên bản pro. -->
+                    <!-- Thông tin giấy phép: https://bootstrapmade.com/license/ -->
+                    <!-- Mua phiên bản pro với biểu mẫu liên hệ PHP/AJAX hoạt động: https://bootstrapmade.com/herobiz-bootstrap-business-template/ -->
+                    Thiết kế bởi <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                </div>
+            </div>
+
+            <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+                <a href=""><i class="bi bi-twitter-x"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+            </div>
+
+        </div>
+    </div>
+
+</footer>
+
+<!-- Nút cuộn lên trên -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Tải trước -->
+<div id="preloader"></div>
+
+<!-- Vendor JS Files -->
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+<!-- Main JS File -->
+<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
+```
