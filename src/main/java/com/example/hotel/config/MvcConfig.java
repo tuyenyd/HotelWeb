@@ -1,5 +1,5 @@
 // src/main/java/com/example/hotel/security/MvcConfig.java
-package com.example.hotel.security;
+package com.example.hotel.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

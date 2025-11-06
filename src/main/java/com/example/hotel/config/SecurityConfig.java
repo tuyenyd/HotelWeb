@@ -1,6 +1,8 @@
 // src/main/java/com/example/hotel/security/SecurityConfig.java
-package com.example.hotel.security;
+package com.example.hotel.config;
 
+import com.example.hotel.security.AuthTokenFilter;
+import com.example.hotel.security.UserDetailsServiceImpl;
 import com.example.hotel.security.jwt.AuthEntryPointJwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -77,8 +79,8 @@ public class SecurityConfig {
 
                         .requestMatchers("/avatars/**").permitAll()
 
-                        // Yêu cầu vai trò 'ADMIN' cho tất cả các API dưới /api/admin/
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        // Yêu cầu vai trò 'ADMIN',"MANAGER" cho tất cả các API dưới /api/admin/
+                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "MANAGER")
 
                         .requestMatchers("/api/users/**").authenticated()
 

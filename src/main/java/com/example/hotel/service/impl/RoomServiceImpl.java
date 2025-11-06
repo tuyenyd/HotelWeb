@@ -160,4 +160,19 @@ public class RoomServiceImpl implements RoomService {
 
         return room;
     }
+    @Override
+    @Transactional
+    public RoomDto updateRoomStatus(Long id, String status) {
+        Room existingRoom = roomRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + id));
+
+        try {
+            RoomStatus newStatus = RoomStatus.valueOf(status.toUpperCase());
+            existingRoom.setStatus(newStatus);
+            Room updatedRoom = roomRepository.save(existingRoom);
+            return convertToDto(updatedRoom);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid room status: " + status);
+        }
+    }
 }

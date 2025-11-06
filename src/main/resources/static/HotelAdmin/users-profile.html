@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Người dùng / Hồ sơ - NiceAdmin Bootstrap Template</title>
+  <title> Hồ sơ - HotelAdmin</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -364,10 +364,6 @@
                 </li>
 
                 <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Cài đặt</button>
-                </li>
-
-                <li class="nav-item">
                   <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Đổi mật khẩu</button>
                 </li>
 
@@ -527,42 +523,7 @@
                 <div class="tab-pane fade pt-3" id="profile-settings">
 
                   <!-- Settings Form -->
-                  <form id="settingsForm">
-
-                    <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Thông báo Email</label>
-                      <div class="col-md-8 col-lg-9">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="changesMade" checked>
-                          <label class="form-check-label" for="changesMade">
-                            Thay đổi trên tài khoản của bạn
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="newProducts" checked>
-                          <label class="form-check-label" for="newProducts">
-                            Thông tin về sản phẩm và dịch vụ mới
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="proOffers">
-                          <label class="form-check-label" for="proOffers">
-                            Ưu đãi tiếp thị và khuyến mãi
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" id="securityNotify" checked disabled>
-                          <label class="form-check-label" for="securityNotify">
-                            Cảnh báo bảo mật
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                    </div>
-                  </form><!-- End settings Form -->
+                  <!-- End settings Form -->
 
                 </div>
 
@@ -746,20 +707,14 @@
 
                   // Tạo FormData từ form
                   const formData = new FormData(profileEditForm);
-                  // FormData đã tự động chứa file từ <input id="profileImageInput">
-                  // vì input đó có "name="avatar""
-
-                  // (Loại bỏ các trường không có trong DTO nếu cần,
-                  // nhưng DTO của chúng ta đã khớp với form)
 
                   try {
                       const response = await fetchWithAuth(`${API_URL}/profile`, {
                           method: 'PUT',
-                          body: formData // Gửi FormData (auth.js đã sửa sẽ xử lý đúng)
+                          body: formData
                       });
 
                       if (!response.ok) {
-                          // auth.js sẽ tự ném lỗi (throw new Error)
                           return;
                       }
 
@@ -769,7 +724,6 @@
                       const oldUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
 
                       // Cập nhật thông tin trên header (lấy từ auth.js)
-                      // Lưu ý: user trả về từ API update nên chứa thông tin mới
                       const currentUser = {
                           ...oldUser,
                           fullName: updatedUser.fullName,
@@ -851,9 +805,8 @@
                   // (Bạn có thể thêm logic gọi API để xóa file trên server ở đây)
               });
 
-          } // Kết thúc setupEventListeners
-
-      })(); // Kết thúc IIFE
+          }
+      })();
   </script>
 </body>
 </html>

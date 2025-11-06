@@ -392,9 +392,6 @@
 
                         <div class="row mb-4">
                             <div class="col-md-4">
-                                <input type="date" class="form-control" id="filterDate" value="2024-06-15">
-                            </div>
-                            <div class="col-md-4">
                                 <select class="form-select" id="filterFloor">
                                     <option value="all" selected>Tất cả các tầng</option>
                                     <option value="1">Tầng 1</option>
@@ -625,7 +622,7 @@
             // SỬA: Gọi API để cập nhật
             const response = await fetchWithAuth(`/api/admin/rooms/${roomId}`, {
                 method: 'PUT',
-                body: JSON.stringify(roomUpdatePayload)
+                body: roomUpdatePayload
             });
 
             if (!response.ok) {

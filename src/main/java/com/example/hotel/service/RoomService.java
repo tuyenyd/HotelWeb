@@ -13,4 +13,5 @@ public interface RoomService {
     RoomDto updateRoom(Long id, RoomDto roomDto);
     void deleteRoom(Long id);
     List<RoomDto> searchRooms(String roomNumber, Long roomTypeId, String status);
+    RoomDto updateRoomStatus(Long id, String status);
 }

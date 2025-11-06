@@ -292,7 +292,7 @@
                             <i class="bi bi-plus-circle"></i> Thêm tài khoản mới
                         </button>
                     </div>
-                    <p>Quản lý tài khoản truy cập hệ thống của nhân viên.</p>
+                    <p>Quản lý tài khoản truy cập hệ thống.</p>
 
                     <div id="tableContainer">
                     </div>
@@ -688,7 +688,7 @@
                 document.getElementById('fullName').value = account.fullName;
                 document.getElementById('username').value = account.username;
                 document.getElementById('email').value = account.email;
-                document.getElementById('username').disabled = true; // Không cho sửa username
+                document.getElementById('username').disabled = false; // Không cho sửa username
                 document.getElementById('password').value = "";
                 document.getElementById('password').required = false; // Mật khẩu không bắt buộc khi sửa
                 document.getElementById('password').placeholder = "Để trống để giữ nguyên mật khẩu";

@@ -942,7 +942,7 @@
             // SỬA LẠI: Thay thế 'fetch' bằng 'fetchWithAuth'
             const response = await fetchWithAuth(url, {
                 method: method,
-                body: JSON.stringify(roomData)
+                body: roomData
             });
 
             if (!response.ok) {

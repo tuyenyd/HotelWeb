@@ -919,11 +919,11 @@
         if (!roomStatusChartInstance) return;
         const statusCounts = getRoomStatusCounts();
         const chartData = [
-            { value: statusCounts.OCCUPIED, name: 'Đang sử dụng' },
-            { value: statusCounts.AVAILABLE, name: 'Trống' },
-            { value: statusCounts.MAINTENANCE, name: 'Bảo trì' },
-            { value: statusCounts.CLEANING, name: 'Đang dọn dẹp' },
-            { value: statusCounts.RESERVED, name: 'Đã đặt trước' }
+            { value: statusCounts.OCCUPIED, name: 'Đang sử dụng',itemStyle: { color: '#198754' } },
+            { value: statusCounts.AVAILABLE, name: 'Trống',itemStyle: { color: '#0dcaf0' } },
+            { value: statusCounts.MAINTENANCE, name: 'Bảo trì',itemStyle: { color: '#dc3545' } },
+            { value: statusCounts.CLEANING, name: 'Đang dọn dẹp',itemStyle: { color: '#ffc107' } },
+            { value: statusCounts.RESERVED, name: 'Đã đặt trước',itemStyle: { color: '#6f42c1' } }
         ].filter(item => item.value > 0);
 
         roomStatusChartInstance.setOption({

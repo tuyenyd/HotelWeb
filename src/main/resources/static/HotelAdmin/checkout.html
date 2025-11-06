@@ -323,42 +323,6 @@
 <script src="assets/js/main.js"></script>
 <script src="assets/js/auth.js"></script>
 <script>
-    // =========================================================================
-    // <<< THÊM HÀM HELPER ĐỂ GỌI API VỚI TOKEN >>>
-    // =========================================================================
-    /**
-     * Hàm helper để gọi fetch() tự động đính kèm token
-     * và xử lý lỗi 401/403 (chuyển về trang login).
-     */
-    async function fetchWithAuth(url, options = {}) {
-        const token = localStorage.getItem('jwtToken');
-        if (!token) {
-            console.error('Không tìm thấy token. Đang chuyển về trang đăng nhập.');
-            alert('Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.');
-            window.location.href = '/HotelAdmin/pages-login.html';
-            throw new Error('Chưa đăng nhập');
-        }
-
-        const headers = new Headers(options.headers || {});
-        // Thêm Content-Type nếu là POST/PUT/PATCH và có body
-        if (options.body && !headers.has('Content-Type')) {
-            headers.append('Content-Type', 'application/json');
-        }
-        headers.append('Authorization', `Bearer ${token}`);
-
-        const updatedOptions = { ...options, headers: headers };
-        const response = await fetch(url, updatedOptions);
-
-        if (response.status === 401 || response.status === 403) {
-            console.error('Lỗi 401/403. Token có thể hết hạn hoặc không hợp lệ.');
-            alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-            localStorage.removeItem('jwtToken');
-            window.location.href = '/HotelAdmin/pages-login.html';
-            throw new Error('Phiên đăng nhập hết hạn');
-        }
-        return response;
-    }
-    // =========================================================================
 
     // === CẤU HÌNH VÀ BIẾN TOÀN CỤC ===
     const API_BASE_URL = '/api/admin';
@@ -381,13 +345,13 @@
 
     function initializePageDefaults() {
         const today = new Date().toISOString().split('T')[0];
-        document.getElementById('filterCheckoutDateFrom').value = today;
-        document.getElementById('filterCheckoutDateTo').value = today;
+        document.getElementById('filterCheckoutDateFrom').value ;
+        document.getElementById('filterCheckoutDateTo').value ;
     }
 
     async function loadRoomTypes() {
         try {
-            const response = await fetchWithAuth(`${API_BASE_URL}/room-types`); // SỬA: Dùng fetchWithAuth
+            const response = await fetchWithAuth(`${API_BASE_URL}/room-types`);
             if (!response.ok) throw new Error('Lỗi tải loại phòng');
             roomTypes = await response.json();
             const select = document.getElementById('filterRoomType');
@@ -396,7 +360,8 @@
                 select.innerHTML += `<option value="${rt.id}">${rt.name}</option>`;
             });
         } catch (error) {
-            if (error.message !== 'Phiên đăng nhập hết hạn') {
+            // === SỬA LỖI GIỐNG CHECKIN.HTML ===
+            if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
                 console.error("Lỗi tải loại phòng:", error);
                 showAlert('Không thể tải danh sách loại phòng.', 'danger');
             }
@@ -443,7 +408,7 @@
         if (searchTerm) params.append('search', searchTerm);
 
         try {
-            const response = await fetchWithAuth(`${API_BASE_URL}/bookings?${params.toString()}`); // SỬA: Dùng fetchWithAuth
+            const response = await fetchWithAuth(`${API_BASE_URL}/bookings?${params.toString()}`);
             if (!response.ok) {
                 let errorMsg = 'Lỗi tải danh sách check-out.';
                 try { const errorData = await response.json(); errorMsg = errorData.message || errorMsg; } catch(e) {}
@@ -458,10 +423,10 @@
 
             renderCheckouts();
             renderPagination(pageData);
-            // updateCheckoutStatistics(allCheckoutBookings); // HÀM ĐÃ BỊ XÓA
 
         } catch (error) {
-            if (error.message !== 'Phiên đăng nhập hết hạn') {
+            // === SỬA LỖI GIỐNG CHECKIN.HTML ===
+            if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
                 console.error('Lỗi khi tải check-outs:', error);
                 showAlert(error.message || 'Có lỗi xảy ra khi tải dữ liệu.', 'danger');
                 document.getElementById('checkoutContainer').innerHTML = '';
@@ -602,7 +567,7 @@
         try {
             let booking = filteredCheckouts.find(b => b.id == bookingId);
             if (!booking) {
-                const response = await fetchWithAuth(`${API_BASE_URL}/bookings/${bookingId}`); // SỬA: Dùng fetchWithAuth
+                const response = await fetchWithAuth(`${API_BASE_URL}/bookings/${bookingId}`);
                 if (!response.ok) throw new Error('Không tìm thấy chi tiết đặt phòng.');
                 booking = await response.json();
             }
@@ -618,7 +583,8 @@
             `;
             new bootstrap.Modal(document.getElementById('bookingDetailModal')).show();
         } catch(error){
-            if (error.message !== 'Phiên đăng nhập hết hạn') {
+            // === SỬA LỖI GIỐNG CHECKIN.HTML ===
+            if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
                 showAlert(error.message || 'Lỗi khi xem chi tiết.', 'danger');
             }
         } finally {
@@ -673,9 +639,9 @@
 
         try {
             // Step 1: Update Booking Status
-            const responseBooking = await fetchWithAuth(`${API_BASE_URL}/bookings/${bookingId}/status`, { // SỬA: Dùng fetchWithAuth
+            const responseBooking = await fetchWithAuth(`${API_BASE_URL}/bookings/${bookingId}/status`, {
                 method: 'PATCH',
-                body: JSON.stringify({ status: 'CHECKED_OUT' })
+                body: { status: 'CHECKED_OUT' }
             });
             if (!responseBooking.ok) {
                 const errorData = await responseBooking.json();
@@ -686,9 +652,9 @@
             const roomId = currentProcessingBooking.roomId; // Make sure roomId is in your Booking DTO
             if (roomId && roomCondition) {
                 try {
-                    const responseRoom = await fetchWithAuth(`${API_BASE_URL}/rooms/${roomId}/status`, { // SỬA: Dùng fetchWithAuth
+                    const responseRoom = await fetchWithAuth(`${API_BASE_URL}/rooms/${roomId}/status`, {
                         method: 'PATCH',
-                        body: JSON.stringify({ status: roomCondition }) // e.g., 'CLEANING' or 'AVAILABLE'
+                        body: { status: roomCondition }
                     });
                     if (!responseRoom.ok) {
                         console.warn(`Không thể cập nhật trạng thái phòng ${roomId} sang ${roomCondition}.`);
@@ -706,7 +672,8 @@
             await loadCheckouts(true); // Refresh list
 
         } catch (error) {
-            if (error.message !== 'Phiên đăng nhập hết hạn') {
+            // === SỬA LỖI GIỐNG CHECKIN.HTML ===
+            if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
                 console.error('Lỗi khi xác nhận check-out:', error);
                 showAlert(error.message || 'Có lỗi xảy ra trong quá trình check-out.', 'danger');
             }
@@ -830,8 +797,8 @@
     // Hàm reset bộ lọc
     function resetFilters() {
         const today = new Date().toISOString().split('T')[0];
-        document.getElementById('filterCheckoutDateFrom').value = today;
-        document.getElementById('filterCheckoutDateTo').value = today;
+        document.getElementById('filterCheckoutDateFrom').value = today ;
+        document.getElementById('filterCheckoutDateTo').value = today ;
         document.getElementById('filterCheckoutStatus').value = 'all';
         document.getElementById('filterRoomType').value = '';
         document.getElementById('searchInput').value = '';
@@ -839,5 +806,6 @@
         applyFiltersAndFetch();
     }
 </script>
+
 </body>
 </html>

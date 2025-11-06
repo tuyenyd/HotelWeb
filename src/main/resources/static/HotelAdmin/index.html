@@ -425,7 +425,7 @@
 <script src="assets/vendor/php-email-form/validate.js"></script>
 
 <script src="assets/js/main.js"></script>
-
+<script src="assets/js/auth.js"></script>
 <script>
     // === CẤU HÌNH VÀ BIẾN TOÀN CỤC ===
     const API_BASE_URL = '/api/admin'; // Địa chỉ gốc API
@@ -441,34 +441,7 @@
     let datatableInstance = null; // Biến cho SimpleDatatables
 
     // Biến theo dõi trạng thái chuyển hướng
-    let isRedirectingForAuth = false;
 
-    // === HÀM FETCH VỚI XÁC THỰC (Giữ nguyên) ===
-    async function fetchWithAuth(url, options = {}) {
-        const token = localStorage.getItem('jwtToken');
-        const headers = { 'Content-Type': 'application/json', ...options.headers };
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        } else {
-            console.warn(`[AUTH] Không tìm thấy token cho yêu cầu tới ${url}.`);
-            if (!isRedirectingForAuth && !window.location.pathname.includes('login')) {
-                isRedirectingForAuth = true; alert('Không tìm thấy thông tin đăng nhập. Đang chuyển hướng...'); window.location.href = '/HotelAdmin/pages-login.html'; throw new Error('Unauthorized');
-            }
-        }
-        const finalOptions = { ...options, headers };
-        try {
-            const response = await fetch(url, finalOptions);
-            if (response.status === 401 && !isRedirectingForAuth) {
-                isRedirectingForAuth = true; console.error(`[AUTH] Lỗi 401 Unauthorized cho ${url}.`); alert('Phiên đăng nhập hết hạn.'); localStorage.removeItem('jwtToken'); localStorage.removeItem('currentUser'); window.location.href = '/HotelAdmin/pages-login.html'; throw new Error('Unauthorized');
-            }
-            if (!response.ok && response.status !== 401) {
-                console.error(`[AUTH] Lỗi HTTP ${response.status} cho ${url}`); let errorBody=`Lỗi ${response.status}`; try{const errorJson=await response.json();errorBody=errorJson.message||JSON.stringify(errorJson);}catch(e){try{errorBody=await response.text();}catch(e2){}} throw new Error(`Lỗi API (${url}): ${errorBody}`);
-            }
-            return response;
-        } catch (error) { if(error.name!=='AbortError'&&error.message!=='Unauthorized'){console.error(`[AUTH] Lỗi fetch/mạng cho ${url}:`,error);} throw error; }
-    }
-
-    // === HÀM KHỞI TẠO CHÍNH (ĐÃ THÊM HÀM MỚI) ===
     document.addEventListener('DOMContentLoaded', async () => {
         console.log("DOM đã tải. Bắt đầu khởi tạo dashboard...");
         showLoadingState(true);
@@ -496,77 +469,6 @@
         }
     });
 
-    // === ⭐ SỬA 5: Thêm hàm mới để tải profile từ localStorage ===
-    /**
-     * Tải thông tin user từ localStorage và cập nhật header
-     */
-    function loadProfileFromStorage() {
-        try {
-            const userString = localStorage.getItem('currentUser');
-            if (!userString) {
-                console.warn('Không tìm thấy "currentUser" trong localStorage...');
-                // (Giữ nguyên logic throw new Error...)
-                throw new Error('Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại.');
-            }
-
-            const user = JSON.parse(userString);
-
-            // --- Lấy các phần tử HTML ---
-            const profileName = document.getElementById('profileName');
-            const profileDropdownName = document.getElementById('profileDropdownName');
-            const profileDropdownRole = document.getElementById('profileDropdownRole');
-
-            // --- BỔ SUNG: Lấy phần tử ảnh ---
-            // Tìm tất cả ảnh profile trên header (có alt="Hồ sơ")
-            const profileImages = document.querySelectorAll('.header-nav img[alt="Hồ sơ"]');
-
-            // --- Cập nhật Text ---
-            if (profileName) profileName.textContent = user.fullName || "Người dùng";
-            if (profileDropdownName) profileDropdownName.textContent = user.fullName || "Người dùng";
-            if (profileDropdownRole) profileDropdownRole.textContent = user.role || "Chưa có vai trò";
-
-            // --- BỔ SUNG: Cập nhật Ảnh ---
-            if (profileImages.length > 0) {
-                let avatarSrc = 'assets/img/profile-img.jpg'; // Ảnh mặc định
-                if (user.avatarUrl) {
-                    // Đường dẫn ảnh (đã cấu hình trong MvcConfig.java)
-                    avatarSrc = `/avatars/${user.avatarUrl}`;
-                }
-
-                profileImages.forEach(img => {
-                    img.src = avatarSrc;
-                });
-            }
-
-        } catch (error) {
-            // (Giữ nguyên khối catch error)
-            console.error("Lỗi khi tải hồ sơ từ localStorage:", error);
-            localStorage.removeItem('jwtToken');
-            localStorage.removeItem('currentUser');
-            if (!window.location.pathname.includes('pages-login.html')) {
-                window.location.href = '/HotelAdmin/pages-login.html';
-            }
-        }
-    }
-    // === ⭐ SỬA 6: Thêm hàm mới để xử lý Logout ===
-    /**
-     * Gắn sự kiện cho nút Đăng xuất
-     */
-    function setupLogoutButton() {
-        const logoutBtn = document.getElementById('logoutButton');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                // Xóa cả token VÀ thông tin user
-                localStorage.removeItem('jwtToken');
-                localStorage.removeItem('currentUser');
-
-                alert('Bạn đã đăng xuất.');
-                window.location.href = '/HotelAdmin/pages-login.html';
-            });
-        }
-    }
 
 
     // === TẢI DỮ LIỆU (Giữ nguyên, lấy 1000 booking) ===
@@ -758,10 +660,19 @@
         try { revenueChartInstance.updateOptions({ xaxis:{categories:chartData.categories}, series:chartData.series, tooltip:{y:[{formatter:val=>`${((val||0)/1e6).toFixed(2)} triệu VND`},{formatter:val=>`${val||0} lượt`},{formatter:val=>`${val||0} khách hàng`}]} }); } catch(e) { console.error("Lỗi update ApexCharts:", e); }
     }
     function renderRoomStatusChart() {
-        if (!roomStatusChartInstance) { console.warn("Chưa thể cập nhật biểu đồ trạng thái phòng."); return; }
-        console.log("Cập nhật biểu đồ trạng thái phòng...");
-        const statusCounts = getRoomStatusCounts(); const chartData = [{value:statusCounts.OCCUPIED||0,name:'Đang sử dụng'},{value:statusCounts.AVAILABLE||0,name:'Trống'},{value:statusCounts.MAINTENANCE||0,name:'Bảo trì'},{value:statusCounts.CLEANING||0,nameS:'Đang dọn dẹp'},{value:statusCounts.RESERVED||0,name:'Đã đặt trước'}].filter(item=>item.value > 0);
-        try { if (chartData.length === 0) { roomStatusChartInstance.clear(); roomStatusChartInstance.setOption({ title:{text:'Không có dữ liệu',left:'center',top:'center',textStyle:{color:'#999',fontSize:14}}, series:[] }); } else { roomStatusChartInstance.setOption({ title:null, series:[{ data: chartData }] }); } } catch(e) { console.error("Lỗi update ECharts:", e); }
+        if (!roomStatusChartInstance) return;
+        const statusCounts = getRoomStatusCounts();
+        const chartData = [
+            { value: statusCounts.OCCUPIED, name: 'Đang sử dụng',itemStyle: { color: '#198754' } },
+            { value: statusCounts.AVAILABLE, name: 'Trống',itemStyle: { color: '#0dcaf0' } },
+            { value: statusCounts.MAINTENANCE, name: 'Bảo trì',itemStyle: { color: '#dc3545' } },
+            { value: statusCounts.CLEANING, name: 'Đang dọn dẹp',itemStyle: { color: '#ffc107' } },
+            { value: statusCounts.RESERVED, name: 'Đã đặt trước',itemStyle: { color: '#6f42c1' } }
+        ].filter(item => item.value > 0);
+
+        roomStatusChartInstance.setOption({
+            series: [{ data: chartData }]
+        });
     }
     function renderRecentBookings() {
         console.log("Render bảng đặt phòng gần đây...");

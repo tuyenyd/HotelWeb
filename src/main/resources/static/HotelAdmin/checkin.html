@@ -339,8 +339,8 @@
     function initializePageDefaults() {
         // Set default date range (e.g., today)
         const today = new Date().toISOString().split('T')[0];
-        document.getElementById('filterCheckinDateFrom').value = today;
-        document.getElementById('filterCheckinDateTo').value = today;
+        document.getElementById('filterCheckinDateFrom').value ;
+        document.getElementById('filterCheckinDateTo').value ;
     }
 
     async function loadRoomTypes() {
@@ -355,8 +355,11 @@
                 select.innerHTML += `<option value="${rt.id}">${rt.name}</option>`;
             });
         } catch (error) {
-            console.error("Lỗi tải loại phòng:", error);
-            showAlert('Không thể tải danh sách loại phòng.', 'danger');
+            // SỬA LỖI: Bọc trong kiểm tra
+            if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
+                console.error("Lỗi tải loại phòng:", error);
+                showAlert('Không thể tải danh sách loại phòng.', 'danger');
+            }
         }
     }
 
@@ -388,8 +391,6 @@
     }
 
     // === TẢI VÀ HIỂN THỊ DỮ LIỆU ===
-
-    // === TẢI VÀ HIỂN THỊ DỮ LIỆU (ĐÃ SỬA LỖI GỬI PARAMETER) ===
     async function loadCheckins(resetPage = false) {
         showLoading();
         if (resetPage) currentPage = 0;
@@ -412,22 +413,14 @@
         if (fromDate) params.append('checkinFrom', fromDate);
         if (toDate) params.append('checkinTo', toDate);
         if (roomTypeId) params.append('roomTypeId', roomTypeId);
-
-        // === SỬA LỖI TẠI ĐÂY ===
-        // Chỉ thêm tham số 'search' nếu searchTerm không rỗng
         if (searchTerm) {
-            params.append('search', searchTerm); // Gửi đúng tên tham số là 'search'
+            params.append('search', searchTerm);
         }
-        // ========================
-
-        // Bộ lọc 'checkinStatus' và 'showOverdueOnly' sẽ được xử lý phía client sau khi fetch
 
         try {
-            // Sử dụng endpoint /search
             const response = await fetchWithAuth(`${API_BASE_URL}/bookings?${params.toString()}`);
 
             if (!response.ok) {
-                // Xử lý lỗi (giữ nguyên như code cũ của bạn)
                 let errorMsg = 'Lỗi tải danh sách check-in.';
                 try {
                     const errorData = await response.json();
@@ -440,19 +433,20 @@
             allCheckinBookings = pageData.content || [];
             totalPages = pageData.totalPages || 0;
 
-            // Apply client-side filters for checkin status (pending/overdue)
             applyClientSideFilters(checkinStatusFilter, showOverdueOnly);
 
             renderCheckins(); // Render the filtered data
             renderPagination(pageData);
-            // HÀM updateStatistics() ĐÃ BỊ XÓA
 
         } catch (error) {
-            console.error('Lỗi khi tải check-ins:', error);
-            showAlert(error.message || 'Có lỗi xảy ra khi tải dữ liệu.', 'danger');
-            document.getElementById('checkinContainer').innerHTML = ''; // Clear content on error
-            document.getElementById('pagination').innerHTML = '';
-            showEmptyStateIfNeeded();
+            // SỬA LỖI: Bọc trong kiểm tra
+            if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
+                console.error('Lỗi khi tải check-ins:', error);
+                showAlert(error.message || 'Có lỗi xảy ra khi tải dữ liệu.', 'danger');
+                document.getElementById('checkinContainer').innerHTML = ''; // Clear content on error
+                document.getElementById('pagination').innerHTML = '';
+                showEmptyStateIfNeeded();
+            }
         } finally {
             hideLoading();
         }
@@ -501,21 +495,17 @@
 
     function createCheckinElement(booking) {
         const colDiv = document.createElement('div');
-        // ===== 🌟 ĐÃ SỬA LỖI LAYOUT BƯỚC 2 🌟 =====
-        colDiv.className = 'col'; // Sửa từ 'col-xl-6 mb-4' thành 'col'
+        colDiv.className = 'col';
 
         const todayStr = new Date().toISOString().split('T')[0];
-        // === SỬA TÊN CỘT ===
         const isOverdue = booking.checkin < todayStr; // Use booking.checkin
         const checkinStatus = isOverdue ? 'overdue' : 'pending';
 
-        // Gán nội dung thẻ (giữ nguyên)
         colDiv.innerHTML = `
         <div class="card checkin-card ${isOverdue ? 'overdue-booking' : ''}">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>
-
                         <h6 class="card-title mb-1">${booking.code || 'N/A'}</h6>
                         <small class="text-muted">Ngày check-in: ${formatDate(booking.checkin)}</small>
                     </div>
@@ -525,10 +515,8 @@
                         </span>
                     </div>
                 </div>
-
                 <div class="customer-info mb-3">
                     <div class="d-flex align-items-center mb-2">
-
                          <div class="customer-avatar ${getAvatarColor(getInitials(booking.customer || ''))} me-2">
                             ${getInitials(booking.customer || '?')}
                         </div>
@@ -537,26 +525,19 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="booking-info">
                     <div >
                         <div class="row">
-
                             <div class="fw-bold">${booking.roomType || 'N/A'} ${booking.roomNumber || 'N/A'}</div>
                         </div><br>
                         <div class="row">
                             <small class="text-muted">Thời gian</small>
-
                             <div>${formatDate(booking.checkin)} - ${formatDate(booking.checkout)}</div>
-
                         </div>
                     </div>
-
                 </div>
-
                 <div class="checkin-actions mt-3">
                     <div class="btn-group w-100">
-
                         <button class="btn btn-sm btn-outline-primary" data-booking-id="${booking.id}">
                             <i class="bi bi-eye"></i>
                         </button>
@@ -575,7 +556,6 @@
     }
 
     // === XỬ LÝ HÀNH ĐỘNG ===
-
     function handleCheckinActions(e) {
         const button = e.target.closest('button');
         if (!button) return;
@@ -595,21 +575,16 @@
     async function viewBookingDetail(bookingId) {
         showLoading();
         try {
-            // Find in the current list first
-            let booking = filteredCheckins.find(b => b.id == bookingId); // Use filtered list
-
-            // If not found (e.g., loaded via different filter), fetch directly
+            let booking = filteredCheckins.find(b => b.id == bookingId);
             if (!booking) {
                 console.log(`Booking ${bookingId} not in current filter, fetching details...`)
                 const response = await fetchWithAuth(`${API_BASE_URL}/bookings/${bookingId}`);
                 if (!response.ok) throw new Error('Không tìm thấy chi tiết đặt phòng.');
-                booking = await response.json(); // Use the fetched details
+                booking = await response.json();
             }
-
-            currentProcessingBooking = booking; // Store the correct booking object
+            currentProcessingBooking = booking;
 
             const modalContent = document.getElementById('bookingDetailContent');
-            // === SỬA TÊN CỘT ===
             modalContent.innerHTML = `
             <div class="row">
                 <div class="col-md-6">
@@ -617,7 +592,6 @@
                     <div class="mb-3">
                         <strong>Họ tên:</strong> ${booking.customer || 'N/A'}<br>
                         <strong>SĐT:</strong> ${booking.phone || 'N/A'}<br>
-
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -633,44 +607,39 @@
                     </div>
                 </div>
             </div>
-
             ${booking.notes ? `<div class="row"><div class="col-12"><h6>Ghi chú</h6><p>${booking.notes}</p></div></div>` : ''}
-        `;
-
+            `;
             new bootstrap.Modal(document.getElementById('bookingDetailModal')).show();
         } catch(error){
-            showAlert(error.message || 'Lỗi khi xem chi tiết.', 'danger');
+            // SỬA LỖI: Bọc trong kiểm tra
+            if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
+                showAlert(error.message || 'Lỗi khi xem chi tiết.', 'danger');
+            }
         } finally {
             hideLoading();
         }
     }
-    // Function to trigger check-in modal from detail modal
+
     function processCheckinFromDetail() {
         const detailModal = bootstrap.Modal.getInstance(document.getElementById('bookingDetailModal'));
         if (detailModal) detailModal.hide();
-
-        // Ensure currentProcessingBooking is set
         if (currentProcessingBooking) {
-            // Use setTimeout to allow the first modal to fully hide
             setTimeout(() => {
                 openCheckinModal(currentProcessingBooking.id);
-            }, 300); // Adjust timeout if needed
+            }, 300);
         } else {
             showAlert('Không có thông tin đặt phòng để check-in.', 'warning');
         }
     }
 
-
     function openCheckinModal(bookingId) {
-        // Find booking data using the CORRECT list (filteredCheckins)
-        const booking = filteredCheckins.find(b => b.id == bookingId); // Use filtered list
+        const booking = filteredCheckins.find(b => b.id == bookingId);
         if (!booking) {
             showAlert('Không tìm thấy thông tin đặt phòng trong danh sách hiện tại!', 'danger');
             return;
         }
-        currentProcessingBooking = booking; // Store for confirmation
+        currentProcessingBooking = booking;
 
-        // === SỬA TÊN CỘT ===
         document.getElementById('checkinCustomerInfo').innerHTML = `
         <strong>Họ tên:</strong> ${booking.customer || 'N/A'}<br>
         <strong>SĐT:</strong> ${booking.phone || 'N/A'}<br>
@@ -681,12 +650,12 @@
         <strong class="text-primary">Tổng tiền: ${formatCurrency(booking.total || 0)}</strong><br>
         <small>(Kiểm tra thanh toán nếu cần)</small>
     `;
-
         document.getElementById('confirmCheckin').checked = false;
         document.getElementById('checkinNotes').value = '';
-
         new bootstrap.Modal(document.getElementById('checkinModal')).show();
     }
+
+    // === BƯỚC 1: SỬA LỖI HÀM NÀY ===
     async function confirmCheckinAction() {
         if (!document.getElementById('confirmCheckin').checked) {
             showAlert('Vui lòng xác nhận các thông tin trước khi check-in!', 'warning');
@@ -698,17 +667,16 @@
         }
 
         const bookingId = currentProcessingBooking.id;
-        const checkinNotes = document.getElementById('checkinNotes').value; // Get notes if needed
+        const checkinNotes = document.getElementById('checkinNotes').value;
 
-        showLoading(); // Show loading indicator
+        showLoading();
         const checkinModalInstance = bootstrap.Modal.getInstance(document.getElementById('checkinModal'));
-
 
         try {
             // Call API to update status
             const response = await fetchWithAuth(`${API_BASE_URL}/bookings/${bookingId}/status`, {
                 method: 'PATCH',
-                body: JSON.stringify({ status: 'CHECKED_IN' }) // Update status to CHECKED_IN
+                body: { status: 'CHECKED_IN' } // <-- SỬA LẠI: Gửi đối tượng thô
             });
 
             if (!response.ok) {
@@ -716,17 +684,19 @@
                 throw new Error(errorData.message || 'Lỗi khi cập nhật trạng thái check-in.');
             }
 
-            // Successfully checked in
-            if(checkinModalInstance) checkinModalInstance.hide(); // Hide modal on success
+            if(checkinModalInstance) checkinModalInstance.hide();
 
             showAlert('Check-in thành công!', 'success');
             await loadCheckins(true); // Refresh list
 
         } catch (error) {
-            console.error('Lỗi khi xác nhận check-in:', error);
-            showAlert(error.message || 'Có lỗi xảy ra trong quá trình check-in.', 'danger');
+            // SỬA LỖI: Bọc trong kiểm tra
+            if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
+                console.error('Lỗi khi xác nhận check-in:', error);
+                showAlert(error.message || 'Có lỗi xảy ra trong quá trình check-in.', 'danger');
+            }
         } finally {
-            hideLoading(); // Hide loading indicator
+            hideLoading();
         }
     }
 
@@ -734,60 +704,45 @@
     function callCustomer(phone) {
         if (phone) {
             showAlert(`Đang gọi đến số: ${phone}... (Giả lập)`, 'info');
-            // In a real app, you might trigger a call using a browser extension or API
-            // window.location.href = `tel:${phone}`; // This might work on mobile
         } else {
             showAlert('Không có số điện thoại để gọi.', 'warning');
         }
     }
 
     // === PHÂN TRANG ===
-
     function renderPagination(pageData) {
         const paginationUl = document.getElementById('pagination');
-        paginationUl.innerHTML = ''; // Clear old pagination
+        paginationUl.innerHTML = '';
         totalPages = pageData.totalPages || 0;
         currentPage = pageData.number || 0;
+        if (totalPages <= 1) return;
 
-        if (totalPages <= 1) return; // No pagination needed for 0 or 1 page
-
-        // Previous Button
         paginationUl.innerHTML += `
             <li class="page-item ${pageData.first ? 'disabled' : ''}">
                 <a class="page-link" href="#" aria-label="Previous" onclick="changePage(${currentPage - 1}); return false;">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>`;
-
-        // Page Numbers (simplified example: show current, +/- 1, first, last)
-        const maxPagesToShow = 5; // Adjust as needed
+        const maxPagesToShow = 5;
         let startPage = Math.max(0, currentPage - Math.floor(maxPagesToShow / 2));
         let endPage = Math.min(totalPages - 1, startPage + maxPagesToShow - 1);
-        // Adjust startPage if endPage is at the limit
         if (endPage === totalPages - 1) {
             startPage = Math.max(0, endPage - maxPagesToShow + 1);
         }
-
-
         if (startPage > 0) {
             paginationUl.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(0); return false;">1</a></li>`;
             if (startPage > 1) paginationUl.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
         }
-
         for (let i = startPage; i <= endPage; i++) {
             paginationUl.innerHTML += `
                 <li class="page-item ${i === currentPage ? 'active' : ''}">
                     <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i + 1}</a>
                 </li>`;
         }
-
         if (endPage < totalPages - 1) {
             if (endPage < totalPages - 2) paginationUl.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
             paginationUl.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${totalPages - 1}); return false;">${totalPages}</a></li>`;
         }
-
-
-        // Next Button
         paginationUl.innerHTML += `
             <li class="page-item ${pageData.last ? 'disabled' : ''}">
                 <a class="page-link" href="#" aria-label="Next" onclick="changePage(${currentPage + 1}); return false;">
@@ -801,8 +756,6 @@
         currentPage = page;
         loadCheckins(false); // Fetch data for the new page
     }
-
-    // === CẬP NHẬT THỐNG KÊ (ĐÃ BỊ XÓA) ===
 
     // === HÀM TIỆN ÍCH ===
     function showLoading() { document.getElementById('loadingSpinner').style.display = 'block'; }
@@ -824,12 +777,11 @@
     function formatDate(dateString) {
         if (!dateString) return 'N/A';
         try {
-            // Assuming dateString is 'YYYY-MM-DD'
             const [year, month, day] = dateString.split('-');
             return `${day}/${month}/${year}`;
         } catch (e) {
             console.warn("Lỗi format ngày:", dateString);
-            return dateString; // Return original if format fails
+            return dateString;
         }
     }
     function calculateNights(checkinStr, checkoutStr) {
@@ -838,7 +790,7 @@
             const checkout = new Date(checkoutStr + 'T00:00:00');
             const diffTime = Math.abs(checkout - checkin);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays > 0 ? diffDays : 1; // Ensure at least 1 night
+            return diffDays > 0 ? diffDays : 1;
         } catch (e) {
             return '?';
         }
@@ -847,13 +799,13 @@
         if (amount == null || isNaN(amount)) return '0 VNĐ';
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
     }
-    function getCheckinStatusBadgeClass(status) { // Status here is 'pending' or 'overdue'
+    function getCheckinStatusBadgeClass(status) {
         return status === 'overdue' ? 'bg-danger' : 'bg-warning';
     }
-    function getCheckinStatusText(status) { // Status here is 'pending' or 'overdue'
+    function getCheckinStatusText(status) {
         return status === 'overdue' ? 'Quá hạn' : 'Chờ check-in';
     }
-    function getStatusText(apiStatus) { // For detail modal using API status
+    function getStatusText(apiStatus) {
         const texts = {
             'PENDING': 'Đang chờ', 'CONFIRMED': 'Đã xác nhận', 'CHECKED_IN': 'Đã check-in',
             'CHECKED_OUT': 'Đã check-out', 'CANCELLED': 'Đã hủy'
@@ -867,7 +819,6 @@
     }
     function getAvatarColor(initials) {
         const colors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-info', 'bg-danger', 'bg-secondary', 'bg-dark'];
-        // Simple hash function for consistent color based on initials
         let hash = 0;
         for (let i = 0; i < initials.length; i++) {
             hash = initials.charCodeAt(i) + ((hash << 5) - hash);
@@ -875,7 +826,7 @@
         const index = Math.abs(hash % colors.length);
         return colors[index];
     }
-    function showAlert(message, type = 'info') { // Default to 'info'
+    function showAlert(message, type = 'info') {
         const existingAlert = document.getElementById('dynamicAlert');
         if(existingAlert) existingAlert.remove();
 
@@ -890,43 +841,12 @@
         `;
         document.body.appendChild(alert);
 
-        // Auto-dismiss after 5 seconds
         setTimeout(() => {
             const currentAlert = document.getElementById('dynamicAlert');
             if (currentAlert) {
                 bootstrap.Alert.getOrCreateInstance(currentAlert).close();
             }
         }, 5000);
-    }
-
-    // HÀM fetchWithAuth (Được gọi bởi các hàm khác)
-    async function fetchWithAuth(url, options = {}) {
-        const token = localStorage.getItem('jwtToken');
-        if (!token) {
-            console.error('Không tìm thấy token. Đang chuyển về trang đăng nhập.');
-            alert('Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.');
-            window.location.href = '/HotelAdmin/pages-login.html';
-            throw new Error('Chưa đăng nhập');
-        }
-
-        const headers = new Headers(options.headers || {});
-        // Thêm Content-Type nếu là POST/PUT/PATCH và có body
-        if (options.body && !headers.has('Content-Type')) {
-            headers.append('Content-Type', 'application/json');
-        }
-        headers.append('Authorization', `Bearer ${token}`);
-
-        const updatedOptions = { ...options, headers: headers };
-        const response = await fetch(url, updatedOptions);
-
-        if (response.status === 401 || response.status === 403) {
-            console.error('Lỗi 401/403. Token có thể hết hạn hoặc không hợp lệ.');
-            alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-            localStorage.removeItem('jwtToken');
-            window.location.href = '/HotelAdmin/pages-login.html';
-            throw new Error('Phiên đăng nhập hết hạn');
-        }
-        return response;
     }
 </script>
 </body>
