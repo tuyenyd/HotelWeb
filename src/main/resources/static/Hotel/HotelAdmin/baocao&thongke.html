@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Báo cáo & Thống kê - Quản lý Khách sạn</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <link href="assets/img/img.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center">
+            <img src="assets/img/logo.png" alt="Logo">
+            <span class="d-none d-lg-block">Grandoria</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><div class="search-bar">
+    <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Tìm kiếm đặt phòng, khách hàng..." title="Nhập từ khóa tìm kiếm">
+        <button type="submit" title="Tìm kiếm"><i class="bi bi-search"></i></button>
+    </form>
+</div><nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+            <a class="nav-link nav-icon search-bar-toggle " href="#">
+                <i class="bi bi-search"></i>
+            </a>
+        </li><li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            <span class="badge bg-primary badge-number">3</span>
+        </a><ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+        <li class="dropdown-header">
+            Bạn có 3 thông báo mới
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">Xem tất cả</span></a>
+        </li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-exclamation-circle text-warning"></i>
+            <div>
+                <h4>Đặt phòng mới</h4>
+                <p>Khách hàng Nguyễn Văn A vừa đặt phòng Deluxe</p>
+                <p>5 phút trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-x-circle text-danger"></i>
+            <div>
+                <h4>Hủy đặt phòng</h4>
+                <p>Đặt phòng #2457 đã bị hủy</p>
+                <p>2 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-check-circle text-success"></i>
+            <div>
+                <h4>Phản hồi mới</h4>
+                <p>Bạn có 2 đánh giá mới từ khách hàng</p>
+                <p>4 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li class="dropdown-footer">
+            <a href="#">Hiển thị tất cả thông báo</a>
+        </li>
+    </ul></li><li class="nav-item dropdown pe-3">
+
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/profile-img.jpg" alt="Hồ sơ" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2" id="profileName">Đang tải...</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+                <h6 id="profileDropdownName">...</h6>
+                <span id="profileDropdownRole">...</span>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-person"></i>
+                    <span>Hồ sơ của tôi</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-gear"></i>
+                    <span>Cài đặt tài khoản</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="#" id="logoutButton">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </li>
+        </ul></li></ul>
+</nav>
+</header><aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="index.html">
+                <i class="bi bi-house-door"></i>
+                <span>Bảng Điều Khiển</span>
+            </a>
+        </li><li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#booking-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-calendar-check"></i><span>Quản lý Đặt phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="booking-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="tatcadatphong.html">
+                    <i class="bi bi-circle"></i><span>Tất cả đặt phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="checkin.html">
+                    <i class="bi bi-circle"></i><span>Check-in</span>
+                </a>
+            </li>
+            <li>
+                <a href="checkout.html">
+                    <i class="bi bi-circle"></i><span>Check-out</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#room-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-door-closed"></i><span>Quản lý Phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="room-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="danhsachphong.html">
+                    <i class="bi bi-circle"></i><span>Danh sách phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="loaiphong.html">
+                    <i class="bi bi-circle"></i><span>Loại phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="tinhtrangphong.html">
+                    <i class="bi bi-circle"></i><span>Tình trạng phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="giaphong.html">
+                    <i class="bi bi-circle"></i><span>Giá phòng</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#customer-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-people"></i><span>Quản lý Khách hàng</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="customer-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="danhsachkhachhang.html">
+                    <i class="bi bi-circle"></i><span>Danh sách khách hàng</span>
+                </a>
+            </li>
+            <li>
+                <a href="chuongtrinhthanhvien.html">
+                    <i class="bi bi-circle"></i><span>Chương trình thành viên</span>
+                </a>
+            </li>
+            <li>
+                <a href="danhgia&phanhoi.html">
+                    <i class="bi bi-circle"></i><span>Đánh giá & Phản hồi</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-item">
+        <a class="nav-link " href="baocao&thongke.html">
+            <i class="bi bi-bar-chart"></i>
+            <span>Báo cáo & Thống kê</span>
+        </a>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-cash-coin"></i><span>Tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="finance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="finance-invoices.html">
+                    <i class="bi bi-circle"></i><span>Hóa đơn</span>
+                </a>
+            </li>
+            <li>
+                <a href="finance-payments.html">
+                    <i class="bi bi-circle"></i><span>Thanh toán</span>
+                </a>
+            </li>
+            <li>
+                <a href="finance-revenue.html">
+                    <i class="bi bi-circle"></i><span>Doanh thu</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-heading">Trang</li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="users-profile.html">
+                <i class="bi bi-person"></i>
+                <span>Hồ sơ</span>
+            </a>
+        </li><li class="nav-item">
+        <a class="nav-link collapsed" href="pages-contact.html">
+            <i class="bi bi-envelope"></i>
+            <span>Liên hệ</span>
+        </a>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" href="users.html">
+            <i class="bi bi-person-gear"></i>
+            <span>Nhân viên</span>
+        </a>
+    </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="taikhoan.html">
+                <i class="bi bi-person-badge"></i>
+                <span>Tài khoản</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="settings.html">
+                <i class="bi bi-gear"></i>
+                <span>Cài đặt</span>
+            </a>
+        </li>
+    </ul>
+
+</aside><main id="main" class="main">
+    <div class="pagetitle d-flex justify-content-between align-items-center">
+        <h1>Báo cáo & Thống kê</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                <li class="breadcrumb-item active">Báo cáo & Thống kê</li>
+            </ol>
+        </nav>
+    </div><section class="section dashboard">
+    <div class="row">
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card info-card revenue-card">
+                <div class="card-body">
+                    <h5 class="card-title">Doanh thu <span>| Năm 2025</span></h5>
+                    <div class="d-flex align-items-center">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                        <div class="ps-3">
+                            <h6 id="revenue">0 VNĐ</h6>
+                            <span class="text-muted small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><div class="col-lg-4 col-md-6">
+        <div class="card info-card bookings-card">
+            <div class="card-body">
+                <h5 class="card-title">Đặt phòng <span>| Năm 2025</span></h5>
+                <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="ps-3">
+                        <h6 id="totalBookings">0</h6>
+                        <span class="text-muted small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card info-card customers-card">
+                <div class="card-body">
+                    <h5 class="card-title">Tổng số khách <span>| Năm 2025</span></h5>
+                    <div class="d-flex align-items-center">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="ps-3">
+                            <h6 id="totalGuestsCard">0</h6>
+                            <span class="small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="filter">
+                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li class="dropdown-header text-start">
+                            <h6>Lọc</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Hôm nay</a></li>
+                        <li><a class="dropdown-item" href="#">Tháng này</a></li>
+                        <li><a class="dropdown-item" href="#">Năm nay</a></li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Báo cáo Doanh thu <span>/Tháng này</span></h5>
+
+                    <div id="revenueChart"></div>
+
+                </div>
+            </div>
+        </div><div class="col-lg-4">
+        <div class="card">
+            <div class="filter">
+                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                        <h6>Lọc</h6>
+                    </li>
+                    <li><a class="dropdown-item" href="#">Tất cả</a></li>
+                    <li><a class="dropdown-item" href="#">Sẵn sàng</a></li>
+                    <li><a class="dropdown-item" href="#">Đang sử dụng</a></li>
+                </ul>
+            </div>
+
+            <div class="card-body">
+                <h5 class="card-title">Tình trạng Phòng <span>| Hôm nay</span></h5>
+
+                <div id="roomStatusChart" style="min-height: 400px;" class="echart"></div>
+
+            </div>
+        </div>
+    </div></div>
+
+    <div class="row mb-4 align-items-end">
+        <div class="col-lg-3 col-md-4">
+            <label for="yearFilterSelect" class="form-label fw-bold">Chọn năm:</label>
+            <select id="yearFilterSelect" class="form-select">
+            </select>
+        </div>
+
+        <div class="col-lg-3 col-md-4" id="specificFilterArea">
+            <div id="monthFilterContainer">
+                <label for="monthFilterSelect" class="form-label fw-bold">Chọn tháng:</label>
+                <select id="monthFilterSelect" class="form-select">
+                    <option value="all">Tất cả 12 tháng</option>
+                </select>
+            </div>
+            <div id="quarterFilterContainer" style="display: none;">
+                <label for="quarterFilterSelect" class="form-label fw-bold">Chọn quý:</label>
+                <select id="quarterFilterSelect" class="form-select">
+                    <option value="all">Tất cả 4 quý</option>
+                    <option value="1">Quý 1</option>
+                    <option value="2">Quý 2</option>
+                    <option value="3">Quý 3</option>
+                    <option value="4">Quý 4</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-4">
+            <ul class="nav nav-pills" id="reportTypeTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link report-tab-trigger active" data-report-type="month" type="button">
+                        Theo Tháng
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link report-tab-trigger" data-report-type="quarter" type="button">
+                        Theo Quý
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link report-tab-trigger" data-report-type="year" type="button">
+                        Tổng quan 5 năm
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Báo cáo doanh thu chi tiết
+                        <button id="exportExcelBtn" class="btn btn-success btn-sm float-end">
+                            <i class="bi bi-file-earmark-excel"></i> Xuất Excel
+                        </button>
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="reportTable">
+                            <thead>
+                            <tr>
+                                <th>Tháng</th>
+                                <th>Doanh thu (triệu VND)</th>
+                                <th>Số lượt đặt phòng</th>
+                                <th>Số khách</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+</main>
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Bản quyền <strong><span>HotelAdmin</span></strong>. Tất cả các quyền được bảo lưu
+    </div>
+    <div class="credits">
+        Thiết kế bởi <a href="#">Nhóm Phát triển</a>
+    </div>
+</footer><a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/chart.js/chart.umd.js"></script>
+<script src="assets/vendor/echarts/echarts.min.js"></script>
+<script src="assets/vendor/quill/quill.js"></script>
+<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/auth.js"></script>
+
+<script>
+    // === CẤU HÌNH VÀ BIẾN TOÀN CỤC ===
+    const API_BASE_URL = '/api/admin'; // Địa chỉ gốc API
+    let allBookings = [];
+    let allCustomers = [];
+    let allRooms = [];
+    let aggregatedReportData = { month: [], quarter: [], year: [] }; // Dữ liệu tổng hợp
+
+    // === SỬA ĐỔI: Thêm 3 biến state mới ===
+    let selectedReportType = 'month'; // 'month', 'quarter', 'year'
+    let selectedYear = new Date().getFullYear();
+    let selectedMonth = 'all';
+    let selectedQuarter = 'all';
+
+
+    // Biến cho biểu đồ (để có thể cập nhật)
+    let revenueChartInstance = null;
+    let roomStatusChartInstance = null;
+
+    // === HÀM KHỞI TẠO CHÍNH ===
+    document.addEventListener('DOMContentLoaded', async () => {
+        showLoadingState(true); // Hiển thị trạng thái tải
+        try {
+            // === SỬA ĐỔI: Thêm 2 hàm populate ===
+            populateYearFilter();
+            populateMonthFilter();
+
+            await fetchDashboardData(); // Tải tất cả dữ liệu cần thiết
+            initializeCharts();      // Khởi tạo cấu trúc biểu đồ
+            setupEventListeners();     // Gắn các sự kiện
+            updateReport();          // Render lần đầu
+        } catch (error) {
+            console.error("Lỗi khởi tạo dashboard:", error);
+            alert("Không thể tải dữ liệu cho trang báo cáo. Vui lòng thử lại. Lỗi: " + error.message);
+        } finally {
+            showLoadingState(false); // Ẩn trạng thái tải
+        }
+    });
+
+    // === HÀM MỚI: Điền 5 năm vào dropdown ===
+    function populateYearFilter() {
+        const select = document.getElementById('yearFilterSelect');
+        const currentYear = new Date().getFullYear();
+        selectedYear = currentYear; // Đặt năm được chọn mặc định là năm nay
+
+        for (let i = 0; i < 5; i++) {
+            const year = currentYear - i;
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = `Năm ${year}`;
+            select.appendChild(option);
+        }
+    }
+
+    // === HÀM MỚI: Điền 12 tháng vào dropdown ===
+    function populateMonthFilter() {
+        const select = document.getElementById('monthFilterSelect');
+        for (let i = 1; i <= 12; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `Tháng ${i}`;
+            select.appendChild(option);
+        }
+    }
+
+
+    // === TẢI DỮ LIỆU (Giữ nguyên) ===
+    async function fetchDashboardData() {
+        try {
+            const [bookingsResponse, customersResponse, roomsResponse] = await Promise.all([
+                fetchWithAuth(`${API_BASE_URL}/bookings?page=0&size=10000`),
+                fetchWithAuth(`${API_BASE_URL}/customers`),
+                fetchWithAuth(`${API_BASE_URL}/rooms`)
+            ]);
+
+            if (!bookingsResponse.ok) throw new Error(`Lỗi tải đặt phòng: ${bookingsResponse.statusText}`);
+            if (!customersResponse.ok) throw new Error(`Lỗi tải khách hàng: ${customersResponse.statusText}`);
+            if (!roomsResponse.ok) throw new Error(`Lỗi tải phòng: ${roomsResponse.statusText}`);
+
+            const bookingsPage = await bookingsResponse.json();
+            allBookings = bookingsPage.content || [];
+            allCustomers = await customersResponse.json();
+            allRooms = await roomsResponse.json();
+
+            // Log chẩn đoán (bạn có thể xóa dòng này nếu muốn)
+            if (allBookings.length > 0) {
+                console.log("Mẫu booking đầu tiên:", allBookings[0]);
+            }
+            console.log("Dữ liệu đã tải:", { allBookings, allCustomers, allRooms });
+            processBookingData();
+
+        } catch (error) {
+            console.error("Lỗi khi tải dữ liệu dashboard:", error);
+            throw error;
+        }
+    }
+
+    // === XỬ LÝ VÀ TỔNG HỢP DỮ LIỆU (ĐÃ SỬA TÊN TRƯỜNG) ===
+    function processBookingData() {
+        const monthlyData = {};
+        const quarterlyData = {};
+        const yearlyData = {};
+
+        allBookings.forEach(booking => {
+            const isValidBooking = booking.status === 'checked-out';
+            const revenue = isValidBooking ? (parseFloat(booking.total) || 0) : 0;
+            const guestCount = (parseInt(booking.soNguoiLon) || 0) + (parseInt(booking.soTreEm) || 0);
+            // 1. Mặc định dùng ngày tạo.
+            // 2. Nếu có ngày checkin (viết thường), dùng ngày checkin.
+            // 3. Nếu đã check-out và có ngày checkout, dùng ngày checkout.
+            let relevantDateString = booking.created; // Mặc định cuối cùng
+
+           /*if (booking.checkin) {
+                // Nếu có ngày check-in, ưu tiên dùng nó cho các đặt phòng chưa hoàn tất
+                relevantDateString = booking.checkin;
+            }*/
+
+            if (booking.status === 'checked-out' && booking.checkout) {
+                // Nếu đã check-out, dùng ngày check-out để ghi nhận doanh thu
+                relevantDateString = booking.checkout;
+            }
+
+            const bookingDate = parseVNDateTime(relevantDateString);
+
+            if (!bookingDate) {
+                console.warn("Không thể phân tích ngày:", relevantDateString, "cho booking:", booking.code);
+                return;
+            }
+
+            const year = bookingDate.getFullYear();
+            const month = bookingDate.getMonth() + 1;
+            const quarter = Math.ceil(month / 3);
+
+            const yearKey = `${year}`;
+            const quarterKey = `${year}-Q${quarter}`;
+            const monthKey = `${year}-${String(month).padStart(2, '0')}`; // VD: "2025-01"
+
+            if (!yearlyData[yearKey]) yearlyData[yearKey] = { period: `Năm ${year}`, revenue: 0, bookings: 0, customerIds: new Set(), totalGuests: 0 };
+            if (!quarterlyData[quarterKey]) quarterlyData[quarterKey] = { period: `Quý ${quarter}/${year}`, key: quarterKey, revenue: 0, bookings: 0, customerIds: new Set(), totalGuests: 0 };
+            if (!monthlyData[monthKey]) monthlyData[monthKey] = { period: `Tháng ${month}/${year}`, key: monthKey, revenue: 0, bookings: 0, customerIds: new Set(), totalGuests: 0 };
+
+            if (isValidBooking) {
+                yearlyData[yearKey].revenue += revenue;
+                quarterlyData[quarterKey].revenue += revenue;
+                monthlyData[monthKey].revenue += revenue;
+
+                yearlyData[yearKey].customerIds.add(booking.customerId);
+                quarterlyData[quarterKey].customerIds.add(booking.customerId);
+                monthlyData[monthKey].customerIds.add(booking.customerId);
+
+                yearlyData[yearKey].totalGuests += guestCount;
+                quarterlyData[quarterKey].totalGuests += guestCount;
+                monthlyData[monthKey].totalGuests += guestCount;
+            }
+
+            yearlyData[yearKey].bookings++;
+            quarterlyData[quarterKey].bookings++;
+            monthlyData[monthKey].bookings++;
+        });
+
+        const formatAggregatedData = (data) => {
+            const sortedKeys = Object.keys(data).sort();
+            return sortedKeys.map(key => {
+                const item = data[key];
+                return {
+                    ...item,
+                    revenueDisplay: (item.revenue / 1000000).toFixed(2),
+                    revenueRaw: item.revenue,
+                    customers: item.customerIds.size, // Số khách hàng unique
+                    totalGuests: item.totalGuests   // Tổng số khách (người lớn + trẻ em)
+                };
+            });
+        };
+
+        aggregatedReportData.year = formatAggregatedData(yearlyData);
+        aggregatedReportData.quarter = formatAggregatedData(quarterlyData);
+        aggregatedReportData.month = formatAggregatedData(monthlyData);
+
+        console.log("Dữ liệu đã tổng hợp:", aggregatedReportData);
+    }
+
+    // Đếm trạng thái phòng (Giữ nguyên)
+    function getRoomStatusCounts() {
+        const counts = { AVAILABLE: 0, OCCUPIED: 0, MAINTENANCE: 0, CLEANING: 0, RESERVED: 0 };
+        allRooms.forEach(room => {
+            if (counts.hasOwnProperty(room.status)) {
+                counts[room.status]++;
+            } else {
+                console.warn("Trạng thái phòng không xác định:", room.status);
+            }
+        });
+        return counts;
+    }
+
+    // === CẬP NHẬT GIAO DIỆN ===
+
+    /**
+     * Cập nhật các thẻ thống kê
+     */
+    // === BẮT ĐẦU SỬA ĐỔI: Logic updateCards 3 cấp ===
+    function updateCards() {
+        let latestData = { revenueRaw: 0, bookings: 0, customers: 0, totalGuests: 0, period: 'N/A' };
+        let previousData = { revenueRaw: 0, bookings: 0, customers: 0, totalGuests: 0 };
+        let periodTitle = '';
+        let comparisonPeriodType = 'kỳ';
+
+        const yearData = aggregatedReportData.year;
+        const monthData = aggregatedReportData.month;
+        const quarterData = aggregatedReportData.quarter;
+
+        if (selectedReportType === 'year') {
+            // Tab "Tổng quan 5 năm" -> Lấy năm MỚI NHẤT từ TẤT CẢ dữ liệu
+            if (yearData.length > 0) {
+                latestData = yearData[yearData.length - 1];
+                if (yearData.length > 1) {
+                    previousData = yearData[yearData.length - 2];
+                }
+            }
+            periodTitle = latestData.period;
+            comparisonPeriodType = 'năm';
+        }
+        else if (selectedReportType === 'month') {
+            if (selectedMonth === 'all') {
+                // Tab "Tháng" + "Tất cả 12 tháng" -> Lấy TỔNG NĂM
+                latestData = yearData.find(d => d.period.includes(selectedYear))
+                    || { revenueRaw: 0, bookings: 0, customers: 0, totalGuests: 0, period: `Năm ${selectedYear}` };
+                let prevYear = selectedYear - 1;
+                previousData = yearData.find(d => d.period.includes(prevYear))
+                    || { revenueRaw: 0, bookings: 0, customers: 0, totalGuests: 0 };
+                periodTitle = `Năm ${selectedYear}`;
+                comparisonPeriodType = 'năm';
+            } else {
+                // Tab "Tháng" + "Tháng 10" -> Lấy CHI TIẾT THÁNG
+                let monthKey = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}`;
+                latestData = monthData.find(d => d.key === monthKey)
+                    || { revenueRaw: 0, bookings: 0, customers: 0, totalGuests: 0, period: `Tháng ${selectedMonth}/${selectedYear}` };
+
+                let prevMonthKey = `${selectedYear - 1}-${String(selectedMonth).padStart(2, '0')}`;
+                previousData = monthData.find(d => d.key === prevMonthKey)
+                    || { revenueRaw: 0, bookings: 0, customers: 0, totalGuests: 0 };
+                periodTitle = latestData.period;
+                comparisonPeriodType = 'cùng kỳ năm trước';
+            }
+        }
+        else if (selectedReportType === 'quarter') {
+            if (selectedQuarter === 'all') {
+                // Tab "Quý" + "Tất cả 4 quý" -> Lấy TỔNG NĂM
+                latestData = yearData.find(d => d.period.includes(selectedYear))
+                    || { revenueRaw: 0, bookings: 0, customers: 0, totalGuests: 0, period: `Năm ${selectedYear}` };
+                let prevYear = selectedYear - 1;
+                previousData = yearData.find(d => d.period.includes(prevYear))
+                    || { revenueRaw: 0, bookings: 0, customers: 0, totalGuests: 0 };
+                periodTitle = `Năm ${selectedYear}`;
+                comparisonPeriodType = 'năm';
+            } else {
+                // Tab "Quý" + "Quý 2" -> Lấy CHI TIẾT QUÝ
+                let quarterKey = `${selectedYear}-Q${selectedQuarter}`;
+                latestData = quarterData.find(d => d.key === quarterKey)
+                    || { revenueRaw: 0, bookings: 0, customers: 0, totalGuests: 0, period: `Quý ${selectedQuarter}/${selectedYear}` };
+
+                let prevQuarterKey = `${selectedYear - 1}-Q${selectedQuarter}`;
+                previousData = quarterData.find(d => d.key === prevQuarterKey)
+                    || { revenueRaw: 0, bookings: 0, customers: 0, totalGuests: 0 };
+                periodTitle = latestData.period;
+                comparisonPeriodType = 'cùng kỳ năm trước';
+            }
+        }
+
+        // --- Cập nhật Tiêu đề Card ---
+        document.querySelector('.revenue-card .card-title span').textContent = `| ${periodTitle}`;
+        document.querySelector('.bookings-card .card-title span').textContent = `| ${periodTitle}`;
+        document.querySelector('.customers-card .card-title span').textContent = `| ${periodTitle}`;
+
+        // --- Cập nhật Giá trị Card ---
+        document.getElementById('revenue').textContent = `${latestData.revenueRaw.toLocaleString('vi-VN')} VNĐ`;
+        updatePercentageSpan(document.querySelector('.revenue-card .small'), calculatePercentageChange(latestData.revenueRaw, previousData.revenueRaw), comparisonPeriodType);
+
+        document.getElementById('totalBookings').textContent = latestData.bookings;
+        updatePercentageSpan(document.querySelector('.bookings-card .small'), calculatePercentageChange(latestData.bookings, previousData.bookings), comparisonPeriodType);
+
+        // Chỗ này thẻ card "Tổng số khách" cũng lấy 'totalGuests' để đồng bộ với bảng
+        document.getElementById('totalGuestsCard').textContent = latestData.totalGuests;
+        updatePercentageSpan(document.querySelector('.customers-card .small'), calculatePercentageChange(latestData.totalGuests, previousData.totalGuests), comparisonPeriodType);
+    }
+    // === KẾT THÚC SỬA ĐỔI: Logic updateCards 3 cấp ===
+
+
+    // Hàm tính % (Giữ nguyên)
+    function calculatePercentageChange(current, previous) {
+        if (previous === 0) {
+            return current > 0 ? Infinity : 0;
+        }
+        return ((current - previous) / previous) * 100;
+    }
+
+    // Hàm cập nhật % (Giữ nguyên)
+    function updatePercentageSpan(spanElement, changeValue, periodType) {
+        const mutedSpan = spanElement.nextElementSibling;
+
+        if (changeValue === Infinity) {
+            spanElement.textContent = '+∞%';
+            spanElement.className = 'text-success small pt-1 fw-bold';
+            mutedSpan.textContent = `so với ${periodType} trước`;
+        } else if (isFinite(changeValue)) {
+            const formattedChange = Math.abs(changeValue).toFixed(1);
+            if (changeValue > 0) {
+                spanElement.textContent = `+${formattedChange}%`;
+                spanElement.className = 'text-success small pt-1 fw-bold';
+            } else if (changeValue < 0) {
+                spanElement.textContent = `-${formattedChange}%`;
+                spanElement.className = 'text-danger small pt-1 fw-bold';
+            } else {
+                spanElement.textContent = `0%`;
+                spanElement.className = 'text-muted small pt-1 fw-bold';
+            }
+            if (changeValue !== 0) {
+                mutedSpan.textContent = `so với ${periodType} trước`;
+            } else {
+                mutedSpan.textContent = '';
+            }
+        } else {
+            spanElement.textContent = '';
+            spanElement.className = 'small pt-1 fw-bold';
+            mutedSpan.textContent = '';
+        }
+    }
+
+
+    // Khởi tạo biểu đồ (Giữ nguyên)
+    function initializeCharts() {
+        // Revenue Chart (ApexCharts)
+        revenueChartInstance = new ApexCharts(document.querySelector("#revenueChart"), {
+            chart: { height: 350, type: 'area', toolbar: { show: false } },
+            markers: { size: 4 },
+            colors: ['#4154f1', '#2eca6a', '#ff9900'],
+            fill: { type: "gradient", gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0.4, stops: [0, 90, 100] } },
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth', width: 2 },
+            series: [],
+            xaxis: { categories: [] },
+            yaxis: [
+                {
+                    axisTicks: { show: true }, axisBorder: { show: true, color: '#4154f1' },
+                    labels: { style: { colors: '#4154f1' }, formatter: (val) => (val / 1000000).toFixed(0) + " Tr" },
+                    title: { text: "Doanh thu (triệu VND)", style: { color: '#4154f1', fontWeight: 600 } }
+                },
+                {
+                    opposite: true, axisTicks: { show: true }, axisBorder: { show: true, color: '#2eca6a' },
+                    labels: { style: { colors: '#2eca6a' }, formatter: (val) => val.toFixed(0) },
+                    title: { text: "Số lượt / Khách hàng", style: { color: '#2eca6a', fontWeight: 600 } },
+                    min: 0
+                }
+            ],
+            tooltip: {
+                y: [
+                    { formatter: val => `${(val / 1000000).toFixed(2)} triệu VND` },
+                    { formatter: val => `${val} lượt` },
+                    // === SỬA LỖI #1: Sửa tooltip cho đồng bộ
+                    { formatter: val => `${val} khách hàng` }
+                ]
+            }
+        });
+        revenueChartInstance.render();
+
+        // Room Status Chart (ECharts)
+        roomStatusChartInstance = echarts.init(document.querySelector("#roomStatusChart"));
+        roomStatusChartInstance.setOption({
+            tooltip: { trigger: 'item', formatter: '{a} <br/>{b}: {c} ({d}%)' },
+            legend: { top: '5%', left: 'center' },
+            series: [{
+                name: 'Tình trạng Phòng', type: 'pie', radius: ['40%', '70%'],
+                avoidLabelOverlap: false, label: { show: false, position: 'center' },
+                emphasis: { label: { show: true, fontSize: '18', fontWeight: 'bold' } },
+                labelLine: { show: false }, data: []
+            }]
+        });
+    }
+
+    // === BẮT ĐẦU SỬA ĐỔI: Cập nhật logic filter cho Biểu đồ ===
+    function renderRevenueChart() {
+        let data = aggregatedReportData[selectedReportType];
+        if (!revenueChartInstance || !data || data.length === 0) return;
+
+        // Lọc dữ liệu theo 3 cấp
+        if (selectedReportType === 'month') {
+            // Lọc theo năm
+            data = data.filter(row => row.period.includes(selectedYear));
+            // Lọc theo tháng cụ thể (nếu có)
+            if (selectedMonth !== 'all') {
+                let monthString = String(selectedMonth).padStart(2, '0');
+                let monthKey = `${selectedYear}-${monthString}`;
+                data = data.filter(row => row.key === monthKey);
+            }
+        }
+        else if (selectedReportType === 'quarter') {
+            // Lọc theo năm
+            data = data.filter(row => row.period.includes(selectedYear));
+            // Lọc theo quý cụ thể (nếu có)
+            if (selectedQuarter !== 'all') {
+                let quarterKey = `${selectedYear}-Q${selectedQuarter}`;
+                data = data.filter(row => row.key === quarterKey);
+            }
+        }
+        // (Không cần lọc cho 'year' vì tab 'year' là tổng quan)
+
+        // Cập nhật biểu đồ với dữ liệu đã lọc
+        revenueChartInstance.updateOptions({
+            xaxis: {
+                categories: data.map(item => item.period.replace("Tháng ", "").replace("Quý ", "Q").replace("Năm ", ""))
+            },
+            // === SỬA LỖI #1: Dùng 'totalGuests' thay vì 'customers' ===
+            series: [
+                { name: 'Doanh thu', data: data.map(item => item.revenueRaw) },
+                { name: 'Đặt phòng', data: data.map(item => item.bookings) },
+                { name: 'Khách hàng', data: data.map(item => item.totalGuests) } // ĐÃ SỬA
+            ],
+            tooltip: {
+                y: [
+                    { formatter: val => `${(val / 1000000).toFixed(2)} triệu VND` },
+                    { formatter: val => `${val} lượt` },
+                    { formatter: val => `${val} khách hàng` } // ĐÃ SỬA
+                ]
+            }
+        });
+    }
+    // === KẾT THÚC SỬA ĐỔI ===
+
+    // Cập nhật biểu đồ phòng (Giữ nguyên)
+    function renderRoomStatusChart() {
+        if (!roomStatusChartInstance) return;
+        const statusCounts = getRoomStatusCounts();
+        const chartData = [
+            { value: statusCounts.OCCUPIED, name: 'Đang sử dụng',itemStyle: { color: '#198754' } },
+            { value: statusCounts.AVAILABLE, name: 'Trống',itemStyle: { color: '#0dcaf0' } },
+            { value: statusCounts.MAINTENANCE, name: 'Bảo trì',itemStyle: { color: '#dc3545' } },
+            { value: statusCounts.CLEANING, name: 'Đang dọn dẹp',itemStyle: { color: '#ffc107' } },
+            { value: statusCounts.RESERVED, name: 'Đã đặt trước',itemStyle: { color: '#6f42c1' } }
+        ].filter(item => item.value > 0);
+
+        roomStatusChartInstance.setOption({
+            series: [{ data: chartData }]
+        });
+    }
+
+    // === BẮT ĐẦU SỬA ĐỔI: Cập nhật logic filter cho Bảng ===
+    function renderTable() {
+        let data = aggregatedReportData[selectedReportType];
+        const tbody = document.querySelector('#reportTable tbody');
+        const thead = document.querySelector('#reportTable thead tr');
+        tbody.innerHTML = '';
+
+        // Lọc dữ liệu theo 3 cấp (giống hệt logic của renderRevenueChart)
+        if (selectedReportType === 'month') {
+            data = data.filter(row => row.period.includes(selectedYear));
+            if (selectedMonth !== 'all') {
+                let monthString = String(selectedMonth).padStart(2, '0');
+                let monthKey = `${selectedYear}-${monthString}`;
+                data = data.filter(row => row.key === monthKey);
+            }
+        }
+        else if (selectedReportType === 'quarter') {
+            data = data.filter(row => row.period.includes(selectedYear));
+            if (selectedQuarter !== 'all') {
+                let quarterKey = `${selectedYear}-Q${selectedQuarter}`;
+                data = data.filter(row => row.key === quarterKey);
+            }
+        }
+
+        // Cập nhật tiêu đề bảng
+        if (selectedReportType === 'month') {
+            let title = (selectedMonth === 'all') ? `(Năm ${selectedYear})` : `(Tháng ${selectedMonth}/${selectedYear})`;
+            thead.innerHTML = `<th>Tháng ${title}</th><th>Doanh thu (triệu VND)</th><th>Số lượt đặt phòng</th><th>Khách hàng</th>`;
+        } else if (selectedReportType === 'quarter') {
+            let title = (selectedQuarter === 'all') ? `(Năm ${selectedYear})` : `(Quý ${selectedQuarter}/${selectedYear})`;
+            thead.innerHTML = `<th>Quý ${title}</th><th>Doanh thu (triệu VND)</th><th>Số lượt đặt phòng</th><th>Khách hàng</th>`;
+        } else { // year
+            thead.innerHTML = `<th>Năm</th><th>Doanh thu (triệu VND)</th><th>Số lượt đặt phòng</th><th>Khách hàng</th>`;
+        }
+
+        // Điền dữ liệu
+        if (!data || data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Không có dữ liệu.</td></tr>`;
+            return;
+        }
+
+        data.forEach(row => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${row.period}</td>
+                    <td>${row.revenueDisplay}</td>
+                    <td>${row.bookings}</td>
+                    <td>${row.totalGuests}</td>
+                </tr>
+            `;
+        });
+    }
+    // === KẾT THÚC SỬA ĐỔI ===
+
+    // === BẮT ĐẦU SỬA ĐỔI: Gắn sự kiện cho cả 3 bộ lọc ===
+    function setupEventListeners() {
+        const yearSelect = document.getElementById('yearFilterSelect');
+        const monthSelect = document.getElementById('monthFilterSelect');
+        const quarterSelect = document.getElementById('quarterFilterSelect');
+        const reportTabs = document.querySelectorAll('.report-tab-trigger');
+        const exportBtn = document.getElementById('exportExcelBtn');
+
+        const monthContainer = document.getElementById('monthFilterContainer');
+        const quarterContainer = document.getElementById('quarterFilterContainer');
+        const specificFilterArea = document.getElementById('specificFilterArea');
+
+        // 1. Sự kiện cho các Tab (Tháng/Quý/Năm)
+        reportTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                reportTabs.forEach(t => t.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+
+                selectedReportType = e.currentTarget.dataset.reportType; // Cập nhật state
+
+                // Cập nhật giao diện bộ lọc
+                if (selectedReportType === 'month') {
+                    specificFilterArea.style.display = 'block';
+                    monthContainer.style.display = 'block';
+                    quarterContainer.style.display = 'none';
+                    yearSelect.disabled = false;
+                } else if (selectedReportType === 'quarter') {
+                    specificFilterArea.style.display = 'block';
+                    monthContainer.style.display = 'none';
+                    quarterContainer.style.display = 'block';
+                    yearSelect.disabled = false;
+                } else { // 'year'
+                    specificFilterArea.style.display = 'none';
+                    yearSelect.disabled = true; // Tắt chọn năm khi xem tổng quan
+                }
+
+                updateReport(); // Gọi hàm cập nhật chính
+            });
+        });
+
+        // 2. Sự kiện cho Dropdown Năm
+        yearSelect.addEventListener('change', (e) => {
+            selectedYear = e.currentTarget.value; // Cập nhật state
+            updateReport(); // Gọi hàm cập nhật chính
+        });
+
+        // 3. Sự kiện cho Dropdown Tháng
+        monthSelect.addEventListener('change', (e) => {
+            selectedMonth = e.currentTarget.value; // Cập nhật state
+            updateReport(); // Gọi hàm cập nhật chính
+        });
+
+        // 4. Sự kiện cho Dropdown Quý
+        quarterSelect.addEventListener('change', (e) => {
+            selectedQuarter = e.currentTarget.value; // Cập nhật state
+            updateReport(); // Gọi hàm cập nhật chính
+        });
+
+        // 5. Sự kiện cho nút Xuất Excel
+        exportBtn.addEventListener('click', exportToExcel);
+    }
+    // === KẾT THÚC SỬA ĐỔI ===
+
+    /**
+     * Hàm cập nhật GIAO DIỆN CHÍNH
+     */
+    function updateReport() {
+        if (!aggregatedReportData) {
+            console.warn("Dữ liệu báo cáo chưa sẵn sàng.");
+            return;
+        }
+
+        updateCards();
+        renderTable();
+        renderRevenueChart();
+        renderRoomStatusChart();
+    }
+
+    // Chức năng xuất file Excel
+    function exportToExcel() {
+        const table = document.getElementById("reportTable");
+        const wb = XLSX.utils.table_to_book(table, { sheet: "BaoCaoDoanhThu" });
+
+        let fileName = `BaoCao_${selectedReportType}`;
+        if (selectedReportType !== 'year') {
+            fileName += `_${selectedYear}`;
+        }
+        if (selectedReportType === 'month' && selectedMonth !== 'all') {
+            fileName += `_Thang${selectedMonth}`;
+        }
+        if (selectedReportType === 'quarter' && selectedQuarter !== 'all') {
+            fileName += `_Quy${selectedQuarter}`;
+        }
+        fileName += `_${new Date().toISOString().slice(0, 10)}.xlsx`;
+
+        XLSX.writeFile(wb, fileName);
+    }
+
+    // === HÀM TIỆN ÍCH (Giữ nguyên) ===
+    function showLoadingState(isLoading) {
+        if (isLoading) {
+            console.log("Đang tải dữ liệu báo cáo...");
+        } else {
+            console.log("Tải dữ liệu báo cáo hoàn tất.");
+        }
+    }
+
+    function parseVNDateTime(dateTimeString) {
+        if (!dateTimeString) return null;
+        try {
+            // Thử parse ngày dạng ISO (YYYY-MM-DD) trước
+            let date = new Date(dateTimeString);
+            if (!isNaN(date.getTime())) {
+                return date;
+            }
+
+            // Thử parse ngày dạng dd/MM/yyyy HH:mm
+            const parts = dateTimeString.split(' ');
+            const dateParts = parts[0].split('/');
+            if (dateParts.length === 3) {
+                // dateParts[0] = dd, dateParts[1] = MM, dateParts[2] = yyyy
+                date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+                if (!isNaN(date.getTime())) return date;
+            }
+
+            console.warn("Không thể parse ngày:", dateTimeString);
+            return null;
+        } catch (e) {
+            console.error("Lỗi phân tích ngày:", dateTimeString, e);
+            return null;
+        }
+    }
+
+</script>
+</body>
+
+</html>
+

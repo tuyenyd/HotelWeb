@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Trang / Đăng nhập</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="assets/css/style.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-image: url('assets/img/bg.webp');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+        }
+        /* Thêm CSS cho thông báo lỗi */
+        .alert-custom {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            margin-bottom: 1rem; /* Thêm margin cho alert */
+        }
+
+        /* CSS cho spinner bên trong button */
+        #loginButton .spinner-border-sm {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+    <div class="container">
+
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                        <div class="card mb-3">
+
+                            <div class="card-body">
+
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">Đăng nhập vào tài khoản</h5>
+                                    <p class="text-center small">Nhập email & mật khẩu để đăng nhập</p>
+                                </div>
+
+                                <!-- 1. Thêm DIV để chứa thông báo lỗi/thành công -->
+                                <div id="alert-container" class="alert alert-danger alert-custom d-none" role="alert">
+                                    <span id="alert-message"></span>
+                                </div>
+
+                                <!-- 2. Thêm id="loginForm" vào thẻ form -->
+                                <form class="row g-3" id="loginForm"> <!-- Bỏ 'needs-validation' và 'novalidate' -->
+
+                                    <div class="col-12">
+                                        <label for="yourEmail" class="form-label">Email</label>
+                                        <div class="input-group has-validation">
+                                            <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                            <input type="email" name="email" class="form-control" id="yourEmail" required>
+                                            <!-- (Không cần 'invalid-feedback' vì chúng ta tự xử lý lỗi) -->
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="yourPassword" class="form-label">Mật khẩu</label>
+                                        <input type="password" name="password" class="form-control" id="yourPassword" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                                            <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <!-- 3. Thêm id="loginButton" và spinner (id="loginSpinner") -->
+                                        <button class="btn w-100 d-flex align-items-center justify-content-center"
+                                                style="background-color: #2f5d50;color: white"
+                                                type="submit"
+                                                id="loginButton">
+
+                                            <span id="loginSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                            <span id="loginButtonText">Đăng nhập</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <p class="small mb-0">Chưa có tài khoản? <a href="pages-register.html" style="color:#2f5d50 ">Tạo tài khoản mới</a></p>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/chart.js/chart.umd.js"></script>
+<script src="assets/vendor/echarts/echarts.min.js"></script>
+<script src="assets/vendor/quill/quill.js"></script>
+<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="assets/js/main.js"></script>
+
+<script>
+    // (Lấy các element một cách chính xác)
+    const loginForm = document.getElementById('loginForm');
+    const alertContainer = document.getElementById('alert-container');
+    const alertMessage = document.getElementById('alert-message');
+    const loginButton = document.getElementById('loginButton');
+    const loginButtonText = document.getElementById('loginButtonText');
+    const loginSpinner = document.getElementById('loginSpinner');
+
+    // Hàm hiển thị lỗi/thành công
+    function showAlert(message, type = 'danger') {
+        alertMessage.textContent = message;
+        // Cập nhật class để đổi màu (danger = đỏ, success = xanh)
+        alertContainer.className = `alert alert-${type} alert-custom d-block`;
+    }
+
+    // Hàm ẩn lỗi
+    function hideAlert() {
+        alertContainer.classList.add('d-none');
+    }
+
+    // Hàm bật/tắt trạng thái loading
+    function setLoading(isLoading) {
+        if (isLoading) {
+            loginButton.disabled = true;
+            loginSpinner.classList.remove('d-none');
+            loginButtonText.textContent = 'Đang xử lý...';
+        } else {
+            loginButton.disabled = false;
+            loginSpinner.classList.add('d-none');
+            loginButtonText.textContent = 'Đăng nhập';
+        }
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Ngăn chặn form submit (tải lại trang)
+
+        const email = document.getElementById('yourEmail').value;
+        const password = document.getElementById('yourPassword').value;
+
+        if (!email || !password) {
+            showAlert('Vui lòng nhập đầy đủ Email và Mật khẩu.');
+            return;
+        }
+
+        setLoading(true);
+        hideAlert(); // Ẩn lỗi cũ
+
+        try {
+            // 1. Gọi API Public Signin
+            // (Endpoint này /api/public/auth/signin phải được định nghĩa trong PublicAuthController của bạn)
+            const response = await fetch('/api/public/auth/signin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, password: password })
+            });
+
+            // 2. Lấy dữ liệu JSON
+            const data = await response.json();
+
+            // 3. Xử lý lỗi từ backend (dựa trên response.ok)
+            if (!response.ok) {
+                // data.message là message bạn trả về từ ResponseEntity.badRequest().body()
+                throw new Error(data.message || 'Email hoặc mật khẩu không đúng.');
+            }
+
+            // 4. Đăng nhập thành công
+            localStorage.setItem('customerToken', data.token);
+            localStorage.setItem('currentCustomer', JSON.stringify(data));
+
+            showAlert('Đăng nhập thành công! Đang chuyển hướng...', 'success');
+
+            setTimeout(() => {
+                // 5. SỬA ĐƯỜNG DẪN CHUYỂN HƯỚNG
+                // Đường dẫn phải khớp với cấu trúc thư mục của bạn
+                window.location.href = '../HotelUser/indexes.html';
+            }, 1500);
+
+        } catch (error) {
+            // 6. Hiển thị lỗi bắt được (từ backend hoặc logic)
+            showAlert(error.message);
+            setLoading(false); // Bật lại nút khi có lỗi
+        }
+    });
+</script>
+<!-- ================== KẾT THÚC SỬA LỖI SCRIPT ================== -->
+</body>
+
+</html>

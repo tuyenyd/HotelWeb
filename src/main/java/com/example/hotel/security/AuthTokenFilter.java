@@ -1,6 +1,8 @@
 package com.example.hotel.security;
 
-import com.example.hotel.security.UserDetailsServiceImpl;
+import com.example.hotel.entity.Customer;
+import com.example.hotel.repository.CustomerRepository;
+import com.example.hotel.service.impl.UserDetailsServiceImpl;
 import com.example.hotel.security.jwt.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,13 +13,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -26,7 +31,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserDetailsServiceImpl userDetailsService; // Dịch vụ của Admin
+
+    @Autowired
+    private CustomerRepository customerRepository; // Repo của Customer
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
@@ -34,57 +42,65 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // --- START: THÊM LOGGING ĐỂ DEBUG ---
-        logger.info("====================================================================");
-        logger.info("AuthTokenFilter is running for request: {}", request.getRequestURI());
+        String path = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String servletPath = path.substring(contextPath.length());
 
         try {
             String jwt = parseJwt(request);
-            if (jwt == null) {
-                logger.warn("--> JWT Token is NULL. Header 'Authorization' might be missing or not start with 'Bearer '.");
-            } else {
-                logger.info("--> JWT Token found: {}", jwt);
+            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+                String username = jwtUtils.getUserNameFromJwtToken(jwt);
+                UserDetails userDetails = null;
 
-                if (jwtUtils.validateJwtToken(jwt)) {
-                    logger.info("--> JWT Token is valid.");
-                    String username = jwtUtils.getUserNameFromJwtToken(jwt);
-                    logger.info("--> Username from token: {}", username);
+                if (servletPath.startsWith("/api/admin") || servletPath.startsWith("/api/users")) {
 
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    logger.info("--> UserDetails loaded. Authorities: {}", userDetails.getAuthorities());
+                    logger.info("--> AuthTokenFilter: Đang xử lý token cho ADMIN (path: {})", servletPath);
+                    try {
+                        userDetails = userDetailsService.loadUserByUsername(username);
+                    } catch (UsernameNotFoundException e) {
+                        logger.error("!!! Token ADMIN không hợp lệ. Không tìm thấy User (Admin): {}", username);
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token Admin không hợp lệ");
+                        return;
+                    }
+                }
+                else if (servletPath.startsWith("/api/public/customer")) {
+                    logger.info("--> AuthTokenFilter: Đang xử lý token cho CUSTOMER (path: {})", servletPath);
+                    Customer customer = customerRepository.findByEmail(username)
+                            .orElseThrow(() -> new UsernameNotFoundException("Token CUSTOMER không hợp lệ: " + username));
 
+                    userDetails = new User(
+                            customer.getEmail(),
+                            customer.getPassword() != null ? customer.getPassword() : "",
+                            new ArrayList<>()
+                    );
+                }
+                else {
+                    logger.warn("--> AuthTokenFilter: Bỏ qua (cho phép) đường dẫn public: {}", servletPath);
+                }
+
+                // Nếu userDetails được tạo (từ Admin hoặc Customer) -> Xác thực
+                if (userDetails != null) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    logger.info("--> User '{}' authenticated successfully. SecurityContext updated.", username);
-                } else {
-                    logger.warn("--> JWT Token is NOT valid.");
+                    logger.info("--> Xác thực thành công cho '{}'. Đã cập nhật SecurityContext.", username);
                 }
             }
         } catch (Exception e) {
-            logger.error("!!! Cannot set user authentication: {}", e.getMessage(), e);
+            logger.error("!!! Không thể xác thực người dùng (AuthTokenFilter): {}", e.getMessage());
         }
-
-        logger.info("====================================================================");
-        // --- END: THÊM LOGGING ĐỂ DEBUG ---
 
         filterChain.doFilter(request, response);
     }
 
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
-        if (headerAuth == null) {
-            logger.warn("--> Header 'Authorization' is missing.");
-            return null;
-        }
-        logger.info("--> Authorization Header: {}", headerAuth);
 
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
             return headerAuth.substring(7);
         }
-
         return null;
     }
 }

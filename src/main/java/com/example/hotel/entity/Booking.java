@@ -11,6 +11,9 @@ import org.hibernate.annotations.ColumnDefault;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.hotel.entity.Customer;
 
 @Entity
@@ -83,4 +86,16 @@ public class Booking {
     @ColumnDefault("0") // Đặt giá trị mặc định trong DB là 0
     private int soTreEm = 0; // Đặt giá trị mặc định trong Java là 0
 
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments = new ArrayList<>();
+
+    public BigDecimal getAmountPaid() {
+        if (this.payments == null || this.payments.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        // Tính tổng
+        return this.payments.stream()
+                .map(Payment::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

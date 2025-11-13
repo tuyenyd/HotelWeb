@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title> Hồ sơ - HotelAdmin</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+    <link href="assets/img/img.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: NiceAdmin
+  * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+  * Updated: Apr 20 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center">
+            <img src="assets/img/logo.png" alt="Logo">
+            <span class="d-none d-lg-block">Grandoria</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><div class="search-bar">
+    <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Tìm kiếm đặt phòng, khách hàng..." title="Nhập từ khóa tìm kiếm">
+        <button type="submit" title="Tìm kiếm"><i class="bi bi-search"></i></button>
+    </form>
+</div><nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+            <a class="nav-link nav-icon search-bar-toggle " href="#">
+                <i class="bi bi-search"></i>
+            </a>
+        </li><li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            <span class="badge bg-primary badge-number">3</span>
+        </a><ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+        <li class="dropdown-header">
+            Bạn có 3 thông báo mới
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">Xem tất cả</span></a>
+        </li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-exclamation-circle text-warning"></i>
+            <div>
+                <h4>Đặt phòng mới</h4>
+                <p>Khách hàng Nguyễn Văn A vừa đặt phòng Deluxe</p>
+                <p>5 phút trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-x-circle text-danger"></i>
+            <div>
+                <h4>Hủy đặt phòng</h4>
+                <p>Đặt phòng #2457 đã bị hủy</p>
+                <p>2 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-check-circle text-success"></i>
+            <div>
+                <h4>Phản hồi mới</h4>
+                <p>Bạn có 2 đánh giá mới từ khách hàng</p>
+                <p>4 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li class="dropdown-footer">
+            <a href="#">Hiển thị tất cả thông báo</a>
+        </li>
+    </ul></li><li class="nav-item dropdown pe-3">
+
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/profile-img.jpg" alt="Hồ sơ" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2" id="profileName">Đang tải...</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+                <h6 id="profileDropdownName">...</h6>
+                <span id="profileDropdownRole">...</span>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-person"></i>
+                    <span>Hồ sơ của tôi</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-gear"></i>
+                    <span>Cài đặt tài khoản</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="#" id="logoutButton">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </li>
+        </ul></li></ul>
+</nav>
+  </header><!-- Kết thúc Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+      <ul class="sidebar-nav" id="sidebar-nav">
+
+          <li class="nav-item">
+              <a class="nav-link " href="index.html">
+                  <i class="bi bi-house-door"></i>
+                  <span>Bảng Điều Khiển</span>
+              </a>
+          </li><!-- Kết thúc Điều hướng Bảng Điều Khiển -->
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#booking-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-calendar-check"></i><span>Quản lý Đặt phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="booking-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                  <li>
+                      <a href="tatcadatphong.html">
+                          <i class="bi bi-circle"></i><span>Tất cả đặt phòng</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="checkin.html">
+                          <i class="bi bi-circle"></i><span>Check-in</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="checkout.html">
+                          <i class="bi bi-circle"></i><span>Check-out</span>
+                      </a>
+                  </li>
+              </ul>
+          </li><!-- Kết thúc Điều hướng Đặt phòng -->
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#room-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-door-closed"></i><span>Quản lý Phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="room-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                  <li>
+                      <a href="danhsachphong.html">
+                          <i class="bi bi-circle"></i><span>Danh sách phòng</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="loaiphong.html">
+                          <i class="bi bi-circle"></i><span>Loại phòng</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="tinhtrangphong.html">
+                          <i class="bi bi-circle"></i><span>Tình trạng phòng</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="giaphong.html">
+                          <i class="bi bi-circle"></i><span>Giá phòng</span>
+                      </a>
+                  </li>
+              </ul>
+          </li><!-- Kết thúc Điều hướng Phòng -->
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#customer-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-people"></i><span>Quản lý Khách hàng</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="customer-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                  <li>
+                      <a href="danhsachkhachhang.html">
+                          <i class="bi bi-circle"></i><span>Danh sách khách hàng</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="chuongtrinhthanhvien.html">
+                          <i class="bi bi-circle"></i><span>Chương trình thành viên</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="danhgia&phanhoi.html">
+                          <i class="bi bi-circle"></i><span>Đánh giá & Phản hồi</span>
+                      </a>
+                  </li>
+              </ul>
+          </li><!-- Kết thúc Điều hướng Khách hàng -->
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="baocao&thongke.html">
+                  <i class="bi bi-bar-chart"></i>
+                  <span>Báo cáo & Thống kê</span>
+              </a>
+          </li><!-- Kết thúc Điều hướng Báo cáo -->
+          <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-cash-coin"></i><span>Tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="finance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                  <li>
+                      <a href="finance-invoices.html">
+                          <i class="bi bi-circle"></i><span>Hóa đơn</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="finance-payments.html">
+                          <i class="bi bi-circle"></i><span>Thanh toán</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="finance-revenue.html">
+                          <i class="bi bi-circle"></i><span>Doanh thu</span>
+                      </a>
+                  </li>
+              </ul>
+          </li><!-- Kết thúc Điều hướng Tài chính -->
+
+          <li class="nav-heading">Trang</li>
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="users-profile.html">
+                  <i class="bi bi-person"></i>
+                  <span>Hồ sơ</span>
+              </a>
+          </li><!-- Kết thúc Trang Hồ sơ -->
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="pages-contact.html">
+                  <i class="bi bi-envelope"></i>
+                  <span>Liên hệ</span>
+              </a>
+          </li><!-- Kết thúc Trang Liên hệ -->
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="users.html">
+                  <i class="bi bi-person-gear"></i>
+                  <span>Nhân viên</span>
+              </a>
+          </li>
+
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="taikhoan.html">
+                  <i class="bi bi-person-badge"></i>
+                  <span>Tài khoản</span>
+              </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="settings.html">
+                  <i class="bi bi-gear"></i>
+                  <span>Cài đặt</span>
+              </a>
+          </li>
+      </ul>
+
+  </aside><!-- Kết thúc Sidebar -->
+
+
+  <main id="main" class="main">
+
+    <div class="pagetitle d-flex justify-content-between align-items-center">
+      <h1>Hồ sơ</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+          <li class="breadcrumb-item">Trang</li>
+          <li class="breadcrumb-item active">Hồ sơ</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile">
+      <div class="row">
+        <div class="col-xl-4">
+
+          <div class="card">
+            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+              <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" id="profileCardImg">
+              <h2 id="profileCardName">Kevin Anderson</h2>
+              <h3 id="profileCardJob">Nhà thiết kế Web</h3>
+              <div class="social-links mt-2">
+                <a href="#" class="twitter" id="profileCardTwitter"><i class="bi bi-twitter"></i></a>
+                <a href="#" class="facebook" id="profileCardFacebook"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="instagram" id="profileCardInstagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="linkedin" id="profileCardLinkedin"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-xl-8">
+
+          <div class="card">
+            <div class="card-body pt-3">
+              <!-- Bordered Tabs -->
+              <ul class="nav nav-tabs nav-tabs-bordered">
+
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Tổng quan</button>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Chỉnh sửa hồ sơ</button>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Đổi mật khẩu</button>
+                </li>
+
+              </ul>
+              <div class="tab-content pt-2">
+
+                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                  <h5 class="card-title">Giới thiệu</h5>
+                  <p class="small fst-italic" id="overviewAbout">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</p>
+
+                  <h5 class="card-title">Chi tiết hồ sơ</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label ">Họ và tên</div>
+                    <div class="col-lg-9 col-md-8" id="overviewFullName">Kevin Anderson</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Công ty</div>
+                    <div class="col-lg-9 col-md-8" id="overviewCompany">Lueilwitz, Wisoky and Leuschke</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Công việc</div>
+                    <div class="col-lg-9 col-md-8" id="overviewJob">Nhà thiết kế Web</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Quốc gia</div>
+                    <div class="col-lg-9 col-md-8" id="overviewCountry">Mỹ</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Địa chỉ</div>
+                    <div class="col-lg-9 col-md-8" id="overviewAddress">A108 Adam Street, New York, NY 535022</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Số điện thoại</div>
+                    <div class="col-lg-9 col-md-8" id="overviewPhone">(436) 486-3538 x29071</div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Email</div>
+                    <div class="col-lg-9 col-md-8" id="overviewEmail">k.anderson@example.com</div>
+                  </div>
+
+                </div>
+
+                <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+
+                  <!-- Profile Edit Form -->
+                  <form id="profileEditForm" enctype="multipart/form-data">
+                    <div class="row mb-3">
+                      <label for="profileImageInput" class="col-md-4 col-lg-3 col-form-label">Ảnh hồ sơ</label>
+                      <div class="col-md-8 col-lg-9">
+                        <img src="assets/img/profile-img.jpg" alt="Profile" id="profilePreview" class="rounded-circle">
+                        <input type="file" id="profileImageInput" name="avatar" accept="image/*" style="display:none">
+                        <div class="pt-2">
+                          <button type="button" class="btn btn-primary btn-sm" id="uploadBtn" title="Tải lên ảnh hồ sơ mới"><i class="bi bi-upload"></i></button>
+                          <button type="button" class="btn btn-danger btn-sm" id="removeImageBtn" title="Xóa ảnh hồ sơ"><i class="bi bi-trash"></i></button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Họ và tên</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="fullName" type="text" class="form-control" id="fullName" value="Kevin Anderson">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="about" class="col-md-4 col-lg-3 col-form-label">Giới thiệu</label>
+                      <div class="col-md-8 col-lg-9">
+                        <textarea name="about" class="form-control" id="about" style="height: 100px">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</textarea>
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="company" class="col-md-4 col-lg-3 col-form-label">Công ty</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="company" type="text" class="form-control" id="company" value="Lueilwitz, Wisoky and Leuschke">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="Job" class="col-md-4 col-lg-3 col-form-label">Công việc</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="job" type="text" class="form-control" id="Job" value="Nhà thiết kế Web">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="Country" class="col-md-4 col-lg-3 col-form-label">Quốc gia</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="country" type="text" class="form-control" id="Country" value="Mỹ">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="Address" class="col-md-4 col-lg-3 col-form-label">Địa chỉ</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="address" type="text" class="form-control" id="Address" value="A108 Adam Street, New York, NY 535022">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Số điện thoại</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="phone" type="text" class="form-control" id="Phone" value="(436) 486-3538 x29071">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="email" type="email" class="form-control" id="Email" value="k.anderson@example.com">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="Twitter" class="col-md-4 col-lg-3 col-form-label">Twitter</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="twitter" type="text" class="form-control" id="Twitter" value="https://twitter.com/#">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="Facebook" class="col-md-4 col-lg-3 col-form-label">Facebook</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="facebook" type="text" class="form-control" id="Facebook" value="https://facebook.com/#">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="Instagram" class="col-md-4 col-lg-3 col-form-label">Instagram</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="instagram" type="text" class="form-control" id="Instagram" value="https://instagram.com/#">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="Linkedin" class="col-md-4 col-lg-3 col-form-label">Linkedin</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="linkedin" type="text" class="form-control" id="Linkedin" value="https://linkedin.com/#">
+                      </div>
+                    </div>
+
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                    </div>
+                  </form><!-- End Profile Edit Form -->
+
+                </div>
+
+                <div class="tab-pane fade pt-3" id="profile-settings">
+
+                  <!-- Settings Form -->
+                  <!-- End settings Form -->
+
+                </div>
+
+                <div class="tab-pane fade pt-3" id="profile-change-password">
+                  <!-- Change Password Form -->
+                  <form id="passwordForm">
+
+                    <div class="row mb-3">
+                      <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Mật khẩu hiện tại</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="password" type="password" class="form-control" id="currentPassword">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">Mật khẩu mới</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="newpassword" type="password" class="form-control" id="newPassword">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Nhập lại mật khẩu mới</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="renewpassword" type="password" class="form-control" id="renewPassword">
+                      </div>
+                    </div>
+
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+                    </div>
+                  </form><!-- End Change Password Form -->
+
+                </div>
+
+              </div><!-- End Bordered Tabs -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      &copy; Bản quyền <strong><span>NiceAdmin</span></strong>. Đã đăng ký bản quyền
+    </div>
+    <div class="credits">
+      <!-- All the links in the footer should remain intact. -->
+      <!-- You can delete the links only if you purchased the pro version. -->
+      <!-- Licensing information: https://bootstrapmade.com/license/ -->
+      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+      Thiết kế bởi <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="assets/vendor/echarts/echarts.min.js"></script>
+  <script src="assets/vendor/quill/quill.js"></script>
+  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+      (function() {
+          "use strict";
+
+          const API_URL = '/api/users'; // API của bạn
+
+          // Không cần định nghĩa lại fetchWithAuth, nó đã có từ auth.js
+
+          // --- HÀM HIỂN THỊ ALERT (Đơn giản) ---
+          function showAlert(message, type = 'info') {
+              // Bạn có thể thay bằng thư viện alert đẹp hơn
+              alert(message);
+          }
+
+          // --- 1. TẢI DỮ LIỆU NGƯỜI DÙNG KHI MỞ TRANG ---
+          document.addEventListener('DOMContentLoaded', () => {
+              loadUserProfile();
+              setupEventListeners();
+          });
+
+          async function loadUserProfile() {
+              try {
+                  // Hàm fetchWithAuth đã có sẵn từ auth.js
+                  const response = await fetchWithAuth(`${API_URL}/profile`);
+                  if (!response.ok) throw new Error('Không thể tải hồ sơ người dùng');
+
+                  const user = await response.json();
+                  populateProfileData(user);
+
+              } catch (error) {
+                  if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
+                      showAlert('Lỗi: ' + error.message, 'danger');
+                  }
+              }
+          }
+
+          // --- 2. HÀM ĐIỀN DỮ LIỆU VÀO CÁC TAB ---
+          function populateProfileData(user) {
+              // Helper: gán text, nếu null thì để '...'
+              const setText = (id, text) => {
+                  const el = document.getElementById(id);
+                  if (el) el.textContent = text || '...';
+              };
+              // Helper: gán value cho input, nếu null thì để ''
+              const setValue = (id, value) => {
+                  const el = document.getElementById(id);
+                  if (el) el.value = value || '';
+              };
+              // Helper: gán link
+              const setLink = (id, url) => {
+                  const el = document.getElementById(id);
+                  if (el) el.href = url || '#';
+              };
+              // Helper: gán ảnh
+              const setImg = (id, url) => {
+                  const el = document.getElementById(id);
+                  // Giả sử ảnh được phục vụ từ /avatars/ten-file.jpg
+                  // Bạn cần cấu hình Spring để phục vụ file từ thư mục "user-avatars"
+                  const fullUrl = url ? `/avatars/${url}` : 'assets/img/profile-img.jpg';
+                  if (el) el.src = fullUrl;
+              };
+
+              // --- Thẻ Profile Card (bên trái) ---
+              setImg('profileCardImg', user.avatarUrl);
+              setText('profileCardName', user.fullName);
+              setText('profileCardJob', user.job);
+              setLink('profileCardTwitter', user.twitter);
+              setLink('profileCardFacebook', user.facebook);
+              setLink('profileCardInstagram', user.instagram);
+              setLink('profileCardLinkedin', user.linkedin);
+
+              // --- Tab 1: Tổng quan (Overview) ---
+              setText('overviewAbout', user.about);
+              setText('overviewFullName', user.fullName);
+              setText('overviewCompany', user.company);
+              setText('overviewJob', user.job);
+              setText('overviewCountry', user.country);
+              setText('overviewAddress', user.address);
+              setText('overviewPhone', user.phone);
+              setText('overviewEmail', user.email);
+
+              // --- Tab 2: Chỉnh sửa hồ sơ (Edit Form) ---
+              setImg('profilePreview', user.avatarUrl);
+              setValue('fullName', user.fullName);
+              setValue('about', user.about);
+              setValue('company', user.company);
+              setValue('Job', user.job);
+              setValue('Country', user.country);
+              setValue('Address', user.address);
+              setValue('Phone', user.phone);
+              setValue('Email', user.email);
+              setValue('Twitter', user.twitter);
+              setValue('Facebook', user.facebook);
+              setValue('Instagram', user.instagram);
+              setValue('Linkedin', user.linkedin);
+          }
+
+          // --- 3. XỬ LÝ CÁC FORM ---
+          function setupEventListeners() {
+              const profileEditForm = document.getElementById('profileEditForm');
+              const passwordForm = document.getElementById('passwordForm');
+
+              // Xử lý Form Cập nhật Hồ sơ
+              profileEditForm.addEventListener('submit', async (e) => {
+                  e.preventDefault();
+
+                  // Tạo FormData từ form
+                  const formData = new FormData(profileEditForm);
+
+                  try {
+                      const response = await fetchWithAuth(`${API_URL}/profile`, {
+                          method: 'PUT',
+                          body: formData
+                      });
+
+                      if (!response.ok) {
+                          return;
+                      }
+
+                      const updatedUser = await response.json();
+                      showAlert('Cập nhật hồ sơ thành công!', 'success');
+                      populateProfileData(updatedUser); // Cập nhật lại giao diện
+                      const oldUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+                      // Cập nhật thông tin trên header (lấy từ auth.js)
+                      const currentUser = {
+                          ...oldUser,
+                          fullName: updatedUser.fullName,
+                          role: updatedUser.role,
+                          avatarUrl: updatedUser.avatarUrl
+                      };
+                      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                      loadProfileFromStorage(); // Gọi lại hàm của auth.js
+
+                  } catch (error) {
+                      if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
+                          showAlert('Lỗi khi cập nhật: ' + error.message, 'danger');
+                      }
+                  }
+              });
+
+              // Xử lý Form Đổi Mật khẩu
+              passwordForm.addEventListener('submit', async (e) => {
+                  e.preventDefault();
+
+                  const currentPassword = document.getElementById('currentPassword').value;
+                  const newPassword = document.getElementById('newPassword').value;
+                  const renewPassword = document.getElementById('renewPassword').value;
+
+                  if (newPassword !== renewPassword) {
+                      showAlert('Mật khẩu mới không khớp!', 'warning');
+                      return;
+                  }
+
+                  if (!currentPassword || !newPassword) {
+                      showAlert('Vui lòng nhập đủ mật khẩu cũ và mới!', 'warning');
+                      return;
+                  }
+
+                  const body = {
+                      currentPassword: currentPassword,
+                      newPassword: newPassword
+                  };
+
+                  try {
+                      // auth.js sẽ tự stringify 'body' và set Content-Type
+                      const response = await fetchWithAuth(`${API_URL}/change-password`, {
+                          method: 'POST',
+                          body: body
+                      });
+
+                      // Nếu response.ok = true (tức là 200 OK)
+                      const successMessage = await response.text();
+                      showAlert(successMessage, 'success');
+                      passwordForm.reset(); // Xóa các trường
+
+                  } catch (error) {
+                      if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
+                          showAlert('Lỗi: ' + error.message, 'danger');
+                      }
+                  }
+              });
+
+              // Xử lý Nút Tải ảnh
+              document.getElementById('uploadBtn').addEventListener('click', () => {
+                  document.getElementById('profileImageInput').click();
+              });
+
+              document.getElementById('profileImageInput').addEventListener('change', (e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                          document.getElementById('profilePreview').src = event.target.result;
+                      };
+                      reader.readAsDataURL(file);
+                  }
+              });
+
+              // Xử lý nút Xóa ảnh
+              document.getElementById('removeImageBtn').addEventListener('click', () => {
+                  document.getElementById('profilePreview').src = 'assets/img/profile-img.jpg'; // Đặt lại ảnh mặc định
+                  document.getElementById('profileImageInput').value = null; // Xóa file đã chọn
+                  // (Bạn có thể thêm logic gọi API để xóa file trên server ở đây)
+              });
+
+          }
+      })();
+  </script>
+</body>
+</html>
+
+

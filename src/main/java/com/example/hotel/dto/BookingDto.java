@@ -24,4 +24,5 @@ public class BookingDto {
     private String actualCheckoutTime;
     private int soNguoiLon;
     private int soTreEm;
+    private BigDecimal amountPaid;
 }

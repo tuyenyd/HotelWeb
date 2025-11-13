@@ -3,6 +3,7 @@ package com.example.hotel.service;
 import com.example.hotel.dto.RoomDto;
 import com.example.hotel.dto.RoomTypeDto;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +15,5 @@ public interface RoomService {
     void deleteRoom(Long id);
     List<RoomDto> searchRooms(String roomNumber, Long roomTypeId, String status);
     RoomDto updateRoomStatus(Long id, String status);
+    List<RoomDto> findAvailableRooms(LocalDate checkin, LocalDate checkout, int totalGuests);
 }

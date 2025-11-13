@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Hồ sơ của tôi - Grandoria</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <style>
+        /* CSS tùy chỉnh cho form hồ sơ */
+        .profile-form-section {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        .form-spinner {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="user-profile-page">
+
+<header id="header" class="header sticky-top">
+    <div class="branding d-flex align-items-cente">
+        <div class="container position-relative d-flex align-items-center justify-content-between">
+            <a href="indexes.html" class="logo d-flex align-items-center">
+                <img src="assets/img/img_1.png" alt="logo">
+                <h1 class="sitename">Grandoria</h1>
+            </a>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="indexes.html">Trang chủ</a></li>
+                    <li><a href="about.html">Giới thiệu</a></li>
+                    <li><a href="rooms.html">Phòng</a></li>
+                    <li><a href="amenities.html">Tiện ích</a></li>
+                    <li><a href="location.html">Vị trí</a></li>
+                    <li class="dropdown"><a href="#"><span>Trang</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="room-details.html">Chi tiết phòng</a></li>
+                            <li><a href="restaurant.html">Nhà hàng</a></li>
+                            <li><a href="offers.html">Ưu đãi</a></li>
+                            <li><a href="hotel-events.html">Sự kiện</a></li>
+                            <li><a href="gallery.html">Thư viện ảnh</a></li>
+                            <li><a href="booking.html">Đặt phòng</a></li>
+                            <li><a href="terms.html">Điều khoản</a></li>
+                            <li><a href="privacy.html">Chính sách bảo mật</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contact.html">Liên hệ</a></li>
+                    <li class="dropdown" id="userProfileMenu" style="display: none;">
+                        <a href="#">
+                            <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
+                            <span id="userProfileName" class="ms-1">Tài khoản</span>
+                            <i class="bi bi-chevron-down toggle-dropdown ms-1"></i>
+                        </a>
+                        <ul>
+                            <li><a href="user-profile.html" class="active">Hồ sơ của tôi</a></li>
+                            <li><a href="user-bookings.html">Lịch sử đặt phòng</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="#" id="userLogoutButton">Đăng xuất</a></li>
+                        </ul>
+                    </li>
+                    <li id="loginLink"><a href="pages-login.html">Đăng nhập</a></li>
+                    <li id="registerLink"><a href="pages-register.html">Đăng ký</a></li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Hồ sơ của tôi</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="indexes.html">Trang chủ</a></li>
+                    <li class="current">Hồ sơ của tôi</li>
+                </ol>
+            </nav>
+        </div>
+    </div><section id="user-profile" class="user-profile section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+
+                <div id="alert-container" class="mb-3"></div>
+
+                <div class="profile-form-section">
+                    <h4>Thông tin cá nhân</h4>
+                    <form id="profileForm">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label for="inputFullName" class="form-label">Tên đầy đủ</label>
+                                <input type="text" class="form-control" id="inputFullName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="inputEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="inputEmail" readonly style="background-color: #e9ecef;">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="inputPhone" class="form-label">Số điện thoại</label>
+                                <input type="tel" class="form-control" id="inputPhone" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="inputAddress" class="form-label">Địa chỉ</label>
+                                <input type="text" class="form-control" id="inputAddress">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="inputIdNumber" class="form-label">Số CCCD/CMND</label>
+                                <input type="text" class="form-control" id="inputIdNumber" readonly style="background-color: #e9ecef;">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="inputDateOfBirth" class="form-label">Ngày sinh</label>
+                                <input type="date" class="form-control" id="inputDateOfBirth" required>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="button" class="btn" id="btnUpdateProfile"  style="background-color: #2f5d50;color: white">
+                                    <span id="profileSpinner" class="spinner-border form-spinner d-none" role="status" aria-hidden="true"></span>
+                                    Lưu thay đổi
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="profile-form-section">
+                    <h4>Đổi mật khẩu</h4>
+                    <form id="passwordForm">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label for="inputCurrentPassword" class="form-label">Mật khẩu hiện tại</label>
+                                <input type="password" class="form-control" id="inputCurrentPassword">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="inputNewPassword" class="form-label">Mật khẩu mới</label>
+                                <input type="password" class="form-control" id="inputNewPassword">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="inputConfirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                                <input type="password" class="form-control" id="inputConfirmPassword">
+                            </div>
+                            <div class="col-12 text-end">
+                                <button type="button" class="btn " id="btnUpdatePassword"  style="background-color: #2f5d50;color: white">
+                                    <span id="passwordSpinner" class="spinner-border form-spinner d-none" role="status" aria-hidden="true"></span>
+                                    Đổi mật khẩu
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<footer id="footer" class="footer position-relative dark-background">
+</footer>
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<div id="preloader"></div>
+
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="assets/js/main.js"></script> <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- 1. KIỂM TRA BẢO MẬT ---
+        const token = localStorage.getItem('customerToken');
+        if (!token) {
+            // Nếu chưa đăng nhập, đá về trang login
+            window.location.href = 'pages-login.html';
+            return; // Dừng thực thi script
+        }
+
+        const API_URL = 'http://localhost:8080/api/public/customer'; // API mới
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+
+        // Lấy các element
+        const alertContainer = document.getElementById('alert-container');
+        const btnUpdateProfile = document.getElementById('btnUpdateProfile');
+        const btnUpdatePassword = document.getElementById('btnUpdatePassword');
+        const profileSpinner = document.getElementById('profileSpinner');
+        const passwordSpinner = document.getElementById('passwordSpinner');
+
+        // --- 2. TẢI THÔNG TIN HỒ SƠ ---
+        async function loadProfile() {
+            try {
+                // API mới: GET /api/public/customer/profile
+                const response = await fetch(`${API_URL}/profile`, { headers });
+                if (!response.ok) {
+                    throw new Error('Không thể tải thông tin hồ sơ.');
+                }
+                const customer = await response.json();
+
+                // Điền thông tin vào form
+                document.getElementById('inputFullName').value = customer.fullName || '';
+                document.getElementById('inputEmail').value = customer.email || '';
+                document.getElementById('inputPhone').value = customer.phone || '';
+                document.getElementById('inputAddress').value = customer.address || '';
+                document.getElementById('inputIdNumber').value = customer.idNumber || '';
+                document.getElementById('inputDateOfBirth').value = customer.dateOfBirth || '';
+
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        }
+
+        // --- 3. CẬP NHẬT HỒ SƠ ---
+        btnUpdateProfile.addEventListener('click', async () => {
+            const profileData = {
+                fullName: document.getElementById('inputFullName').value,
+                phone: document.getElementById('inputPhone').value,
+                address: document.getElementById('inputAddress').value,
+                dateOfBirth: document.getElementById('inputDateOfBirth').value,
+                // Email và CCCD (idNumber) không được phép sửa
+            };
+
+            setLoading(btnUpdateProfile, profileSpinner, true);
+            try {
+                // API mới: PUT /api/public/customer/profile
+                const response = await fetch(`${API_URL}/profile`, {
+                    method: 'PUT',
+                    headers: headers,
+                    body: JSON.stringify(profileData)
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.message || 'Cập nhật thất bại.');
+                }
+
+                // Cập nhật lại tên trên header
+                const userProfileName = document.getElementById('userProfileName');
+                if (userProfileName) {
+                    userProfileName.textContent = profileData.fullName;
+                }
+                // Cập nhật lại localStorage (nếu cần)
+                const storedCustomer = JSON.parse(localStorage.getItem('currentCustomer'));
+                storedCustomer.fullName = profileData.fullName;
+                storedCustomer.phone = profileData.phone;
+                storedCustomer.address = profileData.address;
+                localStorage.setItem('currentCustomer', JSON.stringify(storedCustomer));
+
+                showAlert('Cập nhật hồ sơ thành công!', 'success');
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            } finally {
+                setLoading(btnUpdateProfile, profileSpinner, false);
+            }
+        });
+
+        // --- 4. CẬP NHẬT MẬT KHẨU ---
+        btnUpdatePassword.addEventListener('click', async () => {
+            const currentPassword = document.getElementById('inputCurrentPassword').value;
+            const newPassword = document.getElementById('inputNewPassword').value;
+            const confirmPassword = document.getElementById('inputConfirmPassword').value;
+
+            if (!currentPassword || !newPassword) {
+                showAlert('Vui lòng nhập mật khẩu hiện tại và mật khẩu mới.', 'warning');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                showAlert('Mật khẩu mới không khớp. Vui lòng nhập lại.', 'warning');
+                return;
+            }
+
+            const passwordData = { currentPassword, newPassword };
+
+            setLoading(btnUpdatePassword, passwordSpinner, true);
+            try {
+                // API mới: PATCH /api/public/customer/change-password
+                const response = await fetch(`${API_URL}/change-password`, {
+                    method: 'PATCH',
+                    headers: headers,
+                    body: JSON.stringify(passwordData)
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.message || 'Đổi mật khẩu thất bại.');
+                }
+                showAlert('Đổi mật khẩu thành công!', 'success');
+                document.getElementById('passwordForm').reset();
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            } finally {
+                setLoading(btnUpdatePassword, passwordSpinner, false);
+            }
+        });
+
+        // --- Hàm tiện ích ---
+        function showAlert(message, type = 'danger') {
+            alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                                          ${message}
+                                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                      </div>`;
+            window.scrollTo(0, 0);
+        }
+
+        function setLoading(button, spinner, isLoading) {
+            button.disabled = isLoading;
+            spinner.classList.toggle('d-none', !isLoading);
+        }
+
+        // Tải hồ sơ khi trang được mở
+        loadProfile();
+    });
+</script>
+
+</body>
+</html>

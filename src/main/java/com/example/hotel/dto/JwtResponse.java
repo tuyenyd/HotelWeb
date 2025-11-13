@@ -1,15 +1,29 @@
 package com.example.hotel.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+// Chúng ta sẽ không dùng @AllArgsConstructor vì có 2 constructor khác nhau
+
+@Setter
+@Getter
 public class JwtResponse {
+
     private String token;
     private String type = "Bearer";
 
-    // ⭐ SỬA: Thêm các trường thông tin người dùng
-    private String username;
-    private String fullName;
+    private String username; // Tên đăng nhập (cho Admin)
     private String role;
     private String avatarUrl;
 
+    // --- Bổ sung các trường cho Customer ---
+    private Long id; // ID của khách hàng
+    private String fullName;
+    private String email;    // Dùng trường email riêng
+    private String phone;
+    private String address;
+    private String idNumber;
+
+    // Constructor 1: Dành cho Admin
     public JwtResponse(String accessToken, String username, String fullName, String role, String avatarUrl) {
         this.token = accessToken;
         this.username = username;
@@ -18,49 +32,15 @@ public class JwtResponse {
         this.avatarUrl = avatarUrl;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
+    // Constructor 2: Dành cho Customer
+    public JwtResponse(String token, Long id, String email, String fullName, String phone, String address, String idNumber) {
         this.token = token;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
+        this.id = id;
+        this.email = email; // Đặt email
         this.fullName = fullName;
+        this.phone = phone;
+        this.address = address;
+        this.idNumber = idNumber;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String role) {
-        this.avatarUrl = avatarUrl;
-    }
 }

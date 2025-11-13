@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LoyaltyTierRepository extends JpaRepository<LoyaltyTier, Long> {
@@ -13,6 +14,7 @@ public interface LoyaltyTierRepository extends JpaRepository<LoyaltyTier, Long> 
     List<LoyaltyTier> findAllByOrderByPointsRequiredDesc();
 
     // Dùng để tìm hạng Bronze (ID 1)
-    // Hoặc bạn có thể dùng findById(1L)
     LoyaltyTier findFirstByOrderByPointsRequiredAsc();
+
+    Optional<LoyaltyTier> findByName(String name);
 }

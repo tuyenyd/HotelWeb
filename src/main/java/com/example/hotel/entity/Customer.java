@@ -53,6 +53,9 @@ public class Customer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loyalty_tier_id", nullable = false)
     private LoyaltyTier loyaltyTier;
-    //Lưu ý: Bạn không cần thêm @OneToMany cho Bookings ở đây
-    // Trừ khi bạn muốn xem tất cả booking của 1 customer
+
+    @Column(name = "password", nullable = true) // nullable = true để khách cũ không bị lỗi
+    private String password;
+    //Lưu ý không cần thêm @OneToMany cho Bookings ở đây
+    // Trừ khi muốn xem tất cả booking của 1 customer
 }

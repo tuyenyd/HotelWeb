@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Trang / Đăng ký</title>
+
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        body {
+            /* Thay bằng ảnh nền khách sạn của bạn */
+            background-image: url('assets/img/bg.webp');
+            background-size: cover;
+            background-position: center;
+            /* Cho phép cuộn nếu form quá dài */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            padding: 2rem 0;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <div class="container">
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8 d-flex flex-column align-items-center justify-content-center">
+                        <div class="card mb-3">
+                            <div class="card-body">
+
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">Tạo tài khoản</h5>
+                                    <p class="text-center small">Nhập thông tin cá nhân để đăng ký</p>
+                                </div>
+
+                                <div id="alert-container" class="d-none">
+                                    <div class="alert p-2" role="alert">
+                                        <i class="bi bi-exclamation-triangle-fill"></i> <span id="alert-message"></span>
+                                    </div>
+                                </div>
+
+                                <form class="row g-3 needs-validation" id="registerForm" novalidate>
+                                    <div class="col-md-12">
+                                        <label for="yourName" class="form-label">Họ và tên</label>
+                                        <input type="text" name="name" class="form-control" id="yourName" required>
+                                        <div class="invalid-feedback">Vui lòng nhập họ và tên!</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="yourEmail" class="form-label">Email</label>
+                                        <input type="email" name="email" class="form-control" id="yourEmail" required>
+                                        <div class="invalid-feedback">Vui lòng nhập địa chỉ Email hợp lệ!</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="yourPassword" class="form-label">Mật khẩu (tối thiểu 6 ký tự)</label>
+                                        <input type="password" name="password" class="form-control" id="yourPassword" required minlength="6">
+                                        <div class="invalid-feedback">Vui lòng nhập mật khẩu (tối thiểu 6 ký tự)!</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="yourPhone" class="form-label">Số điện thoại</label>
+                                        <input type="tel" name="phone" class="form-control" id="yourPhone" required>
+                                        <div class="invalid-feedback">Vui lòng nhập số điện thoại!</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="yourIdNumber" class="form-label">Số CCCD / CMND</label>
+                                        <input type="text" name="idNumber" class="form-control" id="yourIdNumber" required>
+                                        <div class="invalid-feedback">Vui lòng nhập số CCCD/CMND!</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="yourDob" class="form-label">Ngày sinh</label>
+                                        <input type="date" name="dob" class="form-control" id="yourDob" required>
+                                        <div class="invalid-feedback">Vui lòng nhập ngày sinh!</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="yourAddress" class="form-label">Địa chỉ </label>
+                                        <input type="text" name="address" class="form-control" id="yourAddress">
+                                        <div class="invalid-feedback">Vui lòng nhập địa chỉ!</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
+                                            <label class="form-check-label" for="acceptTerms">Tôi đồng ý với <a href="#" style="color:#2f5d50 ">điều khoản sử dụng</a></label>
+                                            <div class="invalid-feedback">Bạn phải đồng ý trước khi gửi.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn  w-100" style="background-color: #2f5d50;color: white" type="submit" id="registerButton">
+                                            <span id="registerSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                            Tạo tài khoản
+                                        </button>
+                                    </div>
+                                    <div class="col-12">
+                                        <p class="small mb-0">Đã có tài khoản? <a href="pages-login.html" style="color:#2f5d50 ">Đăng nhập</a></p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main><script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/main.js"></script>
+
+<script>
+    const registerForm = document.getElementById('registerForm');
+    const alertContainer = document.getElementById('alert-container');
+    const alertMessage = document.getElementById('alert-message');
+    const registerButton = document.getElementById('registerButton');
+    const registerSpinner = document.getElementById('registerSpinner');
+
+    function showAlert(message, type = 'danger') {
+        alertMessage.textContent = message;
+        alertContainer.className = `alert alert-${type} p-2 d-block`; // Hiển thị alert
+    }
+
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Kiểm tra validation của Bootstrap
+        if (!registerForm.checkValidity()) {
+            e.stopPropagation();
+            registerForm.classList.add('was-validated');
+            return;
+        }
+
+        registerButton.disabled = true;
+        registerSpinner.classList.remove('d-none');
+        alertContainer.classList.add('d-none'); // Ẩn lỗi cũ
+
+        // 1. Thu thập dữ liệu (Khớp với CustomerRegisterRequest.java)
+        const data = {
+            fullName: document.getElementById('yourName').value,
+            email: document.getElementById('yourEmail').value,
+            password: document.getElementById('yourPassword').value,
+            phone: document.getElementById('yourPhone').value,
+            idNumber: document.getElementById('yourIdNumber').value,
+            dateOfBirth: document.getElementById('yourDob').value,
+            address: document.getElementById('yourAddress').value || null // Gửi null nếu rỗng
+        };
+
+        try {
+            // 2. Gọi API Public Register
+            const response = await fetch('/api/public/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const responseData = await response.json(); // Đọc response (thành công hoặc lỗi)
+
+            if (!response.ok) {
+                // Backend trả về lỗi (VD: Email tồn tại)
+                throw new Error(responseData.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+            }
+
+            // 3. Đăng ký thành công
+            showAlert('Đăng ký thành công! Đang chuyển hướng đến trang đăng nhập...', 'success');
+
+            setTimeout(() => {
+                // Chuyển hướng sang trang đăng nhập
+                window.location.href = 'pages-login.html';
+            }, 2000);
+
+        } catch (error) {
+            showAlert(error.message);
+            registerButton.disabled = false;
+            registerSpinner.classList.add('d-none');
+        }
+    });
+</script>
+</body>
+</html>

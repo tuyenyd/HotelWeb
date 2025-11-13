@@ -30,7 +30,7 @@ public class Room {
 
     @Column(name = "floor")
     private Integer floor;
-    // Thêm trường price vào đây
+
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 

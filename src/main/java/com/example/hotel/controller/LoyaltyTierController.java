@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/loyalty-tiers") // API cho trang admin
+@RequestMapping("/api/admin/loyalty-tiers")
 @RequiredArgsConstructor
 public class LoyaltyTierController {
 

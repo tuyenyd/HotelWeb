@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,5 +34,18 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
             nativeQuery = true
     )
     Optional<Booking> findDeletedById(@Param("id") Long id);
+
+    /**
+     * Tìm các đặt phòng (trừ CANCELLED) có xung đột ngày với một phòng cụ thể.
+     */
+    @Query("SELECT b FROM Booking b " +
+            "WHERE b.room.id = :roomId " +
+            "AND b.status != 'CANCELLED' " +
+            "AND (b.checkInDate < :checkout AND b.checkOutDate > :checkin)")
+    List<Booking> findConflictingBookings(
+            @Param("roomId") Long roomId,
+            @Param("checkin") LocalDate checkin,
+            @Param("checkout") LocalDate checkout
+    );
 }
 

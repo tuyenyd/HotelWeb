@@ -2,12 +2,12 @@ package com.example.hotel.service.impl;
 
 import com.example.hotel.dto.BookingDto;
 import com.example.hotel.dto.BookingHistoryDto;
-import com.example.hotel.entity.Booking;
-import com.example.hotel.entity.BookingStatus;
-import com.example.hotel.entity.Room;
-import com.example.hotel.entity.Customer;
-import com.example.hotel.entity.RoomStatus; // <-- ĐẢM BẢO BẠN CÓ DÒNG NÀY
+import com.example.hotel.dto.BookingRequestDTO;
+import com.example.hotel.dto.BookingResponseDTO;
+import com.example.hotel.entity.*;
 import com.example.hotel.repository.CustomerRepository;
+import com.example.hotel.repository.LoyaltyTierRepository;
+import com.example.hotel.security.jwt.JwtUtils;
 import com.example.hotel.service.LoyaltyAutomationService;
 import lombok.extern.slf4j.Slf4j;
 import com.example.hotel.exception.ResourceNotFoundException;
@@ -32,6 +32,7 @@ import java.util.UUID;
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,8 +43,11 @@ public class BookingServiceImpl implements BookingService {
     private final RoomRepository roomRepository;
     private final CustomerRepository customerRepository;
     private final LoyaltyAutomationService loyaltyAutomationService;
+    private final LoyaltyTierRepository loyaltyTierRepository;
+    private final JwtUtils jwtUtils;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
 
 
     @Override
@@ -52,8 +56,22 @@ public class BookingServiceImpl implements BookingService {
         Specification<Booking> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (status != null && !status.isEmpty()) {
-                String snakeCaseStatus = status.replace('-', '_').toUpperCase();
-                predicates.add(cb.equal(root.get("status"), BookingStatus.valueOf(snakeCaseStatus)));
+                // Tách chuỗi status (VD: "PENDING,CONFIRMED,CHECKED_IN")
+                String[] statuses = status.split(",");
+                List<BookingStatus> bookingStatuses = new ArrayList<>();
+                for (String s : statuses) {
+                    try {
+                        // Chuyển đổi từng trạng thái
+                        bookingStatuses.add(BookingStatus.valueOf(s.replace('-', '_').toUpperCase()));
+                    } catch (IllegalArgumentException e) {
+                        // Bỏ qua trạng thái không hợp lệ nếu có
+                        log.warn("Trạng thái không hợp lệ bị bỏ qua: {}", s);
+                    }
+                }
+                if (!bookingStatuses.isEmpty()) {
+                    // Dùng "IN" thay vì "="
+                    predicates.add(root.get("status").in(bookingStatuses));
+                }
             }
             if (fromDate != null) {
                 predicates.add(cb.greaterThanOrEqualTo(root.get("checkInDate"), fromDate));
@@ -250,8 +268,6 @@ public class BookingServiceImpl implements BookingService {
         log.info("--- KẾT THÚC updateBookingStatus ---");
         return convertToDto(updatedBooking);
     }
-    // === KẾT THÚC HÀM GỠ LỖI ===
-
 
     @Override
     @Transactional(readOnly = true)
@@ -336,6 +352,7 @@ public class BookingServiceImpl implements BookingService {
 
         dto.setSoNguoiLon(booking.getSoNguoiLon());
         dto.setSoTreEm(booking.getSoTreEm());
+        dto.setAmountPaid(booking.getAmountPaid());
 
         return dto;
     }
@@ -366,8 +383,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setCheckOutDate(LocalDate.parse(dto.getCheckout(), dateFormatter));
         booking.setTotalPrice(dto.getTotal());
 
-        // === SỬA LỖI: Lấy giá từ RoomType thay vì Room ===
-        // Giá (price) đã được thêm vào Room entity, nên dùng room.getPrice() là ĐÚNG
+        //  Lấy giá từ RoomType thay vì Room ===
         if (room.getPrice() == null) {
             log.warn("Phòng {} không có giá (price). Đặt giá tạm thời là 0.", room.getId());
             booking.setPricePerNight(BigDecimal.ZERO);
@@ -395,7 +411,7 @@ public class BookingServiceImpl implements BookingService {
             Room room = roomRepository.findById(dto.getRoomId())
                     .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + dto.getRoomId()));
             booking.setRoom(room);
-            // === SỬA LỖI: Cập nhật PricePerNight khi phòng thay đổi ===
+            //  Cập nhật PricePerNight khi phòng thay đổi ===
             if (room.getPrice() == null) {
                 log.warn("Phòng {} không có giá (price). Đặt giá tạm thời là 0.", room.getId());
                 booking.setPricePerNight(BigDecimal.ZERO);
@@ -412,5 +428,125 @@ public class BookingServiceImpl implements BookingService {
         booking.setSoTreEm(dto.getSoTreEm());
 
         return booking;
+    }
+    @Override
+    @Transactional
+    public BookingResponseDTO createPublicBooking(BookingRequestDTO request, String token) {
+
+        // 1. Kiểm tra ngày
+        LocalDate checkin = LocalDate.parse(request.getCheckin(), dateFormatter);
+        LocalDate checkout = LocalDate.parse(request.getCheckout(), dateFormatter);
+        if (checkin.isAfter(checkout) || checkin.isEqual(checkout)) {
+            throw new RuntimeException("Ngày đi phải sau ngày đến.");
+        }
+
+        // 2. Kiểm tra xem phòng có còn trống không (Kiểm tra lần 2 để đảm bảo)
+        List<Booking> conflicts = bookingRepository.findConflictingBookings(
+                request.getRoomId(), checkin, checkout
+        );
+        if (!conflicts.isEmpty()) {
+            throw new RuntimeException("Rất tiếc, phòng này vừa được đặt. Vui lòng chọn phòng khác.");
+        }
+
+        // 3. Lấy thông tin Phòng
+        Room room = roomRepository.findById(request.getRoomId())
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phòng."));
+
+        // 4. Lấy hoặc Tạo Khách hàng
+        Customer customer = getOrCreateCustomer(request, token);
+
+        // 5. Tạo và Lưu Đặt phòng
+        Booking booking = new Booking();
+        booking.setCustomer(customer);
+        booking.setRoom(room);
+
+        booking.setCheckInDate(checkin);
+        booking.setCheckOutDate(checkout);
+        booking.setSoNguoiLon(request.getSoNguoiLon());
+        booking.setSoTreEm(request.getSoTreEm());
+
+        booking.setTotalPrice(request.getTotal());
+        booking.setPricePerNight(room.getPrice()); // Lấy giá chính xác của phòng
+
+        // Entity Booking yêu cầu 2 trường này (dùng thông tin khách hàng)
+        booking.setCustomerFullName(customer.getFullName());
+        booking.setCustomerPhone(customer.getPhone());
+
+        booking.setStatus(BookingStatus.PENDING); // Luôn là PENDING khi khách đặt
+        booking.setBookingConfirmationCode(generateBookingCode()); // Hàm tạo mã ngẫu nhiên
+
+        Booking savedBooking = bookingRepository.save(booking);
+
+        // (Tùy chọn: Gửi email xác nhận cho khách tại đây)
+
+        return new BookingResponseDTO(
+                savedBooking.getBookingConfirmationCode(),
+                savedBooking.getStatus().name(),
+                savedBooking.getTotalPrice()
+        );
+    }
+
+    /**
+     * Logic xử lý khách hàng:
+     * 1. Nếu có token, dùng khách hàng đó.
+     * 2. Nếu không có token, tìm bằng CCCD (idNumber).
+     * 3. Nếu không có CCCD, tìm bằng Email.
+     * 4. Nếu không có Email, tạo khách hàng mới.
+     */
+    private Customer getOrCreateCustomer(BookingRequestDTO request, String token) {
+
+        // 1. Ưu tiên 1: Đã đăng nhập (dùng Token)
+        if (token != null && token.startsWith("Bearer ")) {
+            String jwt = token.substring(7);
+            // Giả sử JwtUtils của bạn có thể lấy 'email' từ token
+            String email = jwtUtils.getUserNameFromJwtToken(jwt);
+            return customerRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResourceNotFoundException("Token khách hàng không hợp lệ."));
+        }
+
+        // 2. Ưu tiên 2: Khách vãng lai - Tìm bằng CCCD
+        // (Entity Customer của bạn định nghĩa idNumber là unique)
+        Optional<Customer> existingByIdNumber = customerRepository.findByIdNumber(request.getCustomerIdNumber());
+        if (existingByIdNumber.isPresent()) {
+            return existingByIdNumber.get();
+        }
+
+        // 3. Ưu tiên 3: Khách vãng lai - Tìm bằng Email
+        // (Entity Customer của bạn định nghĩa email là unique)
+        Optional<Customer> existingByEmail = customerRepository.findByEmail(request.getCustomerEmail());
+        if (existingByEmail.isPresent()) {
+            // Tìm thấy bằng email, nhưng CCCD khác? -> Lỗi
+            throw new RuntimeException("Email này đã tồn tại với một số CCCD khác.");
+        }
+
+        // 4. Không tìm thấy -> Tạo khách hàng mới
+        log.info("Không tìm thấy khách hàng, tạo mới cho: {}", request.getCustomerEmail());
+
+        // LỖI QUAN TRỌNG: Entity Customer yêu cầu 'dateOfBirth' và 'loyaltyTier'
+        // nhưng form không có. Chúng ta phải đặt giá trị mặc định.
+
+        LoyaltyTier defaultTier = loyaltyTierRepository.findById(1L) // Giả sử ID 1 là hạng "Đồng"
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy hạng thành viên mặc định (ID 1L)."));
+
+        Customer newCustomer = new Customer();
+        newCustomer.setFullName(request.getCustomerName());
+        newCustomer.setEmail(request.getCustomerEmail());
+        newCustomer.setPhone(request.getCustomerPhone());
+        newCustomer.setAddress(request.getCustomerAddress());
+        newCustomer.setIdNumber(request.getCustomerIdNumber());
+
+        // Đặt giá trị mặc định cho các trường NOT NULL
+        newCustomer.setDateOfBirth(LocalDate.of(1990, 1, 1)); // Ngày sinh mặc định
+        newCustomer.setLoyaltyTier(defaultTier);
+        newCustomer.setCurrentPoints(0);
+        // newCustomer.setPassword(null); // Không cần password cho khách vãng lai
+
+        return customerRepository.save(newCustomer);
+    }
+
+    // Hàm tạo mã ngẫu nhiên
+    private String generateBookingCode() {
+        // Tốt hơn là dùng UUID như bạn đã làm
+        return "BK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 }

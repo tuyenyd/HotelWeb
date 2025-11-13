@@ -66,7 +66,7 @@ public class LoyaltyAutomationService {
      */
     private void updateCustomerTier(Customer customer) {
         // Lấy danh sách hạng, sắp xếp điểm từ CAO xuống THẤP
-        // (Platinum 3000, Gold 1500, Silver 500, Bronze 0)
+        // (Platinum 3000, Gold 1500, Silver 1000, Bronze 0)
         List<LoyaltyTier> tiers = tierRepository.findAllByOrderByPointsRequiredDesc();
 
         for (LoyaltyTier tier : tiers) {

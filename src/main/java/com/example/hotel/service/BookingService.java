@@ -2,6 +2,8 @@ package com.example.hotel.service;
 
 import com.example.hotel.dto.BookingDto;
 import com.example.hotel.dto.BookingHistoryDto;
+import com.example.hotel.dto.BookingRequestDTO;
+import com.example.hotel.dto.BookingResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,7 +18,6 @@ public interface BookingService {
     BookingDto updateBooking(Long id, BookingDto bookingDto);
     void deleteBooking(Long id);
     BookingDto updateBookingStatus(Long id, String status);
-    // === THÊM PHƯƠNG THỨC NÀY ===
     /**
      * Lấy lịch sử đặt phòng của một khách hàng.
      * @param customerId ID của khách hàng
@@ -29,4 +30,12 @@ public interface BookingService {
      * @return Một trang (Page) các BookingDto
      */
     Page<BookingDto> getDeletedBookings(Pageable pageable);
+
+    /**
+     * Tạo đặt phòng công khai (từ trang người dùng)
+     * @param request DTO chứa thông tin từ form
+     * @param token (Nullable) JWT token của khách hàng nếu họ đã đăng nhập
+     * @return DTO chứa mã đặt phòng
+     */
+    BookingResponseDTO createPublicBooking(BookingRequestDTO request, String token);
 }

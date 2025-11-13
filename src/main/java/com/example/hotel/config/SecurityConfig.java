@@ -2,7 +2,7 @@
 package com.example.hotel.config;
 
 import com.example.hotel.security.AuthTokenFilter;
-import com.example.hotel.security.UserDetailsServiceImpl;
+import com.example.hotel.service.impl.UserDetailsServiceImpl;
 import com.example.hotel.security.jwt.AuthEntryPointJwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -73,9 +73,9 @@ public class SecurityConfig {
                         // Cho phép truy cập công khai vào các API xác thực
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        .requestMatchers("/HotelAdmin/*.html").permitAll()
+                        .requestMatchers("/Hotel/HotelAdmin/**").permitAll()
 
-                        .requestMatchers("/HotelAdmin/assets/**").permitAll()
+                        .requestMatchers("/Hotel/HotelUser/**").permitAll()
 
                         .requestMatchers("/avatars/**").permitAll()
 
@@ -83,6 +83,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "MANAGER")
 
                         .requestMatchers("/api/users/**").authenticated()
+
+                        .requestMatchers("/api/public/auth/**").permitAll()
+
+                        .requestMatchers("/api/public/**").permitAll()
+
+                        .requestMatchers("/api/public/customer/**").authenticated()
 
                         // Yêu cầu xác thực cho tất cả các yêu cầu còn lại
                         .anyRequest().authenticated()

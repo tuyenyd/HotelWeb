@@ -14,7 +14,7 @@ import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("/api/admin/rooms") // API dành cho admin quản lý phòng
+@RequestMapping("/api/admin/rooms")
 public class RoomAdminController {
 
     @Autowired

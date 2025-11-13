@@ -1,7 +1,9 @@
 package com.example.hotel.controller;
 
 import com.example.hotel.dto.BookingDto;
+import com.example.hotel.dto.PaymentDto;
 import com.example.hotel.service.BookingService;
+import com.example.hotel.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,6 +25,7 @@ import java.util.Map;
 public class BookingAdminController {
 
     private final BookingService bookingService;
+    private final PaymentService paymentService;
 
     @GetMapping
     public ResponseEntity<Page<BookingDto>> getAllBookings(
@@ -88,5 +92,9 @@ public class BookingAdminController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortField));
         Page<BookingDto> trashPage = bookingService.getDeletedBookings(pageable);
         return ResponseEntity.ok(trashPage);
+    }
+    @GetMapping("/{id}/payments")
+    public ResponseEntity<List<PaymentDto>> getBookingPayments(@PathVariable Long id) {
+        return ResponseEntity.ok(paymentService.getPaymentsForBooking(id));
     }
 }

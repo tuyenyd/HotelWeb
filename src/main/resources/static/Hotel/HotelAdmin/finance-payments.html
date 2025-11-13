@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Thanh toán - Quản lý Khách sạn</title>
+    <link href="assets/img/img.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+
+    <style>
+        /* CSS tùy chỉnh cho trang thanh toán */
+        .total-due {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--bs-danger); /* Màu đỏ */
+        }
+        .total-paid {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--bs-success); /* Màu xanh */
+        }
+
+        /* === CẢI TIẾN 1: STICKY COLUMN === */
+        @media (min-width: 992px) { /* Chỉ áp dụng cho màn hình lớn (lg) */
+            .payment-column-sticky {
+                position: sticky;
+                top: 80px; /* 60px header + 20px padding */
+            }
+        }
+
+        /* Màu nền nhạt cho thẻ tóm tắt */
+        .bg-danger-light {
+            background-color: #fdeded;
+            border-color: #f5c6cb;
+        }
+        .bg-success-light {
+            background-color: #e6f7f0;
+            border-color: #c3e6cb;
+        }
+
+        /* CSS cho icon giao dịch */
+        .transaction-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+
+        /* CSS cho Alert (giống checkin.html) */
+        .alert-custom {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center">
+            <img src="assets/img/logo.png" alt="Logo">
+            <span class="d-none d-lg-block">Grandoria</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><div class="search-bar">
+    <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Tìm kiếm đặt phòng, khách hàng..." title="Nhập từ khóa tìm kiếm">
+        <button type="submit" title="Tìm kiếm"><i class="bi bi-search"></i></button>
+    </form>
+</div><nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+            <a class="nav-link nav-icon search-bar-toggle " href="#">
+                <i class="bi bi-search"></i>
+            </a>
+        </li><li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            <span class="badge bg-primary badge-number">3</span>
+        </a><ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+        <li class="dropdown-header">
+            Bạn có 3 thông báo mới
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">Xem tất cả</span></a>
+        </li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-exclamation-circle text-warning"></i>
+            <div>
+                <h4>Đặt phòng mới</h4>
+                <p>Khách hàng Nguyễn Văn A vừa đặt phòng Deluxe</p>
+                <p>5 phút trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-x-circle text-danger"></i>
+            <div>
+                <h4>Hủy đặt phòng</h4>
+                <p>Đặt phòng #2457 đã bị hủy</p>
+                <p>2 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-check-circle text-success"></i>
+            <div>
+                <h4>Phản hồi mới</h4>
+                <p>Bạn có 2 đánh giá mới từ khách hàng</p>
+                <p>4 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li class="dropdown-footer">
+            <a href="#">Hiển thị tất cả thông báo</a>
+        </li>
+    </ul></li><li class="nav-item dropdown pe-3">
+
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/profile-img.jpg" alt="Hồ sơ" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2" id="profileName">Đang tải...</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+                <h6 id="profileDropdownName">...</h6>
+                <span id="profileDropdownRole">...</span>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-person"></i>
+                    <span>Hồ sơ của tôi</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-gear"></i>
+                    <span>Cài đặt tài khoản</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="pages-login.html" id="logoutButton">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </li>
+        </ul></li></ul>
+</nav></header><aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="index.html">
+                <i class="bi bi-house-door"></i>
+                <span>Bảng Điều Khiển</span>
+            </a>
+        </li><li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#booking-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-calendar-check"></i><span>Quản lý Đặt phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="booking-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="tatcadatphong.html">
+                    <i class="bi bi-circle"></i><span>Tất cả đặt phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="checkin.html">
+                    <i class="bi bi-circle"></i><span>Check-in</span>
+                </a>
+            </li>
+            <li>
+                <a href="checkout.html">
+                    <i class="bi bi-circle"></i><span>Check-out</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#room-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-door-closed"></i><span>Quản lý Phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="room-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="danhsachphong.html">
+                    <i class="bi bi-circle"></i><span>Danh sách phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="loaiphong.html">
+                    <i class="bi bi-circle"></i><span>Loại phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="tinhtrangphong.html">
+                    <i class="bi bi-circle"></i><span>Tình trạng phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="giaphong.html">
+                    <i class="bi bi-circle"></i><span>Giá phòng</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#customer-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-people"></i><span>Quản lý Khách hàng</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="customer-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="danhsachkhachhang.html">
+                    <i class="bi bi-circle"></i><span>Danh sách khách hàng</span>
+                </a>
+            </li>
+            <li>
+                <a href="chuongtrinhthanhvien.html">
+                    <i class="bi bi-circle"></i><span>Chương trình thành viên</span>
+                </a>
+            </li>
+            <li>
+                <a href="danhgia&phanhoi.html">
+                    <i class="bi bi-circle"></i><span>Đánh giá & Phản hồi</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" href="baocao&thongke.html">
+            <i class="bi bi-bar-chart"></i>
+            <span>Báo cáo & Thống kê</span>
+        </a>
+    </li>
+
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-cash-coin"></i><span>Tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="finance-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="finance-invoices.html">
+                        <i class="bi bi-circle"></i><span>Hóa đơn</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="finance-payments.html" class="active">
+                        <i class="bi bi-circle"></i><span>Thanh toán</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="finance-revenue.html">
+                        <i class="bi bi-circle"></i><span>Doanh thu</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-heading">Trang</li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="users-profile.html">
+                <i class="bi bi-person"></i>
+                <span>Hồ sơ</span>
+            </a>
+        </li><li class="nav-item">
+        <a class="nav-link collapsed" href="pages-contact.html">
+            <i class="bi bi-envelope"></i>
+            <span>Liên hệ</span>
+        </a>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" href="users.html">
+            <i class="bi bi-person-gear"></i>
+            <span>Nhân viên</span>
+        </a>
+    </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="taikhoan.html">
+                <i class="bi bi-person-badge"></i>
+                <span>Tài khoản</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="settings.html">
+                <i class="bi bi-gear"></i>
+                <span>Cài đặt</span>
+            </a>
+        </li>
+    </ul>
+
+</aside>
+
+<main id="main" class="main">
+
+    <div class="pagetitle d-flex justify-content-between align-items-center">
+        <h1>Ghi lại Thanh toán</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                <li class="breadcrumb-item">Tài chính</li>
+                <li class="breadcrumb-item active">Thanh toán</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+
+            <div class="col-lg-7">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Tìm kiếm Đặt phòng</h5>
+
+                        <div class="row g-3">
+                            <div class="col-md-9">
+                                <label for="paymentSearchInput" class="form-label">Mã đặt phòng, Tên khách, SĐT hoặc Số phòng</label>
+                                <input type="text" class="form-control" id="paymentSearchInput" placeholder="VD: BK-24050 hoặc 401...">
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="button" class="btn btn-primary w-100" id="paymentSearchBtn"><i class="bi bi-search"></i> Tìm</button>
+                            </div>
+                        </div>
+
+                        <div id="paymentSearchResult" class="mt-4" style="max-height: 200px; overflow-y: auto;">
+                            <p class="text-muted text-center p-3">Vui lòng tìm kiếm để hiển thị kết quả...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card d-none" id="bookingDetailsCard">
+                    <div class="card-body">
+                        <h5 class="card-title">Chi tiết Thanh toán cho Đặt phòng <span id="bookingCodeDisplay" class="text-primary">#...</span></h5>
+
+                        <div id="bookingPaymentDetails">
+                            <div class="text-center p-3">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p>Đang tải chi tiết...</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-5 d-none payment-column-sticky" id="paymentFormColumn">
+
+                <div class="card bg-danger-light" id="paymentSummaryCard">
+                    <div class="card-body text-center p-3">
+                        <h5 class="card-title text-danger pb-0" id="summaryTitle">Còn lại phải thu</h5>
+                        <h2 class="total-due" id="summaryTotalDue">0 VNĐ</h2>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Ghi lại Thanh toán Mới</h5>
+
+                        <div id="paymentPaidMessage" class="alert alert-success text-center d-none" role="alert">
+                            <i class="bi bi-check-circle-fill fs-4"></i><br>
+                            <strong>Đã thanh toán đầy đủ!</strong>
+                        </div>
+
+                        <form class="row g-3" id="recordPaymentForm">
+                            <fieldset id="paymentFieldset">
+                                <div class="col-12">
+                                    <label for="paymentAmount" class="form-label">Số tiền thanh toán</label>
+
+                                    <div class="btn-group btn-group-sm w-100 mb-2" role="group">
+                                        <button type="button" class="btn btn-outline-primary" id="btnPayFull">Trả đủ</button>
+                                        <button type="button" class="btn btn-outline-secondary" id="btnPayHalf">50%</button>
+                                        <button type="button" class="btn btn-outline-secondary" id="btnPayHal">25%</button>
+                                        <button type="button" class="btn btn-outline-danger" id="btnPayClear">Xóa</button>
+                                    </div>
+
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="paymentAmount" required>
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <label for="paymentMethod" class="form-label">Phương thức thanh toán</label>
+                                    <select id="paymentMethod" class="form-select" required>
+                                        <option value="" selected disabled>Chọn phương thức...</option>
+                                        <option value="CASH">Tiền mặt</option>
+                                        <option value="CREDIT_CARD_POS">Thẻ tín dụng (Quẹt máy POS)</option>
+                                        <option value="BANK_TRANSFER">Chuyển khoản ngân hàng</option>
+                                        <option value="ONLINE_GATEWAY">Cổng thanh toán Online (VNPay,...)</option>
+                                        <option value="OTHER">Khác</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <label for="paymentNotes" class="form-label">Ghi chú (Tùy chọn)</label>
+                                    <textarea class="form-control" id="paymentNotes" rows="3" placeholder="VD: Khách chuyển khoản Vietcombank, mã GD 12345"></textarea>
+                                </div>
+
+                                <div class="text-center mt-4">
+                                    <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Xác nhận Thanh toán</button>
+                                    <button type="button" class="btn btn-secondary" onclick="cancelPayment()">Hủy</button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main><footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Bản quyền <strong><span>HotelAdmin</span></strong>. Tất cả các quyền được bảo lưu
+    </div>
+    <div class="credits">
+        Thiết kế bởi <a href="#">Nhóm Phát triển</a>
+    </div>
+</footer>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/main.js"></script>
+
+<script>
+    // === CÁC BIẾN DOM ===
+    const searchBtn = document.getElementById('paymentSearchBtn');
+    const searchInput = document.getElementById('paymentSearchInput');
+    const searchResultDiv = document.getElementById('paymentSearchResult');
+
+    const detailsCard = document.getElementById('bookingDetailsCard');
+    const detailsContent = document.getElementById('bookingPaymentDetails');
+
+    const paymentColumn = document.getElementById('paymentFormColumn');
+    const paymentForm = document.getElementById('recordPaymentForm');
+    const paymentAmountInput = document.getElementById('paymentAmount');
+
+    const paymentSummaryCard = document.getElementById('paymentSummaryCard');
+    const summaryTitle = document.getElementById('summaryTitle');
+    const summaryTotalDue = document.getElementById('summaryTotalDue');
+    const paymentFieldset = document.getElementById('paymentFieldset');
+    const paymentPaidMessage = document.getElementById('paymentPaidMessage');
+    const btnPayFull = document.getElementById('btnPayFull');
+    const btnPayHalf = document.getElementById('btnPayHalf');
+    const btnPayHal = document.getElementById('btnPayHal');
+    const btnPayClear = document.getElementById('btnPayClear');
+
+    const bookingCodeDisplay = document.getElementById('bookingCodeDisplay');
+
+    let currentSelectedBookingId = null;
+    let currentRemainingAmount = 0; // Lưu số tiền còn nợ
+    let currentTotalAmount = 0; // Lưu tổng tiền hóa đơn
+
+    // === GẮN SỰ KIỆN ===
+    document.addEventListener('DOMContentLoaded', () => {
+        // Kiểm tra auth.js
+        if (typeof fetchWithAuth === 'undefined') {
+            console.error("LỖI: Không tìm thấy auth.js. Trang không thể hoạt động.");
+            showAlert('Lỗi nghiêm trọng: Không tải được auth.js', 'danger');
+            return;
+        }
+
+        searchBtn.addEventListener('click', searchBookings);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchBookings();
+        });
+
+        paymentForm.addEventListener('submit', handlePaymentSubmit);
+
+        // Gắn sự kiện cho nút thanh toán nhanh
+        btnPayFull.addEventListener('click', () => {
+            paymentAmountInput.value = currentRemainingAmount;
+        });
+        btnPayHalf.addEventListener('click', () => {
+            // Làm tròn đến hàng nghìn
+            paymentAmountInput.value = Math.round(currentRemainingAmount / 2000) * 1000;
+        });
+        btnPayHal.addEventListener('click', () => {
+            // Làm tròn đến hàng nghìn
+            paymentAmountInput.value = Math.round(currentRemainingAmount / 4000) * 1000;
+        });
+        btnPayClear.addEventListener('click', () => {
+            paymentAmountInput.value = '';
+        });
+    });
+
+    /**
+     * HÀM 1: TÌM KIẾM ĐẶT PHÒNG (Đã kết nối API)
+     */
+    async function searchBookings() {
+        const searchTerm = searchInput.value.trim();
+        if (!searchTerm) {
+            showAlert('Vui lòng nhập thông tin tìm kiếm.', 'warning');
+            return;
+        }
+        showLoading(searchResultDiv, true, 'Đang tìm kiếm...');
+        cancelPayment(); // Ẩn form cũ
+
+        // Chỉ tìm các booking đang hoạt động (chưa check-out hoặc hủy)
+        // Dựa trên BookingServiceImpl.java của bạn
+        const params = new URLSearchParams({
+            search: searchTerm,
+            status: 'PENDING,CONFIRMED,CHECKED_IN', // Lọc các trạng thái cần thanh toán
+            page: 0,
+            size: 10, // Giới hạn 10 kết quả
+            sort: 'checkInDate,asc'
+        });
+
+        try {
+            // API TỪ BookingAdminController.java
+            const response = await fetchWithAuth(`/api/admin/bookings?${params.toString()}`);
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.message || 'Tìm kiếm thất bại');
+            }
+
+            const pageData = await response.json();
+            const bookings = pageData.content || []; // Đây là List<BookingDto>
+
+            showLoading(searchResultDiv, false);
+            searchResultDiv.innerHTML = '';
+
+            if (bookings.length === 0) {
+                searchResultDiv.innerHTML = '<p class="text-muted text-center">Không tìm thấy đặt phòng phù hợp.</p>';
+                return;
+            }
+
+            const listGroup = document.createElement('div');
+            listGroup.className = 'list-group';
+
+            // Dữ liệu này dựa trên BookingDto.java (đã thêm amountPaid)
+            bookings.forEach(b => {
+                const total = b.total || 0;
+                // 'amountPaid' được thêm vào từ BookingDto
+                const paid = b.amountPaid || 0;
+                const remaining = total - paid;
+
+                const statusClass = remaining <= 0 ? 'text-success' : 'text-danger';
+                const statusText = remaining <= 0 ? 'Đã thanh toán' : `Còn nợ: ${formatCurrency(remaining)}`;
+
+                // Truyền 'b.total' vào selectBooking để không phải gọi API lần 2
+                listGroup.innerHTML += `
+                    <a href="#" class="list-group-item list-group-item-action" onclick="selectBooking(${b.id}, '${b.code}', ${total}); return false;">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">${b.code} (Phòng ${b.roomNumber})</h6>
+                            <small class="${statusClass}">${statusText}</small>
+                        </div>
+                        <p class="mb-1">${b.customer} - ${b.phone}</p>
+                    </a>`;
+            });
+            searchResultDiv.appendChild(listGroup);
+
+        } catch (error) {
+            console.error("Lỗi searchBookings:", error);
+            if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
+                showLoading(searchResultDiv, false);
+                searchResultDiv.innerHTML = `<p class="text-danger text-center">Lỗi: ${error.message}</p>`;
+            }
+        }
+    }
+
+    /**
+     * HÀM 2: CHỌN VÀ TẢI CHI TIẾT (Đã kết nối API)
+     */
+    async function selectBooking(bookingId, bookingCode, totalAmount) {
+        currentSelectedBookingId = bookingId;
+        currentTotalAmount = totalAmount; // Lấy tổng tiền từ hàm search
+
+        detailsCard.classList.remove('d-none');
+        paymentColumn.classList.remove('d-none');
+
+        showLoading(detailsContent, true, 'Đang tải chi tiết...');
+        bookingCodeDisplay.textContent = `${bookingCode}`;
+
+        try {
+            // API TỪ BookingAdminController.java (endpoint /:id/payments)
+            const response = await fetchWithAuth(`/api/admin/bookings/${bookingId}/payments`);
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.message || 'Không thể tải lịch sử giao dịch');
+            }
+
+            const transactions = await response.json(); // Đây là List<PaymentDto>
+
+            // Tính toán số liệu
+            const amountPaid = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+            const amountRemaining = currentTotalAmount - amountPaid;
+            currentRemainingAmount = amountRemaining; // Lưu lại số nợ
+
+            // Icon Map
+            const iconMap = {
+                'CASH': { icon: 'bi-cash-stack', color: 'text-success' },
+                'CREDIT_CARD_POS': { icon: 'bi-credit-card-2-front-fill', color: 'text-primary' },
+                'BANK_TRANSFER': { icon: 'bi-bank', color: 'text-info' },
+                'ONLINE_GATEWAY': { icon: 'bi-globe', color: 'text-warning' },
+                'OTHER': { icon: 'bi-question-circle', color: 'text-muted' }
+            };
+
+            let transactionHtml = '';
+            if (transactions.length > 0) {
+                transactions.forEach(t => {
+                    const iconInfo = iconMap[t.method] || iconMap['OTHER'];
+                    // PaymentDto trả về LocalDateTime (ISO string)
+                    const paymentDate = t.paymentDate ? new Date(t.paymentDate).toLocaleString('vi-VN') : 'N/A';
+                    transactionHtml += `
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="bi ${iconInfo.icon} ${iconInfo.color} transaction-icon"></i>
+                            <div>
+                                <strong>${formatCurrency(t.amount)}</strong> - ${getPaymentMethodText(t.method)}
+                                <br><small class="text-muted">${paymentDate} - ${t.notes || 'Không có ghi chú'}</small>
+                            </div>
+                        </li>`;
+                });
+            } else {
+                transactionHtml = '<li class="list-group-item">Chưa có thanh toán nào được ghi lại.</li>';
+            }
+
+            // Render chi tiết
+            detailsContent.innerHTML = `
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Tổng tiền hóa đơn:</strong>
+                        <span class="fw-bold">${formatCurrency(currentTotalAmount)}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Đã thanh toán:</strong>
+                        <span class="fw-bold text-success">${formatCurrency(amountPaid)}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>Còn lại phải thu:</strong>
+                        <span class="fw-bold text-danger fs-5">${formatCurrency(amountRemaining)}</span>
+                    </li>
+                </ul>
+                <h6 class="card-title pb-0 mt-4">Lịch sử Giao dịch</h6>
+                <ul class="list-group">
+                    ${transactionHtml}
+                </ul>
+            `;
+
+            // Cập nhật Form và Thẻ Tóm tắt
+            if (currentRemainingAmount <= 0) {
+                summaryTotalDue.textContent = "Đã thanh toán";
+                summaryTotalDue.className = "total-paid text-success";
+                summaryTitle.textContent = "Tình trạng";
+                summaryTitle.className = "card-title text-success pb-0";
+                paymentSummaryCard.className = "card bg-success-light";
+                paymentFieldset.disabled = true;
+                paymentPaidMessage.classList.remove('d-none');
+                paymentAmountInput.value = '';
+            } else {
+                summaryTotalDue.textContent = formatCurrency(currentRemainingAmount);
+                summaryTotalDue.className = "total-due text-danger";
+                summaryTitle.textContent = "Còn lại phải thu";
+                summaryTitle.className = "card-title text-danger pb-0";
+                paymentSummaryCard.className = "card bg-danger-light";
+                paymentFieldset.disabled = false;
+                paymentPaidMessage.classList.add('d-none');
+                paymentAmountInput.value = currentRemainingAmount; // Tự động điền số nợ
+            }
+
+        } catch (error) {
+            console.error("Lỗi selectBooking:", error);
+            if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
+                showLoading(detailsContent, false);
+                detailsContent.innerHTML = `<p class="text-danger text-center">Lỗi tải chi tiết: ${error.message}</p>`;
+                paymentColumn.classList.add('d-none'); // Ẩn form nếu lỗi
+            }
+        }
+    }
+
+    /**
+     * Hủy thao tác, ẩn form
+     */
+    function cancelPayment() {
+        detailsCard.classList.add('d-none');
+        paymentColumn.classList.add('d-none');
+        currentSelectedBookingId = null;
+        currentRemainingAmount = 0;
+        currentTotalAmount = 0;
+        paymentForm.reset();
+        paymentFieldset.disabled = false;
+        paymentPaidMessage.classList.add('d-none');
+    }
+
+    /**
+     * HÀM 3: GỬI FORM THANH TOÁN (Đã kết nối API)
+     */
+    async function handlePaymentSubmit(e) {
+        e.preventDefault();
+        if (!currentSelectedBookingId) {
+            showAlert('Lỗi: Chưa chọn đặt phòng nào.', 'danger');
+            return;
+        }
+
+        const data = {
+            bookingId: currentSelectedBookingId,
+            amount: parseFloat(document.getElementById('paymentAmount').value),
+            method: document.getElementById('paymentMethod').value,
+            notes: document.getElementById('paymentNotes').value
+        };
+
+        if (data.amount <= 0) {
+            showAlert('Vui lòng nhập số tiền lớn hơn 0.', 'warning');
+            return;
+        }
+        if (!data.method) {
+            showAlert('Vui lòng chọn phương thức thanh toán.', 'warning');
+            return;
+        }
+
+        const submitButton = paymentForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang lưu...';
+
+        try {
+            // API TỪ PaymentAdminController.java
+            const response = await fetchWithAuth('/api/admin/payments/record', {
+                method: 'POST',
+                body: data // fetchWithAuth tự động stringify
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Lỗi khi lưu thanh toán');
+            }
+
+            showAlert('Đã ghi lại thanh toán thành công!', 'success');
+
+            // Tải lại chi tiết
+            // (Truyền lại currentTotalAmount để không cần gọi API lần nữa)
+            selectBooking(currentSelectedBookingId, bookingCodeDisplay.textContent.replace('#',''), currentTotalAmount);
+
+        } catch (error) {
+            console.error("Lỗi handlePaymentSubmit:", error);
+            if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
+                showAlert(error.message, 'danger');
+            }
+        } finally {
+            // Kích hoạt lại nút
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="bi bi-check-circle"></i> Xác nhận Thanh toán';
+        }
+    }
+
+    // === HÀM TIỆN ÍCH (Giữ nguyên) ===
+    function showLoading(element, isLoading, text = 'Đang tải...') {
+        if (isLoading) {
+            element.innerHTML = `
+                <div class="text-center p-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">${text}</p>
+                </div>`;
+        } else {
+            element.innerHTML = '';
+        }
+    }
+
+    function formatCurrency(amount) {
+        if (amount == null || isNaN(amount)) return '0 VNĐ';
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+    }
+
+    function getPaymentMethodText(method) {
+        const methods = {
+            'CASH': 'Tiền mặt',
+            'CREDIT_CARD_POS': 'Thẻ (POS)',
+            'BANK_TRANSFER': 'Chuyển khoản',
+            'ONLINE_GATEWAY': 'Cổng Online',
+            'OTHER': 'Khác'
+        };
+        return methods[method] || method;
+    }
+
+    // Hàm showAlert đã được cập nhật để dùng class 'alert-custom'
+    function showAlert(message, type = 'info') {
+        const existingAlert = document.getElementById('dynamicAlert');
+        if(existingAlert) existingAlert.remove();
+        const alert = document.createElement('div');
+        alert.id = 'dynamicAlert';
+        alert.className = `alert alert-${type} alert-dismissible fade show alert-custom`;
+        alert.setAttribute('role', 'alert');
+        alert.innerHTML = `
+            <i class="bi ${type === 'success' ? 'bi-check-circle-fill' : type === 'warning' ? 'bi-exclamation-triangle-fill' : type === 'danger' ? 'bi-exclamation-octagon-fill' : 'bi-info-circle-fill'} me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        document.body.appendChild(alert);
+        setTimeout(() => {
+            const currentAlert = document.getElementById('dynamicAlert');
+            if (currentAlert) {
+                bootstrap.Alert.getOrCreateInstance(currentAlert).close();
+            }
+        }, 5000);
+    }
+</script>
+
+</body>
+
+</html>

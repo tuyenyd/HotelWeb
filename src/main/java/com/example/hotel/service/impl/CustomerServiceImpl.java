@@ -12,6 +12,7 @@ import com.example.hotel.repository.CustomerRepository;
 import com.example.hotel.service.CustomerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final LoyaltyTierRepository loyaltyTierRepository;
-    private final BookingRepository bookingRepository; // === INJECT REPO MỚI ===
+    private final BookingRepository bookingRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public CustomerResponseDTO createCustomer(CustomerRequestDTO customerRequest) {
@@ -56,7 +58,6 @@ public class CustomerServiceImpl implements CustomerService {
         return mapToResponseDTO(savedCustomer);
     }
 
-    // === CẬP NHẬT HÀM NÀY ===
     @Override
     @Transactional(readOnly = true) // Thêm Transactional vì có truy vấn DB
     public CustomerResponseDTO getCustomerById(Long customerId) {
@@ -64,10 +65,9 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy khách hàng với ID: " + customerId));
         // Lấy booking chỉ cho khách hàng này để tính toán
         List<Booking> customerBookings = bookingRepository.findByCustomerIdOrderByCheckInDateDesc(customerId);
-        return mapToResponseDTO(customer, customerBookings); // Gọi hàm map mới có booking list
+        return mapToResponseDTO(customer, customerBookings);
     }
 
-    // === CẬP NHẬT HÀM NÀY ===
     @Override
     @Transactional(readOnly = true) // Thêm Transactional vì có truy vấn DB
     public List<CustomerResponseDTO> getAllCustomers() {
@@ -111,6 +111,62 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.deleteById(customerId);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public CustomerResponseDTO getCustomerProfileByEmail(String email) {
+        Customer customer = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy khách hàng với email: " + email));
+
+        // Dùng hàm mapToResponseDTO (phiên bản không cần list booking, nhanh hơn)
+        return mapToResponseDTO(customer);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long getCustomerIdByEmail(String email) {
+        Customer customer = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy khách hàng với email: " + email));
+        return customer.getId();
+    }
+
+    @Override
+    @Transactional
+    public CustomerResponseDTO updateCustomerProfile(String email, CustomerRequestDTO customerRequest) {
+        Customer existingCustomer = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy khách hàng với email: " + email));
+
+        // Cập nhật các trường được phép thay đổi
+        existingCustomer.setFullName(customerRequest.getFullName());
+        existingCustomer.setPhone(customerRequest.getPhone());
+        existingCustomer.setAddress(customerRequest.getAddress());
+        existingCustomer.setDateOfBirth(customerRequest.getDateOfBirth());
+        // Email và CCCD (idNumber) không cho phép thay đổi từ form này
+
+        Customer updatedCustomer = customerRepository.save(existingCustomer);
+
+        return mapToResponseDTO(updatedCustomer);
+    }
+
+    @Override
+    @Transactional
+    public void changeCustomerPassword(String email, String currentPassword, String newPassword) {
+        Customer customer = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy khách hàng."));
+
+        // 1. Kiểm tra mật khẩu hiện tại có đúng không
+        if (customer.getPassword() == null || !passwordEncoder.matches(currentPassword, customer.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu hiện tại không đúng.");
+        }
+
+        // 2. Kiểm tra mật khẩu mới có khác mật khẩu cũ không
+        if (passwordEncoder.matches(newPassword, customer.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu mới phải khác mật khẩu cũ.");
+        }
+
+        // 3. Mã hóa và lưu mật khẩu mới
+        customer.setPassword(passwordEncoder.encode(newPassword));
+        customerRepository.save(customer);
+    }
     // --- Hàm tiện ích để chuyển đổi (mapping) ---
 
     private Customer mapToEntity(CustomerRequestDTO dto) {
@@ -125,7 +181,6 @@ public class CustomerServiceImpl implements CustomerService {
         return customer;
     }
 
-    // --- HÀM MAP MỚI (chấp nhận List<Booking>) ---
     private CustomerResponseDTO mapToResponseDTO(Customer entity, List<Booking> allBookings) {
         CustomerResponseDTO dto = new CustomerResponseDTO();
         dto.setId(entity.getId());
@@ -173,7 +228,6 @@ public class CustomerServiceImpl implements CustomerService {
         dto.setBookings(bookingsCount);
         dto.setNights(totalNights);
         dto.setSpend(totalSpend);
-        // === KẾT THÚC TÍNH TOÁN ===
 
         return dto;
     }
@@ -201,7 +255,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         // Không tính toán thống kê ở đây
-        dto.setBookings(0); // Hoặc null nếu bạn muốn
+        dto.setBookings(0); // Hoặc null
         dto.setNights(0L); // Hoặc null
         dto.setSpend(BigDecimal.ZERO); // Hoặc null
 

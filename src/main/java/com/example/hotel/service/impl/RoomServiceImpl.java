@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -43,11 +44,10 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional
     public RoomDto createRoom(RoomDto roomDto) {
-        // === PHẦN SỬA LỖI 1: Kiểm tra số phòng trùng lặp khi tạo mới ===
+        // Kiểm tra số phòng trùng lặp khi tạo mới ===
         if (roomRepository.findByRoomNumber(roomDto.getRoomNumber()).isPresent()) {
             throw new DataIntegrityViolationException("Room number '" + roomDto.getRoomNumber() + "' already exists.");
         }
-        // =============================================================
 
         Room room = convertToEntity(roomDto);
         Room savedRoom = roomRepository.save(room);
@@ -60,7 +60,7 @@ public class RoomServiceImpl implements RoomService {
         Room existingRoom = roomRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + id));
 
-        // === PHẦN SỬA LỖI 2: Kiểm tra số phòng trùng lặp khi cập nhật ===
+        // Kiểm tra số phòng trùng lặp khi cập nhật ===
         Optional<Room> roomWithSameNumber = roomRepository.findByRoomNumber(roomDto.getRoomNumber());
         if (roomWithSameNumber.isPresent() && !roomWithSameNumber.get().getId().equals(id)) {
             // Tìm thấy một phòng có cùng số, nhưng đó không phải là phòng đang được chỉnh sửa
@@ -105,9 +105,9 @@ public class RoomServiceImpl implements RoomService {
             try {
                 statusEnum = RoomStatus.valueOf(status.toUpperCase());
             } catch (IllegalArgumentException e) {
-                // Handle invalid status string
-            }
-        }
+
+        } // Handle invalid status string
+    }
         return roomRepository.searchRooms(roomNumber, roomTypeId, statusEnum)
                 .stream().map(this::convertToDto).collect(Collectors.toList());
     }
@@ -174,5 +174,48 @@ public class RoomServiceImpl implements RoomService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid room status: " + status);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RoomDto> findAvailableRooms(LocalDate checkin, LocalDate checkout, int totalGuests) {
+        if (checkin.isAfter(checkout) || checkin.isEqual(checkout)) {
+            throw new IllegalArgumentException("Ngày check-out phải sau ngày check-in.");
+        }
+
+        // 1. Gọi Repository
+        List<Room> rooms = roomRepository.findAvailableRooms(checkin, checkout, totalGuests);
+
+        // 2. Chuyển List<Room> thành List<RoomDto>
+        return rooms.stream().map(room -> {
+            RoomDto dto = new RoomDto();
+            dto.setId(room.getId());
+            dto.setRoomNumber(room.getRoomNumber());
+            dto.setStatus(room.getStatus().name());
+            dto.setFloor(room.getFloor());
+
+            // Lấy thông tin từ RoomType
+            if (room.getRoomType() != null) {
+                RoomType rt = room.getRoomType();
+                dto.setRoomTypeId(rt.getId());
+                dto.setRoomTypeName(rt.getName());
+                dto.setCapacity(rt.getCapacity());
+                dto.setDescription(rt.getDescription());
+
+                // Lấy tiện nghi (amenities)
+                String amenitiesStr = rt.getAmenities();
+                if (amenitiesStr != null && !amenitiesStr.trim().isEmpty()) {
+                    dto.setAmenities(Arrays.asList(amenitiesStr.trim().split("\\s*,\\s*")));
+                } else {
+                    dto.setAmenities(Collections.emptyList());
+                }
+            }
+
+            // Quan trọng: Dùng giá của Room (room.getPrice())
+            // Hàm convertToDto cũ của bạn đang dùng roomType.getBasePrice() là không chính xác
+            dto.setPricePerNight(room.getPrice());
+
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

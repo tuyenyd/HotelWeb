@@ -3,7 +3,7 @@ package com.example.hotel.dto;
 
 import lombok.Data;
 
-@Data // Tự động tạo Getters, Setters, toString...
+@Data
 public class ProfileUpdateRequest {
     private String fullName;
     private String about;
@@ -12,7 +12,7 @@ public class ProfileUpdateRequest {
     private String country;
     private String address;
     private String phone;
-    private String email; // Cân nhắc nếu cho phép đổi email
+    private String email;
     private String twitter;
     private String facebook;
     private String instagram;

@@ -22,7 +22,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     @Autowired
     private RoomTypeRepository roomTypeRepository;
 
-    // --- START: HÀM TIỆN ÍCH ĐỂ TẠO TYPE_CODE ---
+    //  HÀM TIỆN ÍCH ĐỂ TẠO TYPE_CODE ---
     private String generateTypeCode(String name) {
         if (name == null || name.isEmpty()) {
             return "DEFAULT_CODE"; // Hoặc ném ra một exception
@@ -35,7 +35,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         // Chuyển thành chữ hoa và thay thế khoảng trắng/ký tự đặc biệt bằng dấu gạch dưới
         return normalized.toUpperCase().replaceAll("\\s+", "_").replaceAll("[^A-Z0-9_]", "");
     }
-    // --- END: HÀM TIỆN ÍCH ---
 
     @Override
     @Transactional(readOnly = true)
