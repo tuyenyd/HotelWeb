@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Đặt phòng - Khách sạn Grandoria</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <style>
+        .form-feedback {
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+        .form-spinner {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="booking-page">
+<header id="header" class="header sticky-top">
+
+    <div class="branding d-flex align-items-cente">
+
+        <div class="container position-relative d-flex align-items-center justify-content-between">
+            <a href="indexes.html" class="logo d-flex align-items-center">
+                <img src="assets/img/img_1.png" alt="logo">
+                <h1 class="sitename">Grandoria</h1>
+            </a>
+
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="indexes.html">Trang chủ</a></li>
+                    <li><a href="about.html">Giới thiệu</a></li>
+                    <li><a href="rooms.html">Phòng</a></li>
+                    <li><a href="amenities.html">Tiện ích</a></li>
+                    <li><a href="location.html">Vị trí</a></li>
+                    <li class="dropdown"><a href="#"><span>Trang</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="room-details.html">Chi tiết phòng</a></li>
+                            <li><a href="restaurant.html">Nhà hàng</a></li>
+                            <li><a href="offers.html">Ưu đãi</a></li>
+                            <li><a href="hotel-events.html">Sự kiện</a></li>
+                            <li><a href="gallery.html">Thư viện ảnh</a></li>
+                            <li><a href="booking.html" class="active">Đặt phòng</a></li>
+                            <li><a href="terms.html">Điều khoản</a></li>
+                            <li><a href="privacy.html">Chính sách bảo mật</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contact.html">Liên hệ</a></li>
+
+                    <li class="dropdown" id="userProfileMenu" style="display: none;">
+                        <a href="#">
+                            <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
+                            <span id="userProfileName" class="ms-1">Tài khoản</span>
+                            <i class="bi bi-chevron-down toggle-dropdown ms-1"></i>
+                        </a>
+                        <ul>
+                            <li><a href="user-profile.html">Hồ sơ của tôi</a></li>
+                            <li><a href="user-bookings.html">Lịch sử đặt phòng</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="#" id="userLogoutButton">Đăng xuất</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="loginLink"><a href="pages-login.html">Đăng nhập</a></li>
+                    <li id="registerLink"><a href="pages-register.html">Đăng ký</a></li>
+
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="main">
+
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Đặt phòng</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="indexes.html">Trang chủ</a></li>
+                    <li class="current">Đặt phòng</li>
+                </ol>
+            </nav>
+        </div>
+    </div><section id="booking" class="booking section">
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="reservation-wrapper">
+
+            <div class="reservation-header text-center" data-aos="fade-up" data-aos-delay="200">
+                <h2>Đặt chỗ lưu trú của bạn</h2>
+                <p class="lead">Trải nghiệm dịch vụ hiếu khách tuyệt vời với quy trình đặt phòng đơn giản</p>
+            </div>
+
+            <div class="booking-grid">
+
+                <div class="booking-form-section" data-aos="fade-right" data-aos-delay="300">
+                    <div class="form-container">
+
+                        <form class="reservation-form" id="publicBookingForm">
+
+                            <div id="alert-container" class="d-none"></div>
+
+                            <div class="form-section">
+                                <h4>1. Thông tin khách hàng</h4>
+                                <p class="small" id="login-notice">Bạn chưa đăng nhập. Vui lòng điền thông tin bên dưới hoặc <a href="pages-login.html">Đăng nhập</a> để tự động điền.</p>
+
+                                <div class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="inputCustomerName" class="form-label">Tên khách chính *</label>
+                                        <input type="text" class="form-control" id="inputCustomerName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputCustomerEmail" class="form-label">Email *</label>
+                                        <input type="email" class="form-control" id="inputCustomerEmail" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputCustomerPhone" class="form-label">Số điện thoại *</label>
+                                        <input type="tel" class="form-control" id="inputCustomerPhone" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputCustomerAddress" class="form-label">Địa chỉ</label>
+                                        <input type="text" class="form-control" id="inputCustomerAddress">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputCustomerIdNumber" class="form-label">Số CCCD/CMND *</label>
+                                        <input type="text" class="form-control" id="inputCustomerIdNumber" required>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-section">
+                                <h4>2. Chi tiết đặt phòng</h4>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="inputCheckin" class="form-label">Ngày đến *</label>
+                                        <input type="date" class="form-control" id="inputCheckin" name="arrival_date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputCheckout" class="form-label">Ngày đi *</label>
+                                        <input type="date" class="form-control" id="inputCheckout" name="departure_date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputSoNguoiLon" class="form-label">Số người lớn *</label>
+                                        <input type="number" class="form-control" id="inputSoNguoiLon" value="1" min="1" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputSoTreEm" class="form-label">Số trẻ em *</label>
+                                        <input type="number" class="form-control" id="inputSoTreEm" value="0" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h4>3. Chọn phòng còn trống</h4>
+                                <div class="form-group">
+                                    <label for="inputRoomId" class="form-label">Phòng còn trống *</label>
+                                    <select class="form-select" id="inputRoomId" required>
+                                        <option value="">Vui lòng chọn ngày và số khách trước</option>
+                                    </select>
+                                    <div class="form-feedback text-danger d-none" id="room-feedback"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputTotal" class="form-label">Tạm tính (VND)</label>
+                                    <input type="text" class="form-control" id="inputTotal" readonly style="background-color: #e9ecef; font-weight: bold;">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputNotes" class="form-label">Yêu cầu bổ sung</label>
+                                    <textarea class="form-control" id="inputNotes" rows="3" placeholder="Vui lòng ghi rõ các yêu cầu hoặc sắp xếp đặc biệt..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-primary" id="btnSubmitBooking">
+                                    <span id="bookingSpinner" class="spinner-border form-spinner d-none" role="status" aria-hidden="true"></span>
+                                    <i class="bi bi-calendar-plus me-2" id="bookingIcon"></i>
+                                    <span id="bookingButtonText">Gửi Yêu cầu Đặt phòng</span>
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <div class="hotel-showcase" data-aos="fade-left" data-aos-delay="400">
+                    <div class="showcase-image">
+                        <img src="assets/img/hotel/showcase-1.webp" alt="Hình ảnh khách sạn sang trọng" class="img-fluid">
+                    </div>
+                    <div class="hotel-highlights">
+                        <h3>Tại sao chọn khách sạn của chúng tôi</h3>
+                        <div class="highlights-grid">
+                            <div class="highlight-item">
+                                <div class="highlight-icon">
+                                    <i class="bi bi-wifi"></i>
+                                </div>
+                                <div class="highlight-content">
+                                    <h5>Kết nối cao cấp</h5>
+                                    <p>Truy cập internet tốc độ cao ở mọi khu vực</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon">
+                                    <i class="bi bi-clock"></i>
+                                </div>
+                                <div class="highlight-content">
+                                    <h5>Dịch vụ 24/7</h5>
+                                    <p>Hỗ trợ và phục vụ liên tục quanh ngày</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon">
+                                    <i class="bi bi-car-front"></i>
+                                </div>
+                                <div class="highlight-content">
+                                    <h5>Đỗ xe có nhân viên</h5>
+                                    <p>Dịch vụ đỗ xe miễn phí với nhân viên hỗ trợ</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon">
+                                    <i class="bi bi-heart-pulse"></i>
+                                </div>
+                                <div class="highlight-content">
+                                    <h5>Trung tâm Sức khỏe</h5>
+                                    <p>Spa và cơ sở vật chất tập thể dục đầy đủ</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="booking-guarantees">
+                        <div class="guarantee-item">
+                            <i class="bi bi-shield-check"></i>
+                            <span>Đặt phòng An toàn</span>
+                        </div>
+                        <div class="guarantee-item">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            <span>Hủy phòng Linh hoạt</span>
+                        </div>
+                        <div class="guarantee-item">
+                            <i class="bi bi-telephone"></i>
+                            <span>Hỗ trợ 24/7</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section></main>
+
+<footer id="footer" class="footer position-relative dark-background">
+</footer>
+
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<div id="preloader"></div>
+
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+<script src="assets/js/main.js"></script> <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // API endpoint của bạn (chỉ là giả định, bạn cần thay đổi cho đúng)
+        const API_PUBLIC_URL = 'http://localhost:8080/api/public';
+
+        // Lấy các element của form
+        const form = document.getElementById('publicBookingForm');
+        const inputCheckin = document.getElementById('inputCheckin');
+        const inputCheckout = document.getElementById('inputCheckout');
+        const inputSoNguoiLon = document.getElementById('inputSoNguoiLon');
+        const inputSoTreEm = document.getElementById('inputSoTreEm');
+        const inputRoomId = document.getElementById('inputRoomId');
+        const inputTotal = document.getElementById('inputTotal');
+        const roomFeedback = document.getElementById('room-feedback');
+        const btnSubmitBooking = document.getElementById('btnSubmitBooking');
+        const bookingSpinner = document.getElementById('bookingSpinner');
+        const bookingIcon = document.getElementById('bookingIcon');
+        const bookingButtonText = document.getElementById('bookingButtonText');
+        const alertContainer = document.getElementById('alert-container');
+
+        // Lấy các element thông tin khách hàng
+        const notice = document.getElementById('login-notice');
+        const inputCustomerName = document.getElementById('inputCustomerName');
+        const inputCustomerEmail = document.getElementById('inputCustomerEmail');
+        const inputCustomerPhone = document.getElementById('inputCustomerPhone');
+        const inputCustomerAddress = document.getElementById('inputCustomerAddress');
+        const inputCustomerIdNumber = document.getElementById('inputCustomerIdNumber');
+
+        // 1. Tự động điền thông tin nếu đã đăng nhập
+        function autoFillCustomerInfo() {
+            const token = localStorage.getItem('customerToken');
+            const customerDataString = localStorage.getItem('currentCustomer');
+
+            if (token && customerDataString) {
+                try {
+                    const customer = JSON.parse(customerDataString);
+
+                    inputCustomerName.value = customer.fullName || '';
+                    inputCustomerEmail.value = customer.email || '';
+                    inputCustomerPhone.value = customer.phone || '';
+                    inputCustomerAddress.value = customer.address || '';
+                    inputCustomerIdNumber.value = customer.idNumber || ''; // Giả định tên trường là 'idNumber'
+
+                    // Khóa các trường này lại
+                    inputCustomerName.readOnly = true;
+                    inputCustomerEmail.readOnly = true;
+                    inputCustomerPhone.readOnly = true;
+                    inputCustomerAddress.readOnly = true;
+                    inputCustomerIdNumber.readOnly = true;
+
+                    // Ẩn thông báo
+                    if(notice) notice.classList.add('d-none');
+
+                } catch (e) {
+                    console.error("Lỗi đọc thông tin khách hàng:", e);
+                    if(notice) notice.classList.remove('d-none');
+                }
+            } else {
+                if(notice) notice.classList.remove('d-none');
+            }
+        }
+
+        // 2. Tải danh sách phòng còn trống
+        // (Giống hệt logic của trang admin, nhưng gọi API public)
+        async function loadAvailableRooms() {
+            const checkin = inputCheckin.value;
+            const checkout = inputCheckout.value;
+            const adults = inputSoNguoiLon.value;
+            const children = inputSoTreEm.value;
+
+            // Xóa danh sách phòng cũ và tổng tiền
+            inputRoomId.innerHTML = '<option value="">-- Chọn phòng --</option>';
+            inputTotal.value = 0;
+            roomFeedback.classList.add('d-none');
+
+            if (!checkin || !checkout) {
+                inputRoomId.innerHTML = '<option value="">Vui lòng chọn ngày đến và ngày đi</option>';
+                return;
+            }
+
+            if (new Date(checkin) >= new Date(checkout)) {
+                inputRoomId.innerHTML = '<option value="">Ngày đi phải sau ngày đến</option>';
+                return;
+            }
+
+            inputRoomId.innerHTML = '<option value="">-- Đang tìm phòng... --</option>';
+
+            try {
+                // !!! QUAN TRỌNG: Bạn cần tạo API endpoint này ở backend
+                // Nó nên trả về List<RoomDto> các phòng CÒN TRỐNG và phù hợp
+                const response = await fetch(`${API_PUBLIC_URL}/rooms/available?checkin=${checkin}&checkout=${checkout}&adults=${adults}&children=${children}`);
+
+                if (!response.ok) {
+                    throw new Error('Lỗi khi tìm phòng. Vui lòng thử lại.');
+                }
+
+                const rooms = await response.json();
+
+                if (rooms.length === 0) {
+                    inputRoomId.innerHTML = '<option value="">Không còn phòng trống phù hợp</option>';
+                    roomFeedback.textContent = 'Không tìm thấy phòng nào. Vui lòng thử thay đổi ngày hoặc số lượng khách.';
+                    roomFeedback.classList.remove('d-none');
+                    return;
+                }
+
+                inputRoomId.innerHTML = '<option value="">-- Chọn một phòng --</option>';
+                rooms.forEach(r => {
+                    // Giống hệt trang admin
+                    inputRoomId.innerHTML += `<option
+                                            value="${r.id}"
+                                            data-price="${r.pricePerNight || 0}">
+                                            ${r.roomNumber} - ${r.roomTypeName} (${(r.pricePerNight || 0).toLocaleString()} VND/đêm)
+                                         </option>`;
+                });
+
+            } catch (error) {
+                console.error(error);
+                inputRoomId.innerHTML = '<option value="">Lỗi khi tải danh sách phòng</option>';
+                roomFeedback.textContent = error.message;
+                roomFeedback.classList.remove('d-none');
+            }
+        }
+
+        // 3. Tính tổng tiền (Copy y hệt từ trang admin)
+        function calculateTotalPrice() {
+            try {
+                const selectedOption = inputRoomId.options[inputRoomId.selectedIndex];
+                const pricePerNight = parseFloat(selectedOption.dataset.price || 0);
+                const checkin = new Date(inputCheckin.value);
+                const checkout = new Date(inputCheckout.value);
+
+                if (!isNaN(checkin.getTime()) && !isNaN(checkout.getTime()) && pricePerNight > 0) {
+                    const timeDiff = checkout.getTime() - checkin.getTime();
+                    const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+                    if (nights > 0) {
+                        inputTotal.value = (nights * pricePerNight).toLocaleString() + " VND";
+                    } else {
+                        inputTotal.value = 0;
+                    }
+                } else {
+                    inputTotal.value = 0;
+                }
+            } catch (error) {
+                console.error("Lỗi khi tính giá:", error);
+                inputTotal.value = 0;
+            }
+        }
+
+        // 4. Hàm xử lý Submit
+        async function submitBooking(event) {
+            event.preventDefault();
+
+            // Lấy token (nếu có)
+            const token = localStorage.getItem('customerToken');
+
+            // Kiểm tra các trường thông tin khách hàng (chỉ nếu chưa đăng nhập)
+            if (!token) {
+                if (!inputCustomerName.value || !inputCustomerEmail.value || !inputCustomerPhone.value || !inputCustomerIdNumber.value) {
+                    showAlert('Vui lòng điền đầy đủ thông tin khách hàng (Tên, Email, SĐT, CCCD).', 'danger');
+                    return;
+                }
+            }
+
+            // Kiểm tra các trường đặt phòng
+            if (!inputRoomId.value || !inputCheckin.value || !inputCheckout.value) {
+                showAlert('Vui lòng chọn ngày và phòng còn trống.', 'danger');
+                return;
+            }
+
+            // Bật loading
+            setLoading(true);
+
+            // Lấy giá trị tổng tiền (chuyển "1,500,000 VND" thành 1500000)
+            const calculatedTotal = parseFloat(inputTotal.value.replace(/[^0-9]/g, '')) || 0;
+
+            // Tạo đối tượng dữ liệu
+            // Tên các trường này PHẢI KHỚP với BookingRequestDTO ở backend của bạn
+            const bookingData = {
+                roomId: inputRoomId.value,
+                checkin: inputCheckin.value,
+                checkout: inputCheckout.value,
+                soNguoiLon: inputSoNguoiLon.value,
+                soTreEm: inputSoTreEm.value,
+                total: calculatedTotal,
+                notes: document.getElementById('inputNotes').value,
+
+                // Thông tin khách hàng (gửi ngay cả khi đã đăng nhập,
+                // backend sẽ ưu tiên ID từ token hơn)
+                customerName: inputCustomerName.value,
+                customerEmail: inputCustomerEmail.value,
+                customerPhone: inputCustomerPhone.value,
+                customerAddress: inputCustomerAddress.value,
+                customerIdNumber: inputCustomerIdNumber.value,
+            };
+
+            try {
+                // !!! QUAN TRỌNG: Bạn cần tạo API endpoint này
+                // Nó sẽ nhận BookingRequestDTO và customerToken (nếu có)
+                const response = await fetch(`${API_PUBLIC_URL}/bookings`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Gửi token nếu khách hàng đã đăng nhập
+                        ...(token && { 'Authorization': `Bearer ${token}` })
+                    },
+                    body: JSON.stringify(bookingData)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Đặt phòng thất bại. Vui lòng thử lại.');
+                }
+
+                // Thành công!
+                showAlert(`Đặt phòng thành công! Mã đặt phòng của bạn là: ${result.code}. Chúng tôi sẽ sớm liên hệ với bạn.`, 'success');
+                form.reset(); // Xóa form
+                autoFillCustomerInfo(); // Điền lại thông tin nếu họ đã đăng nhập
+
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            } finally {
+                setLoading(false); // Tắt loading
+            }
+        }
+
+        // 5. Các hàm tiện ích (hiển thị thông báo, loading)
+        function showAlert(message, type = 'danger') {
+            alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                                      ${message}
+                                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                  </div>`;
+            alertContainer.classList.remove('d-none');
+            window.scrollTo(0, 0); // Cuộn lên đầu trang để thấy thông báo
+        }
+
+        function setLoading(isLoading) {
+            btnSubmitBooking.disabled = isLoading;
+            if (isLoading) {
+                bookingSpinner.classList.remove('d-none');
+                bookingIcon.classList.add('d-none');
+                bookingButtonText.textContent = 'Đang xử lý...';
+            } else {
+                bookingSpinner.classList.add('d-none');
+                bookingIcon.classList.remove('d-none');
+                bookingButtonText.textContent = 'Gửi Yêu cầu Đặt phòng';
+            }
+        }
+
+        // 6. Gắn các sự kiện
+
+        // Khi các trường thay đổi -> tìm phòng
+        inputCheckin.addEventListener('change', loadAvailableRooms);
+        inputCheckout.addEventListener('change', loadAvailableRooms);
+        inputSoNguoiLon.addEventListener('change', loadAvailableRooms);
+        inputSoTreEm.addEventListener('change', loadAvailableRooms);
+
+        // Khi chọn phòng -> tính tiền
+        inputRoomId.addEventListener('change', calculateTotalPrice);
+
+        // Khi nhấn nút đặt phòng
+        btnSubmitBooking.addEventListener('click', submitBooking);
+
+        // 7. Chạy hàm tự động điền khi tải trang
+        autoFillCustomerInfo();
+    });
+</script>
+
+</body>
+
+</html>

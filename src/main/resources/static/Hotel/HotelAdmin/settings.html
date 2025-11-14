@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Quản lý Khách sạn</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="assets/img/img.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Giả sử có Header và Sidebar ở đây -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center">
+            <img src="assets/img/logo.png" alt="Logo">
+            <span class="d-none d-lg-block">Grandoria</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><div class="search-bar">
+    <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Tìm kiếm đặt phòng, khách hàng..." title="Nhập từ khóa tìm kiếm">
+        <button type="submit" title="Tìm kiếm"><i class="bi bi-search"></i></button>
+    </form>
+</div><nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+            <a class="nav-link nav-icon search-bar-toggle " href="#">
+                <i class="bi bi-search"></i>
+            </a>
+        </li><li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            <span class="badge bg-primary badge-number">3</span>
+        </a><ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+        <li class="dropdown-header">
+            Bạn có 3 thông báo mới
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">Xem tất cả</span></a>
+        </li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-exclamation-circle text-warning"></i>
+            <div>
+                <h4>Đặt phòng mới</h4>
+                <p>Khách hàng Nguyễn Văn A vừa đặt phòng Deluxe</p>
+                <p>5 phút trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-x-circle text-danger"></i>
+            <div>
+                <h4>Hủy đặt phòng</h4>
+                <p>Đặt phòng #2457 đã bị hủy</p>
+                <p>2 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-check-circle text-success"></i>
+            <div>
+                <h4>Phản hồi mới</h4>
+                <p>Bạn có 2 đánh giá mới từ khách hàng</p>
+                <p>4 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li class="dropdown-footer">
+            <a href="#">Hiển thị tất cả thông báo</a>
+        </li>
+    </ul></li><li class="nav-item dropdown pe-3">
+
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/profile-img.jpg" alt="Hồ sơ" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2" id="profileName">Đang tải...</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+                <h6 id="profileDropdownName">...</h6>
+                <span id="profileDropdownRole">...</span>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-person"></i>
+                    <span>Hồ sơ của tôi</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-gear"></i>
+                    <span>Cài đặt tài khoản</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="#" id="logoutButton">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </li>
+        </ul></li></ul>
+</nav>
+</header><!-- Kết thúc Header -->
+
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link " href="index.html">
+                <i class="bi bi-house-door"></i>
+                <span>Bảng Điều Khiển</span>
+            </a>
+        </li><!-- Kết thúc Điều hướng Bảng Điều Khiển -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#booking-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-calendar-check"></i><span>Quản lý Đặt phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="booking-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="tatcadatphong.html">
+                        <i class="bi bi-circle"></i><span>Tất cả đặt phòng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="checkin.html">
+                        <i class="bi bi-circle"></i><span>Check-in</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="checkout.html">
+                        <i class="bi bi-circle"></i><span>Check-out</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- Kết thúc Điều hướng Đặt phòng -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#room-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-door-closed"></i><span>Quản lý Phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="room-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="danhsachphong.html">
+                        <i class="bi bi-circle"></i><span>Danh sách phòng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="loaiphong.html">
+                        <i class="bi bi-circle"></i><span>Loại phòng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="tinhtrangphong.html">
+                        <i class="bi bi-circle"></i><span>Tình trạng phòng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="giaphong.html">
+                        <i class="bi bi-circle"></i><span>Giá phòng</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- Kết thúc Điều hướng Phòng -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#customer-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-people"></i><span>Quản lý Khách hàng</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="customer-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="danhsachkhachhang.html">
+                        <i class="bi bi-circle"></i><span>Danh sách khách hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="chuongtrinhthanhvien.html">
+                        <i class="bi bi-circle"></i><span>Chương trình thành viên</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="danhgia&phanhoi.html">
+                        <i class="bi bi-circle"></i><span>Đánh giá & Phản hồi</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- Kết thúc Điều hướng Khách hàng -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="baocao&thongke.html">
+                <i class="bi bi-bar-chart"></i>
+                <span>Báo cáo & Thống kê</span>
+            </a>
+        </li><!-- Kết thúc Điều hướng Báo cáo -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-cash-coin"></i><span>Tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="finance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="finance-invoices.html">
+                        <i class="bi bi-circle"></i><span>Hóa đơn</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="finance-payments.html">
+                        <i class="bi bi-circle"></i><span>Thanh toán</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="finance-revenue.html">
+                        <i class="bi bi-circle"></i><span>Doanh thu</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- Kết thúc Điều hướng Tài chính -->
+
+        <li class="nav-heading">Trang</li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="users-profile.html">
+                <i class="bi bi-person"></i>
+                <span>Hồ sơ</span>
+            </a>
+        </li><!-- Kết thúc Trang Hồ sơ -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="pages-contact.html">
+                <i class="bi bi-envelope"></i>
+                <span>Liên hệ</span>
+            </a>
+        </li><!-- Kết thúc Trang Liên hệ -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="users.html">
+                <i class="bi bi-person-gear"></i>
+                <span>Nhân viên</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="taikhoan.html">
+                <i class="bi bi-person-badge"></i>
+                <span>Tài khoản</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="settings.html">
+                <i class="bi bi-gear"></i>
+                <span>Cài đặt</span>
+            </a>
+        </li>
+    </ul>
+
+</aside><!-- Kết thúc Sidebar -->
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Cài đặt</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                <li class="breadcrumb-item active">Cài đặt</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile">
+        <div class="row">
+            <div class="col-xl-12">
+
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <!-- Bordered Tabs -->
+                        <ul class="nav nav-tabs nav-tabs-bordered">
+
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-settings">Cài đặt tài khoản</button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#hotel-settings">Thông tin khách sạn</button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#system-settings">Cài đặt hệ thống</button>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content pt-2">
+
+                            <div class="tab-pane fade show active profile-edit pt-3" id="profile-settings">
+
+                                <!-- Profile Edit Form -->
+                                <form>
+                                    <h5 class="card-title">Thay đổi thông tin cá nhân</h5>
+                                    <div class="row mb-3">
+                                        <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Ảnh đại diện</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <img src="assets/img/profile-img.jpg" alt="Profile">
+                                            <div class="pt-2">
+                                                <a href="#" class="btn btn-primary btn-sm" title="Tải ảnh đại diện mới"><i class="bi bi-upload"></i></a>
+                                                <a href="#" class="btn btn-danger btn-sm" title="Xóa ảnh đại diện"><i class="bi bi-trash"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Họ và tên</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="fullName" type="text" class="form-control" id="fullName" value="Tên người dùng hiện tại">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="email" type="email" class="form-control" id="Email" value="email@example.com">
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                    </div>
+                                </form><!-- End Profile Edit Form -->
+
+                                <hr>
+
+                                <!-- Change Password Form -->
+                                <form>
+                                    <h5 class="card-title">Đổi mật khẩu</h5>
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Mật khẩu hiện tại</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="password" type="password" class="form-control" id="currentPassword">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">Mật khẩu mới</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="newpassword" type="password" class="form-control" id="newPassword">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Nhập lại mật khẩu mới</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="renewpassword" type="password" class="form-control" id="renewPassword">
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+                                    </div>
+                                </form><!-- End Change Password Form -->
+
+                                <hr>
+
+                                <!-- 2FA Form -->
+                                <form>
+                                    <h5 class="card-title">Xác thực hai yếu tố (2FA)</h5>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Bật 2FA</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+                                                <label class="form-check-label" for="flexSwitchCheckChecked">Kích hoạt xác thực hai yếu tố để tăng cường bảo mật cho tài khoản của bạn.</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary">Lưu cài đặt 2FA</button>
+                                    </div>
+                                </form><!-- End 2FA Form -->
+
+                            </div>
+
+                            <div class="tab-pane fade pt-3" id="hotel-settings">
+                                <!-- Hotel Settings Form -->
+                                <form>
+                                    <h5 class="card-title">Chỉnh sửa thông tin khách sạn</h5>
+                                    <div class="row mb-3">
+                                        <label for="hotelName" class="col-md-4 col-lg-3 col-form-label">Tên khách sạn</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="hotelName" type="text" class="form-control" id="hotelName" value="Tên khách sạn">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="hotelAddress" class="col-md-4 col-lg-3 col-form-label">Địa chỉ</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="hotelAddress" type="text" class="form-control" id="hotelAddress" value="Địa chỉ khách sạn">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="hotelPhone" class="col-md-4 col-lg-3 col-form-label">Số điện thoại</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="hotelPhone" type="text" class="form-control" id="hotelPhone" value="0123456789">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="hotelEmail" class="col-md-4 col-lg-3 col-form-label">Email liên hệ</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="hotelEmail" type="email" class="form-control" id="hotelEmail" value="contact@example.com">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="hotelLogo" class="col-md-4 col-lg-3 col-form-label">Logo khách sạn</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input class="form-control" type="file" id="hotelLogo">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="hotelFavicon" class="col-md-4 col-lg-3 col-form-label">Favicon</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input class="form-control" type="file" id="hotelFavicon">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="checkInTime" class="col-md-4 col-lg-3 col-form-label">Giờ Check-in</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="checkInTime" type="time" class="form-control" id="checkInTime" value="14:00">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="checkOutTime" class="col-md-4 col-lg-3 col-form-label">Giờ Check-out</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="checkOutTime" type="time" class="form-control" id="checkOutTime" value="12:00">
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                    </div>
+                                </form><!-- End Hotel Settings Form -->
+                            </div>
+
+                            <div class="tab-pane fade pt-3" id="system-settings">
+                                <!-- System Settings Form -->
+                                <form>
+                                    <h5 class="card-title">Cài đặt hệ thống</h5>
+                                    <div class="row mb-3">
+                                        <label for="currency" class="col-md-4 col-lg-3 col-form-label">Đơn vị tiền tệ</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" id="currency">
+                                                <option selected>VND</option>
+                                                <option>USD</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="language" class="col-md-4 col-lg-3 col-form-label">Ngôn ngữ mặc định</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" id="language">
+                                                <option selected>Tiếng Việt</option>
+                                                <option>English</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="tax" class="col-md-4 col-lg-3 col-form-label">Thuế VAT (%)</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="tax" type="number" class="form-control" id="tax" value="10">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="serviceFee" class="col-md-4 col-lg-3 col-form-label">Phí dịch vụ (%)</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="serviceFee" type="number" class="form-control" id="serviceFee" value="5">
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                    </div>
+                                </form><!-- End System Settings Form -->
+
+                                <hr>
+
+                                <!-- Email Templates Settings -->
+                                <div class="email-templates-settings">
+                                    <h5 class="card-title">Chỉnh sửa mẫu email tự động</h5>
+                                    <div class="row mb-3">
+                                        <label for="emailTemplateSelect" class="col-md-4 col-lg-3 col-form-label">Chọn mẫu email</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" id="emailTemplateSelect">
+                                                <option selected>Xác nhận đặt phòng</option>
+                                                <option>Thông báo hủy phòng</option>
+                                                <option>Nhắc nhở check-in</option>
+                                                <option>Cảm ơn sau khi check-out</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="emailTemplateContent" class="col-md-4 col-lg-3 col-form-label">Nội dung mẫu</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <textarea name="emailTemplateContent" class="form-control" id="emailTemplateContent" style="height: 200px;">Xin chào {{TEN_KHACH_HANG}}, Cảm ơn bạn đã đặt phòng tại khách sạn chúng tôi. Đặt phòng của bạn đã được xác nhận. Chi tiết: ...</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary">Lưu mẫu email</button>
+                                    </div>
+                                </div><!-- End Email Templates Settings -->
+                            </div>
+
+                        </div><!-- End Bordered Tabs -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+<!-- Giả sử có Footer ở đây -->
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Bản quyền <strong><span>HotelAdmin</span></strong>. Tất cả các quyền được bảo lưu
+    </div>
+    <div class="credits">
+        Thiết kế bởi <a href="#">Nhóm Phát triển</a>
+    </div>
+</footer><!-- Kết thúc Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/chart.js/chart.umd.js"></script>
+<script src="assets/vendor/echarts/echarts.min.js"></script>
+<script src="assets/vendor/quill/quill.js"></script>
+<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="assets/js/main.js"></script>
+<script src="assets/js/auth.js"></script>
+
+<!-- Script cho chức năng trang Cài đặt -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Hàm trợ giúp để hiển thị thông báo (sử dụng alert đơn giản)
+        const showAlert = (message, type = 'success') => {
+            alert((type === 'success' ? 'Thành công: ' : 'Lỗi: ') + message);
+        };
+
+        // --- TAB: CÀI ĐẶT TÀI KHOẢN ---
+
+        // 1. Form thay đổi thông tin cá nhân
+        const profileEditForm = document.querySelector('#profile-settings form:nth-of-type(1)');
+        if (profileEditForm) {
+            profileEditForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const fullName = document.getElementById('fullName').value;
+                const email = document.getElementById('Email').value;
+                console.log('Đang lưu thông tin cá nhân:', { fullName, email });
+                // TODO: Gọi API để lưu dữ liệu
+                showAlert('Thông tin cá nhân đã được cập nhật.');
+            });
+        }
+
+        // 2. Form đổi mật khẩu
+        const changePasswordForm = document.querySelector('#profile-settings form:nth-of-type(2)');
+        if (changePasswordForm) {
+            changePasswordForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const renewPassword = document.getElementById('renewPassword').value;
+
+                if (newPassword !== renewPassword) {
+                    showAlert('Mật khẩu mới không khớp.', 'error');
+                    return;
+                }
+                if (!newPassword) {
+                    showAlert('Mật khẩu mới không được để trống.', 'error');
+                    return;
+                }
+
+                console.log('Đang đổi mật khẩu...');
+                // TODO: Gọi API để đổi mật khẩu
+                showAlert('Mật khẩu đã được thay đổi thành công.');
+                changePasswordForm.reset(); // Xóa các trường
+            });
+        }
+
+        // 3. Form 2FA
+        const form2FA = document.querySelector('#profile-settings form:nth-of-type(3)');
+        if (form2FA) {
+            form2FA.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const is2FAEnabled = document.getElementById('flexSwitchCheckChecked').checked;
+                console.log('Lưu cài đặt 2FA:', { is2FAEnabled });
+                // TODO: Gọi API để lưu trạng thái 2FA
+                showAlert('Cài đặt xác thực hai yếu tố đã được lưu.');
+            });
+        }
+
+
+        // --- TAB: THÔNG TIN KHÁCH SẠN ---
+        const hotelSettingsForm = document.querySelector('#hotel-settings form');
+        if (hotelSettingsForm) {
+            hotelSettingsForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const hotelData = {
+                    name: document.getElementById('hotelName').value,
+                    address: document.getElementById('hotelAddress').value,
+                    phone: document.getElementById('hotelPhone').value,
+                    email: document.getElementById('hotelEmail').value,
+                    checkIn: document.getElementById('checkInTime').value,
+                    checkOut: document.getElementById('checkOutTime').value,
+                };
+                console.log('Lưu thông tin khách sạn:', hotelData);
+                // TODO: Xử lý upload file logo, favicon và gọi API để lưu dữ liệu
+                showAlert('Thông tin khách sạn đã được cập nhật.');
+            });
+        }
+
+
+        // --- TAB: CÀI ĐẶT HỆ THỐNG ---
+
+        // 1. Form cài đặt hệ thống (tiền tệ, ngôn ngữ, thuế...)
+        const systemSettingsForm = document.querySelector('#system-settings form:nth-of-type(1)');
+        if (systemSettingsForm) {
+            systemSettingsForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const systemData = {
+                    currency: document.getElementById('currency').value,
+                    language: document.getElementById('language').value,
+                    tax: document.getElementById('tax').value,
+                    serviceFee: document.getElementById('serviceFee').value,
+                };
+                console.log('Lưu cài đặt hệ thống:', systemData);
+                // TODO: Gọi API để lưu dữ liệu
+                showAlert('Cài đặt hệ thống đã được cập nhật.');
+            });
+        }
+
+        // 2. Chỉnh sửa mẫu email
+        const emailTemplateSelect = document.getElementById('emailTemplateSelect');
+        const emailTemplateContent = document.getElementById('emailTemplateContent');
+        const emailTemplatesForm = document.querySelector('.email-templates-settings');
+
+        // Dữ liệu mẫu (thay thế bằng dữ liệu từ server)
+        const emailTemplates = {
+            "Xác nhận đặt phòng": "Xin chào {{TEN_KHACH_HANG}}, Cảm ơn bạn đã đặt phòng tại khách sạn chúng tôi. Đặt phòng của bạn đã được xác nhận. Chi tiết: ...",
+            "Thông báo hủy phòng": "Xin chào {{TEN_KHACH_HANG}}, Yêu cầu hủy đặt phòng của bạn đã được xử lý. Chúng tôi rất tiếc khi bạn không thể đến.",
+            "Nhắc nhở check-in": "Xin chào {{TEN_KHACH_HANG}}, Nhắc nhở: bạn có lịch check-in vào ngày mai. Chúng tôi rất mong được đón tiếp bạn.",
+            "Cảm ơn sau khi check-out": "Kính gửi {{TEN_KHACH_HANG}}, Cảm ơn bạn đã lựa chọn khách sạn của chúng tôi. Hy vọng bạn đã có một kỳ nghỉ tuyệt vời."
+        };
+
+        if (emailTemplateSelect && emailTemplateContent) {
+            // Tải nội dung khi thay đổi lựa chọn
+            emailTemplateSelect.addEventListener('change', (e) => {
+                emailTemplateContent.value = emailTemplates[e.target.value] || '';
+            });
+
+            // Xử lý lưu mẫu email
+            if (emailTemplatesForm) {
+                emailTemplatesForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const selectedTemplate = emailTemplateSelect.value;
+                    const content = emailTemplateContent.value;
+                    console.log(`Lưu mẫu email "${selectedTemplate}":`, content);
+                    // Cập nhật lại dữ liệu mẫu (để mô phỏng)
+                    emailTemplates[selectedTemplate] = content;
+                    // TODO: Gọi API để lưu nội dung mẫu email
+                    showAlert(`Mẫu email "${selectedTemplate}" đã được lưu.`);
+                });
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

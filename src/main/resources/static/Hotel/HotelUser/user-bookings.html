@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Lịch sử đặt phòng - Grandoria</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <style>
+        /* CSS tùy chỉnh cho thẻ đặt phòng */
+        .booking-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            border-left: 5px solid #0d6efd; /* Mặc định */
+        }
+        .booking-card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .booking-card-body {
+            padding: 1.5rem;
+        }
+        .booking-card-footer {
+            padding: 1rem 1.5rem;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eee;
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .booking-code {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 0.4em 0.7em;
+            font-weight: 600;
+        }
+        .booking-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+        .info-item h6 {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .info-item p {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+        /* Màu cho các trạng thái */
+        .status-pending { border-left-color: #ffc107; }
+        .status-confirmed { border-left-color: #198754; }
+        .status-checked-in { border-left-color: #0dcaf0; }
+        .status-checked-out { border-left-color: #6c757d; }
+        .status-cancelled { border-left-color: #dc3545; opacity: 0.8; }
+    </style>
+</head>
+
+<body class="user-bookings-page">
+
+<header id="header" class="header sticky-top">
+    <div class="branding d-flex align-items-cente">
+        <div class="container position-relative d-flex align-items-center justify-content-between">
+            <a href="indexes.html" class="logo d-flex align-items-center">
+                <img src="assets/img/img_1.png" alt="logo">
+                <h1 class="sitename">Grandoria</h1>
+            </a>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="indexes.html">Trang chủ</a></li>
+                    <li><a href="about.html">Giới thiệu</a></li>
+                    <li><a href="rooms.html">Phòng</a></li>
+                    <li><a href="amenities.html">Tiện ích</a></li>
+                    <li><a href="location.html">Vị trí</a></li>
+                    <li class="dropdown"><a href="#"><span>Trang</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="room-details.html">Chi tiết phòng</a></li>
+                            <li><a href="restaurant.html">Nhà hàng</a></li>
+                            <li><a href="offers.html">Ưu đãi</a></li>
+                            <li><a href="hotel-events.html">Sự kiện</a></li>
+                            <li><a href="gallery.html">Thư viện ảnh</a></li>
+                            <li><a href="booking.html">Đặt phòng</a></li>
+                            <li><a href="terms.html">Điều khoản</a></li>
+                            <li><a href="privacy.html">Chính sách bảo mật</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contact.html">Liên hệ</a></li>
+                    <li class="dropdown" id="userProfileMenu" style="display: none;">
+                        <a href="#">
+                            <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
+                            <span id="userProfileName" class="ms-1">Tài khoản</span>
+                            <i class="bi bi-chevron-down toggle-dropdown ms-1"></i>
+                        </a>
+                        <ul>
+                            <li><a href="user-profile.html">Hồ sơ của tôi</a></li>
+                            <li><a href="user-bookings.html" class="active">Lịch sử đặt phòng</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="#" id="userLogoutButton">Đăng xuất</a></li>
+                        </ul>
+                    </li>
+                    <li id="loginLink"><a href="pages-login.html">Đăng nhập</a></li>
+                    <li id="registerLink"><a href="pages-register.html">Đăng ký</a></li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+
+    <div class="page-title light-background">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Lịch sử đặt phòng</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="indexes.html">Trang chủ</a></li>
+                    <li class="current">Lịch sử đặt phòng</li>
+                </ol>
+            </nav>
+        </div>
+    </div><section id="user-bookings" class="user-bookings section">
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+
+                <div id="booking-list-container">
+                    <div id="loading-spinner" class="text-center p-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Đang tải...</span>
+                        </div>
+                        <p class="mt-2">Đang tải lịch sử đặt phòng của bạn...</p>
+                    </div>
+
+                    <div id="no-bookings-message" class="alert alert-info d-none" role="alert">
+                        Bạn chưa có lịch sử đặt phòng nào. <a href="booking.html" class="alert-link">Đặt phòng ngay!</a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<footer id="footer" class="footer position-relative dark-background">
+</footer>
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<div id="preloader"></div>
+
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="assets/js/main.js"></script> <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- 1. KIỂM TRA BẢO MẬT ---
+        const token = localStorage.getItem('customerToken');
+        if (!token) {
+            window.location.href = 'pages-login.html';
+            return;
+        }
+
+        const API_URL = 'http://localhost:8080/api/public/customer'; // API mới
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+
+        // Lấy các element
+        const container = document.getElementById('booking-list-container');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const noBookingsMessage = document.getElementById('no-bookings-message');
+
+        // --- 2. TẢI LỊCH SỬ ĐẶT PHÒNG ---
+        async function loadBookingHistory() {
+            try {
+                // API mới: GET /api/public/customer/bookings
+                // API này sẽ tự động lấy ID khách hàng từ token
+                const response = await fetch(`${API_URL}/bookings`, { headers });
+
+                if (!response.ok) {
+                    throw new Error('Không thể tải lịch sử đặt phòng.');
+                }
+
+                const bookings = await response.json();
+
+                // Ẩn spinner
+                loadingSpinner.classList.add('d-none');
+
+                if (bookings.length === 0) {
+                    // Hiển thị thông báo rỗng
+                    noBookingsMessage.classList.remove('d-none');
+                } else {
+                    // Tạo HTML cho từng booking
+                    bookings.forEach(renderBookingCard);
+                }
+
+            } catch (error) {
+                loadingSpinner.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+            }
+        }
+
+        // --- 3. HÀM TẠO HTML CHO THẺ BOOKING ---
+        function renderBookingCard(booking) {
+            // (Dữ liệu từ BookingHistoryDto ở backend)
+            const statusDetails = getStatusDetails(booking.status);
+
+            const cardHtml = `
+            <div class="booking-card ${statusDetails.class}">
+                <div class="booking-card-header">
+                    <span class="booking-code">Mã: ${booking.bookingCode}</span>
+                    <span class="badge ${statusDetails.badgeClass} status-badge">${statusDetails.text}</span>
+                </div>
+                <div class="booking-card-body">
+                    <div class="booking-info-grid">
+                        <div class="info-item">
+                            <h6>Phòng</h6>
+                            <p>${booking.roomTypeName} - ${booking.roomNumber}</p>
+                        </div>
+                        <div class="info-item">
+                            <h6>Nhận phòng</h6>
+                            <p>${formatDate(booking.checkInDate)}</p>
+                        </div>
+                        <div class="info-item">
+                            <h6>Trả phòng</h6>
+                            <p>${formatDate(booking.checkOutDate)}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="booking-card-footer">
+                    <span>Tổng cộng: ${booking.totalPrice.toLocaleString()} VND</span>
+                </div>
+            </div>
+            `;
+            container.innerHTML += cardHtml;
+        }
+
+        // --- 4. HÀM TIỆN ÍCH ---
+        function formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
+            const [year, month, day] = dateStr.split('-');
+            return `${day}/${month}/${year}`;
+        }
+
+        function getStatusDetails(status) {
+            // (status trả về từ backend là PENDING, CONFIRMED,...)
+            switch (status) {
+                case 'PENDING':
+                    return { text: 'Đang chờ', class: 'status-pending', badgeClass: 'bg-warning text-dark' };
+                case 'CONFIRMED':
+                    return { text: 'Đã xác nhận', class: 'status-confirmed', badgeClass: 'bg-success' };
+                case 'CHECKED_IN':
+                    return { text: 'Đã check-in', class: 'status-checked-in', badgeClass: 'bg-info text-dark' };
+                case 'CHECKED_OUT':
+                    return { text: 'Đã check-out', class: 'status-checked-out', badgeClass: 'bg-secondary' };
+                case 'CANCELLED':
+                    return { text: 'Đã hủy', class: 'status-cancelled', badgeClass: 'bg-danger' };
+                default:
+                    return { text: status, class: '', badgeClass: 'bg-dark' };
+            }
+        }
+
+        // Tải lịch sử khi trang được mở
+        loadBookingHistory();
+    });
+</script>
+
+</body>
+</html>

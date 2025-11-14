@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Danh sách phòng - HotelAdmin</title>
+    <link href="assets/img/img.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <style>
+        .room-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #4154f1;
+            opacity: 1;
+        }
+
+        .room-card:not(.available) {
+            opacity: 0.7;
+            filter: grayscale(90%);
+        }
+
+        .room-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        .room-card.occupied {
+            border-left-color: #198754;
+        }
+        .room-card.maintenance {
+            border-left-color: #dc3545;
+        }
+        .room-card.cleaning {
+            border-left-color: #ffc107;
+        }
+        .room-card.available {
+            border-left-color: #0dcaf0;
+        }
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 0.35em 0.65em;
+        }
+        .room-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        .feature-badge {
+            font-size: 0.7rem;
+            margin-right: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+        .view-toggle {
+            cursor: pointer;
+        }
+        .view-toggle.active {
+            color: #4154f1;
+        }
+        .grid-view .room-card {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center">
+            <img src="assets/img/logo.png" alt="Logo">
+            <span class="d-none d-lg-block">Grandoria</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><div class="search-bar">
+    <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Tìm kiếm đặt phòng, khách hàng..." title="Nhập từ khóa tìm kiếm">
+        <button type="submit" title="Tìm kiếm"><i class="bi bi-search"></i></button>
+    </form>
+</div><nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+            <a class="nav-link nav-icon search-bar-toggle " href="#">
+                <i class="bi bi-search"></i>
+            </a>
+        </li><li class="nav-item dropdown">
+        <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            <span class="badge bg-primary badge-number">3</span>
+        </a><ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+        <li class="dropdown-header">
+            Bạn có 3 thông báo mới
+            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">Xem tất cả</span></a>
+        </li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-exclamation-circle text-warning"></i>
+            <div>
+                <h4>Đặt phòng mới</h4>
+                <p>Khách hàng Nguyễn Văn A vừa đặt phòng Deluxe</p>
+                <p>5 phút trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-x-circle text-danger"></i>
+            <div>
+                <h4>Hủy đặt phòng</h4>
+                <p>Đặt phòng #2457 đã bị hủy</p>
+                <p>2 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+        <li class="notification-item">
+            <i class="bi bi-check-circle text-success"></i>
+            <div>
+                <h4>Phản hồi mới</h4>
+                <p>Bạn có 2 đánh giá mới từ khách hàng</p>
+                <p>4 giờ trước</p>
+            </div>
+        </li>
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li class="dropdown-footer">
+            <a href="#">Hiển thị tất cả thông báo</a>
+        </li>
+    </ul></li><li class="nav-item dropdown pe-3">
+
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/profile-img.jpg" alt="Hồ sơ" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2" id="profileName">Đang tải...</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+                <h6 id="profileDropdownName">...</h6>
+                <span id="profileDropdownRole">...</span>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-person"></i>
+                    <span>Hồ sơ của tôi</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                    <i class="bi bi-gear"></i>
+                    <span>Cài đặt tài khoản</span>
+                </a>
+            </li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="#" id="logoutButton">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </li>
+        </ul></li></ul>
+</nav>
+</header><aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="index.html">
+                <i class="bi bi-house-door"></i>
+                <span>Bảng Điều Khiển</span>
+            </a>
+        </li><li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#booking-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-calendar-check"></i><span>Quản lý Đặt phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="booking-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="tatcadatphong.html">
+                    <i class="bi bi-circle"></i><span>Tất cả đặt phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="checkin.html">
+                    <i class="bi bi-circle"></i><span>Check-in</span>
+                </a>
+            </li>
+            <li>
+                <a href="checkout.html">
+                    <i class="bi bi-circle"></i><span>Check-out</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-item">
+        <a class="nav-link " data-bs-target="#room-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-door-closed"></i><span>Quản lý Phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="room-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="danhsachphong.html" class="active">
+                    <i class="bi bi-circle"></i><span>Danh sách phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="loaiphong.html">
+                    <i class="bi bi-circle"></i><span>Loại phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="tinhtrangphong.html">
+                    <i class="bi bi-circle"></i><span>Tình trạng phòng</span>
+                </a>
+            </li>
+            <li>
+                <a href="giaphong.html">
+                    <i class="bi bi-circle"></i><span>Giá phòng</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#customer-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-people"></i><span>Quản lý Khách hàng</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="customer-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="danhsachkhachhang.html">
+                    <i class="bi bi-circle"></i><span>Danh sách khách hàng</span>
+                </a>
+            </li>
+            <li>
+                <a href="chuongtrinhthanhvien.html">
+                    <i class="bi bi-circle"></i><span>Chương trình thành viên</span>
+                </a>
+            </li>
+            <li>
+                <a href="danhgia&phanhoi.html">
+                    <i class="bi bi-circle"></i><span>Đánh giá & Phản hồi</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" href="baocao&thongke.html">
+            <i class="bi bi-bar-chart"></i>
+            <span>Báo cáo & Thống kê</span>
+        </a>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-cash-coin"></i><span>Tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="finance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="finance-invoices.html">
+                    <i class="bi bi-circle"></i><span>Hóa đơn</span>
+                </a>
+            </li>
+            <li>
+                <a href="finance-payments.html">
+                    <i class="bi bi-circle"></i><span>Thanh toán</span>
+                </a>
+            </li>
+            <li>
+                <a href="finance-revenue.html">
+                    <i class="bi bi-circle"></i><span>Doanh thu</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-heading">Trang</li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="users-profile.html">
+                <i class="bi bi-person"></i>
+                <span>Hồ sơ</span>
+            </a>
+        </li><li class="nav-item">
+        <a class="nav-link collapsed" href="pages-contact.html">
+            <i class="bi bi-envelope"></i>
+            <span>Liên hệ</span>
+        </a>
+    </li><li class="nav-item">
+        <a class="nav-link collapsed" href="users.html">
+            <i class="bi bi-person-gear"></i>
+            <span>Nhân viên</span>
+        </a>
+    </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="taikhoan.html">
+                <i class="bi bi-person-badge"></i>
+                <span>Tài khoản</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="settings.html">
+                <i class="bi bi-gear"></i>
+                <span>Cài đặt</span>
+            </a>
+        </li>
+    </ul>
+
+</aside><main id="main" class="main">
+    <div class="pagetitle d-flex justify-content-between align-items-center">
+        <h1>Danh sách phòng</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                <li class="breadcrumb-item">Quản lý Phòng</li>
+                <li class="breadcrumb-item active">Danh sách phòng</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+
+        <div class="row">
+            <div class="col-lg col-md-6">
+                <div class="card info-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng số phòng</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-door-closed"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6 id="total-rooms-count">0</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg col-md-6">
+                <div class="card info-card sales-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Phòng trống</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6 id="available-count">0</h6>
+                                <span id="available-percent" class="text-success small pt-1 fw-bold">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg col-md-6">
+                <div class="card info-card revenue-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Đang sử dụng</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-people"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6 id="occupied-count">0</h6>
+                                <span id="occupied-percent" class="text-success small pt-1 fw-bold">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg col-md-6">
+                <div class="card info-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Đã đặt trước</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6 id="reserved-count">0</h6>
+                                <span id="reserved-percent" class="text-primary small pt-1 fw-bold">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg col-md-6">
+                <div class="card info-card customers-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Bảo trì</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <i class="bi bi-tools"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6 id="maintenance-count">0</h6>
+                                <span id="maintenance-percent" class="text-danger small pt-1 fw-bold">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg col-md-6">
+                <div class="card info-card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Đang dọn dẹp</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-warning">
+                                <i class="bi bi-brush text-white"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6 id="cleaning-count">0</h6>
+                                <span id="cleaning-percent" class="text-warning small pt-1 fw-bold">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title">Quản lý phòng</h5>
+                            <div>
+                                <div class="btn-group me-2" role="group">
+                                    <input type="radio" class="btn-check" name="viewMode" id="gridView" checked>
+                                    <label class="btn btn-outline-primary view-toggle" for="gridView" title="Xem lưới">
+                                        <i class="bi bi-grid-3x3-gap"></i>
+                                    </label>
+                                    <input type="radio" class="btn-check" name="viewMode" id="listView">
+                                    <label class="btn btn-outline-primary view-toggle" for="listView" title="Xem danh sách">
+                                        <i class="bi bi-list-ul"></i>
+                                    </label>
+                                </div>
+                                <button class="btn btn-primary" id="btnShowAddRoom" data-bs-toggle="modal" data-bs-target="#addRoomModal">
+                                    <i class="bi bi-plus-circle"></i> Thêm phòng
+                                </button>
+                                <button class="btn btn-warning d-none" id="btnShowEditRoom" data-bs-toggle="modal" data-bs-target="#addRoomModal">
+                                    <i class="bi bi-pencil"></i> Sửa phòng
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <select class="form-select" id="filterType">
+                                    <option value="">Tất cả loại phòng</option>
+                                    <option>Standard</option>
+                                    <option>Deluxe</option>
+                                    <option>Suite</option>
+                                    <option>Family</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filterStatus">
+                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="AVAILABLE">Trống</option>
+                                    <option value="OCCUPIED">Đang sử dụng</option>
+                                    <option value="RESERVED">Đã đặt trước</option>
+                                    <option value="MAINTENANCE">Bảo trì</option>
+                                    <option value="CLEANING">Đang dọn dẹp</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filterSort">
+                                    <option value="">Sắp xếp theo</option>
+                                    <option value="az">Số phòng A-Z</option>
+                                    <option value="za">Số phòng Z-A</option>
+                                    <option value="priceAsc">Giá thấp đến cao</option>
+                                    <option value="priceDesc">Giá cao đến thấp</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control mb-2" id="filterSearch" placeholder="Tìm kiếm số phòng, loại, tiện nghi...">
+                                <button class="btn btn-outline-primary w-100" id="btnFilter">Lọc</button>
+                            </div>
+                        </div>
+                        <div class="row grid-view" id="roomGridView">
+                        </div>
+                        <div class="table-responsive d-none" id="roomListView">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Số phòng</th>
+                                    <th>Loại phòng</th>
+                                    <th>Tình trạng</th>
+                                    <th>Giá/đêm</th>
+                                    <th>Sức chứa</th>
+                                    <th>Tiện nghi</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                                </thead>
+                                <tbody id="roomListBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center" id="pagination">
+                            </ul>
+                        </nav>
+                        <div class="modal fade" id="addRoomModal" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="roomModalTitle">Thêm phòng mới</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="addRoomForm" class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="formRoomNumber" class="form-label">Số phòng</label>
+                                                <input type="text" class="form-control" id="formRoomNumber" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="formFloor" class="form-label">Tầng</label>
+                                                <input type="number" class="form-control" id="formFloor" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="formRoomType" class="form-label">Loại phòng</label>
+                                                <select id="formRoomType" class="form-select" required>
+                                                    <option value="">-- Chọn loại phòng --</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="formStatus" class="form-label">Trạng thái</label>
+                                                <select id="formStatus" class="form-select" required>
+                                                    <option value="AVAILABLE">Trống</option>
+                                                    <option value="OCCUPIED">Đang sử dụng</option>
+                                                    <option value="RESERVED">Đã đặt trước</option>
+                                                    <option value="MAINTENANCE">Bảo trì</option>
+                                                    <option value="CLEANING">Đang dọn dẹp</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <hr>
+                                                <h6 class="text-muted">Thông tin loại phòng </h6>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="formPrice" class="form-label">Giá cơ bản</label>
+                                                <input type="text" class="form-control" id="formPrice" readonly>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="formCapacity" class="form-label">Sức chứa</label>
+                                                <input type="text" class="form-control" id="formCapacity" readonly>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="formArea" class="form-label">Diện tích</label>
+                                                <input type="text" class="form-control" id="formArea" readonly>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="formDescription" class="form-label">Mô tả loại phòng</label>
+                                                <textarea class="form-control" id="formDescription" rows="2" readonly></textarea>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="formAmenities" class="form-label">Tiện nghi</label>
+                                                <p id="formAmenities" class="form-control-plaintext bg-light p-2 rounded" style="min-height: 40px;"></p>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                        <button type="submit" form="addRoomForm" id="btnAddRoom" class="btn btn-primary">Thêm phòng</button>
+                                        <button type="submit" form="addRoomForm" id="btnEditRoom" class="btn btn-warning d-none">Lưu thay đổi</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div class="modal fade" id="roomDetailModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết phòng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="roomDetailBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Bản quyền <strong><span>HotelAdmin</span></strong>. Tất cả các quyền được bảo lưu
+    </div>
+    <div class="credits">
+        Thiết kế bởi <a href="#">Nhóm Phát triển</a>
+    </div>
+</footer>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/auth.js"></script>
+
+<script>
+
+    let allRooms = [];
+    let allRoomTypes = [];
+    let filteredRooms = [];
+    let editRoomId = null;
+    let currentPage = 1;
+    const pageSize = 8;
+
+    function getStatusDetails(status) {
+        const details = {
+            AVAILABLE: { text: "Trống", badge: "info" },
+            OCCUPIED: { text: "Đang sử dụng", badge: "success" },
+            RESERVED: { text: "Đã đặt trước", badge: "primary" },
+            MAINTENANCE: { text: "Bảo trì", badge: "danger" },
+            CLEANING: { text: "Đang dọn dẹp", badge: "warning" }
+        };
+        return details[status] || { text: status, badge: "secondary" };
+    }
+
+    async function fetchAndRenderRooms() {
+        try {
+            // === SỬA LỖI: Thêm tham số _t (cache-busting) ===
+            const url = `/api/admin/rooms?_t=${new Date().getTime()}`;
+            const response = await fetchWithAuth(url, { cache: 'no-store' });
+            // === KẾT THÚC SỬA LỖI ===
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            allRooms = await response.json();
+            filteredRooms = [...allRooms];
+            applyFilters(); // Áp dụng bộ lọc và render lần đầu
+        } catch (error) {
+            console.error('Lỗi khi tải danh sách phòng:', error);
+            // Hiển thị thông báo lỗi cho người dùng nếu cần
+        }
+    }
+
+    async function fetchRoomTypes() {
+        try {
+            const response = await fetchWithAuth('/api/admin/room-types');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            allRoomTypes = await response.json();
+            const filterSelect = document.getElementById('filterType');
+            const formSelect = document.getElementById('formRoomType');
+
+            filterSelect.innerHTML = '<option value="">Tất cả loại phòng</option>';
+            formSelect.innerHTML = '<option value="">-- Chọn loại phòng --</option>';
+
+            allRoomTypes.forEach(type => {
+                // Thêm option cho bộ lọc
+                const filterOption = document.createElement('option');
+                // SỬA: Sử dụng type.id làm giá trị để đồng bộ với hàm applyFilters
+                filterOption.value = type.id;
+                filterOption.textContent = type.name;
+                filterSelect.appendChild(filterOption);
+
+                // Thêm option cho form
+                const formOption = document.createElement('option');
+                formOption.value = type.id;
+                formOption.textContent = type.name;
+                formSelect.appendChild(formOption);
+            });
+        } catch (error) {
+            console.error('Lỗi khi tải loại phòng:', error);
+        }
+    }
+
+    /**
+     * =================================================================
+     * ===== SỬA ĐỔI TẠI ĐÂY: Cập nhật hàm JS cho modal =====
+     * =================================================================
+     */
+    function updateFormWithRoomType(typeId) {
+        const type = allRoomTypes.find(t => t.id == typeId);
+
+        // 1. Lấy tất cả các element
+        const priceEl = document.getElementById('formPrice');
+        const capacityEl = document.getElementById('formCapacity');
+        const descriptionEl = document.getElementById('formDescription');
+        const amenitiesEl = document.getElementById('formAmenities');
+        const areaEl = document.getElementById('formArea'); // Lấy element mới
+
+        if (type) {
+            // 2. Điền thông tin nếu tìm thấy 'type'
+            const price = type.basePrice || 0;
+            priceEl.dataset.price = price;
+            priceEl.value = price > 0 ? `${price.toLocaleString()} VND` : 'N/A';
+            capacityEl.value = type.capacity ? `${type.capacity} người` : 'N/A';
+            areaEl.value = type.area ? `${type.area} m²` : 'N/A'; // Điền thông tin diện tích
+            descriptionEl.value = type.description || 'Không có mô tả.';
+
+            let amenitiesText = 'Không có tiện nghi.';
+            // Kiểm tra amenities có phải là mảng không (vì dữ liệu có thể không đồng nhất)
+            if (Array.isArray(type.amenities)) {
+                amenitiesText = type.amenities.length > 0 ? type.amenities.join(', ') : 'Không có tiện nghi.';
+            } else if (typeof type.amenities === 'string' && type.amenities.length > 0) {
+                amenitiesText = type.amenities; // Nếu là chuỗi thì dùng luôn
+            }
+            amenitiesEl.textContent = amenitiesText;
+
+        } else {
+            // 3. Xóa thông tin nếu không chọn 'type'
+            priceEl.dataset.price = '0';
+            priceEl.value = '';
+            capacityEl.value = '';
+            areaEl.value = ''; // Xóa thông tin diện tích
+            descriptionEl.value = '';
+            amenitiesEl.textContent = 'Chọn một loại phòng để xem tiện nghi.';
+        }
+    }
+    /**
+     * =================================================================
+     * ==================== KẾT THÚC SỬA ĐỔI ========================
+     * =================================================================
+     */
+
+
+    function renderRooms() {
+        const grid = document.getElementById('roomGridView');
+        const listBody = document.getElementById('roomListBody');
+        const paginationEl = document.getElementById('pagination'); // Thêm dòng này
+
+        grid.innerHTML = '';
+        listBody.innerHTML = '';
+
+        if (filteredRooms.length === 0) {
+            grid.innerHTML = '<div class="col-12"><p class="text-center mt-4">Không tìm thấy phòng nào.</p></div>';
+            listBody.innerHTML = '<tr><td colspan="7" class="text-center mt-4">Không tìm thấy phòng nào.</td></tr>';
+            paginationEl.style.display = 'none'; // Ẩn phân trang
+            updateStats();
+            return;
+        }
+
+        // Kiểm tra xem đang ở chế độ xem nào
+        const isGridView = !document.getElementById('roomGridView').classList.contains('d-none');
+
+        if (isGridView) {
+            // --- LOGIC MỚI CHO GRID VIEW (PHÂN NHÓM THEO TẦNG) ---
+            paginationEl.style.display = 'none'; // Ẩn phân trang khi ở Grid View
+
+            // 1. Nhóm các phòng theo tầng
+            const groupedRooms = filteredRooms.reduce((acc, room) => {
+                const floor = room.floor || 'N/A'; // Lấy số tầng
+                if (!acc[floor]) {
+                    acc[floor] = [];
+                }
+                acc[floor].push(room);
+                return acc;
+            }, {});
+
+            // 2. Sắp xếp các tầng theo thứ tự số (tầng 'N/A' đưa xuống cuối)
+            const sortedFloors = Object.keys(groupedRooms).sort((a, b) => {
+                if (a === 'N/A') return 1;
+                if (b === 'N/A') return -1;
+                return a - b;
+            });
+
+            // 3. Render HTML cho từng tầng
+            sortedFloors.forEach(floor => {
+                // Thêm tiêu đề cho tầng
+                grid.innerHTML += `
+                    <div class="col-12 mt-3">
+                        <h4 class="border-bottom pb-2">Tầng ${floor}</h4>
+                    </div>
+                `;
+
+                // Tạo một 'row' mới cho tầng này, sử dụng 'row-cols-lg-5' để có 5 cột
+                const floorRow = document.createElement('div');
+                // row-cols-1: 1 cột trên XS
+                // row-cols-md-3: 3 cột trên MD
+                // row-cols-lg-5: 5 cột trên LG (đáp ứng yêu cầu của bạn)
+                floorRow.className = 'row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4 mb-3';
+
+                const roomsOnFloor = groupedRooms[floor];
+
+                // Render từng phòng trong tầng
+                roomsOnFloor.forEach(room => {
+                    const statusDetails = getStatusDetails(room.status);
+                    const roomTypeName = room.roomTypeName || 'N/A';
+                    const roomPrice = room.pricePerNight ? room.pricePerNight.toLocaleString() : 'N/A';
+                    const roomCapacity = room.capacity ? `${room.capacity} người` : 'N/A';
+
+                    // Tạo thẻ 'col' bọc ngoài
+                    const colWrapper = document.createElement('div');
+                    colWrapper.className = 'col'; // Lớp 'col' này sẽ tự động vừa vặn theo 'row-cols-*'
+
+                    colWrapper.innerHTML = `
+                        <div class="card room-card ${room.status.toLowerCase()} h-100">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h5 class="card-title pt-0 pb-0 ps-0">${room.roomNumber}</h5>
+                                    </div>
+                                </div>
+                                <div class="room-info mb-3">
+                                    <p class="mb-1">${roomTypeName}</p>
+                                    <p class="mb-1">${roomPrice} VND/đêm</p>
+                                    <p class="mb-1"><span><i class="bi bi-people"></i> ${roomCapacity}</span></p>
+                                </div>
+                                <div class="room-actions mt-auto">
+                                    <div class="btn-group w-100" role="group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="showRoomDetail(${room.id})">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-warning" onclick="editRoom(${room.id})">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteRoom(${room.id})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    floorRow.appendChild(colWrapper);
+                });
+
+                grid.appendChild(floorRow); // Thêm hàng của tầng này vào grid
+                grid.innerHTML += '<hr class="my-3">'; // Thêm vạch kẻ ngang ngăn cách các tầng
+            });
+
+        } else {
+            // --- LOGIC CŨ CHO LIST VIEW (GIỮ NGUYÊN PHÂN TRANG) ---
+            paginationEl.style.display = 'flex'; // Hiển thị lại phân trang
+
+            const start = (currentPage - 1) * pageSize;
+            const pageData = filteredRooms.slice(start, start + pageSize);
+
+            pageData.forEach(room => {
+                const statusDetails = getStatusDetails(room.status);
+                const roomTypeName = room.roomTypeName || 'N/A';
+                const roomPrice = room.pricePerNight ? room.pricePerNight.toLocaleString() : 'N/A';
+                const roomCapacity = room.capacity ? `${room.capacity} người` : 'N/A';
+                let roomDescription = room.description || '';
+                if (roomDescription.length > 60) {
+                    roomDescription = roomDescription.substring(0, 60) + '...';
+                }
+                const featuresHtmlList = (room.amenities || []).join(', ');
+
+                listBody.innerHTML += `
+                    <tr>
+                        <td><div class="fw-bold">${room.roomNumber}</div></td>
+                        <td>${roomTypeName}</td>
+                        <td><span class="badge bg-${statusDetails.badge}">${statusDetails.text}</span></td>
+                        <td>${roomPrice} VND</td>
+                        <td>${roomCapacity}</td>
+                        <td><small>${featuresHtmlList}</small></td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-primary" onclick="showRoomDetail(${room.id})"><i class="bi bi-eye"></i></button>
+                                <button class="btn btn-sm btn-outline-warning" onclick="editRoom(${room.id})"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteRoom(${room.id})"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+
+            renderPagination(); // Chỉ render phân trang khi ở List View
+        }
+
+        updateStats(); // Cập nhật thống kê chung
+    }
+
+    function setupAddRoomModal() {
+        editRoomId = null;
+        document.getElementById('addRoomForm').reset();
+        document.getElementById('roomModalTitle').textContent = 'Thêm phòng mới';
+        document.getElementById('btnAddRoom').classList.remove('d-none');
+        document.getElementById('btnEditRoom').classList.add('d-none');
+        updateFormWithRoomType(null);
+    }
+
+    function editRoom(id) {
+        const room = allRooms.find(r => r.id === id);
+        if (!room) {
+            console.error("Không tìm thấy phòng với ID:", id);
+            return;
+        }
+
+        editRoomId = id;
+
+        // SỬA LỖI: Bỏ dòng reset() không cần thiết và gây ra lỗi
+        // document.getElementById('addRoomForm').reset();
+
+        // Cập nhật tiêu đề và các nút của modal
+        document.getElementById('roomModalTitle').textContent = `Sửa phòng ${room.roomNumber}`;
+        document.getElementById('btnAddRoom').classList.add('d-none');
+        document.getElementById('btnEditRoom').classList.remove('d-none');
+
+        // Điền dữ liệu chính vào form
+        document.getElementById('formRoomNumber').value = room.roomNumber;
+        document.getElementById('formFloor').value = room.floor;
+        document.getElementById('formStatus').value = room.status;
+
+        // QUAN TRỌNG: Đặt giá trị cho ô chọn loại phòng TRƯỚC
+        const formRoomTypeSelect = document.getElementById('formRoomType');
+        formRoomTypeSelect.value = room.roomTypeId;
+
+        // SAU KHI đã có giá trị loại phòng, gọi hàm cập nhật các trường phụ thuộc
+        updateFormWithRoomType(room.roomTypeId);
+
+        // Hiển thị modal
+        const addRoomModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('addRoomModal'));
+        addRoomModal.show();
+    }
+
+
+    async function handleRoomFormSubmit(event) {
+        event.preventDefault();
+        const form = document.getElementById('addRoomForm');
+        const roomTypeIdValue = form.querySelector('#formRoomType').value;
+
+        if (!roomTypeIdValue) {
+            alert('Vui lòng chọn một loại phòng.');
+            return;
+        }
+
+        const priceValue = parseFloat(form.querySelector('#formPrice').dataset.price) || 0;
+
+        const roomData = {
+            roomNumber: form.querySelector('#formRoomNumber').value,
+            floor: parseInt(form.querySelector('#formFloor').value),
+            roomTypeId: parseInt(roomTypeIdValue),
+            status: form.querySelector('#formStatus').value,
+            pricePerNight: priceValue
+        };
+
+        const url = editRoomId ? `/api/admin/rooms/${editRoomId}` : '/api/admin/rooms';
+        const method = editRoomId ? 'PUT' : 'POST';
+
+        try {
+            // SỬA LẠI: Thay thế 'fetch' bằng 'fetchWithAuth'
+            const response = await fetchWithAuth(url, {
+                method: method,
+                body: roomData
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Có lỗi xảy ra');
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById('addRoomModal')).hide();
+            await fetchAndRenderRooms(); // Tải lại dữ liệu
+            alert(editRoomId ? 'Cập nhật phòng thành công!' : 'Thêm phòng thành công!');
+
+        } catch (error) {
+            console.error('Lỗi khi lưu phòng:', error);
+            alert('Lỗi: ' + error.message);
+        }
+
+    }
+
+    // ... các hàm còn lại giữ nguyên ...
+    // Sửa trong file danhsachphong.html
+    async function deleteRoom(id) {
+        if (!confirm("Bạn có chắc muốn xóa phòng này?")) return;
+        try {
+            // SỬA LẠI: Thay thế 'fetch' bằng 'fetchWithAuth'
+            const response = await fetchWithAuth(`/api/admin/rooms/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Không thể xóa phòng.');
+            }
+
+            await fetchAndRenderRooms(); // Tải lại dữ liệu
+            alert('Xóa phòng thành công!');
+        } catch (error) {
+            console.error('Lỗi khi xóa phòng:', error);
+            alert('Lỗi: ' + error.message);
+        }
+    }
+
+
+    function showRoomDetail(id) {
+        const room = allRooms.find(r => r.id === id);
+        if (!room) return;
+        const statusDetails = getStatusDetails(room.status);
+
+        // 1. Tìm loại phòng tương ứng trong mảng allRoomTypes
+        const roomType = allRoomTypes.find(rt => rt.id === room.roomTypeId);
+
+        // 2. Lấy thông tin diện tích, nếu không có thì hiển thị 'N/A'
+        const areaInfo = (roomType && roomType.area) ? `${roomType.area} m²` : 'N/A';
+
+        // 3. Cập nhật HTML cho modal body
+        document.getElementById('roomDetailBody').innerHTML = `
+            <h5>Phòng ${room.roomNumber} <span class="badge bg-${statusDetails.badge}">${statusDetails.text}</span></h5>
+            <p><strong>Loại phòng:</strong> ${room.roomTypeName || 'N/A'}</p>
+            <p><strong>Giá mỗi đêm:</strong> ${room.pricePerNight ? room.pricePerNight.toLocaleString() : 'N/A'} VND</p>
+            <p><strong>Sức chứa:</strong> ${room.capacity || 'N/A'} người</p>
+
+            <p><strong>Diện tích:</strong> ${areaInfo}</p>
+
+            <p><strong>Mô tả:</strong> ${room.description || 'Không có mô tả.'}</p>
+            <p><strong>Tiện nghi:</strong> ${(room.amenities && room.amenities.length > 0) ? room.amenities.join(', ') : 'Không có tiện nghi.'}</p>
+        `;
+
+        new bootstrap.Modal(document.getElementById('roomDetailModal')).show();
+    }
+
+
+    function applyFilters() {
+        // SỬA: Đổi tên biến để rõ ràng hơn và lấy giá trị là ID
+        const typeId = document.getElementById('filterType').value;
+        const status = document.getElementById('filterStatus').value;
+        const sort = document.getElementById('filterSort').value;
+        const search = document.getElementById('filterSearch').value.trim().toLowerCase();
+
+        filteredRooms = allRooms.filter(room => {
+            // SỬA: Lọc theo roomTypeId thay vì roomTypeName
+            const matchType = !typeId || room.roomTypeId == typeId;
+            const matchStatus = !status || room.status === status;
+            const matchSearch = !search || room.roomNumber.toLowerCase().includes(search);
+            return matchType && matchStatus && matchSearch;
+        });
+
+        if (sort === "az") {
+            filteredRooms.sort((a, b) => a.roomNumber.localeCompare(b.roomNumber));
+        } else if (sort === "za") {
+            filteredRooms.sort((a, b) => b.roomNumber.localeCompare(a.roomNumber));
+        } else if (sort === "priceAsc") {
+            filteredRooms.sort((a, b) => (a.pricePerNight || 0) - (b.pricePerNight || 0));
+        } else if (sort === "priceDesc") {
+            filteredRooms.sort((a, b) => (b.pricePerNight || 0) - (a.pricePerNight || 0));
+        }
+
+        currentPage = 1;
+        renderRooms();
+    }
+
+
+    // === HÀM JAVASCRIPT ĐÃ SỬA ===
+    function updateStats() {
+        const total = allRooms.length;
+
+        // SỬA LỖI 1: Thêm 'RESERVED' vào đối tượng đếm
+        const statusCounts = { AVAILABLE: 0, OCCUPIED: 0, MAINTENANCE: 0, CLEANING: 0, RESERVED: 0 };
+        allRooms.forEach(r => {
+            if (statusCounts.hasOwnProperty(r.status)) {
+                statusCounts[r.status]++;
+            }
+        });
+
+        // SỬA LỖI 2: Dùng 'getElementById' cho TẤT CẢ các thẻ để đảm bảo an toàn
+        document.getElementById('total-rooms-count').textContent = total;
+        document.getElementById('available-count').textContent = statusCounts.AVAILABLE;
+        document.getElementById('occupied-count').textContent = statusCounts.OCCUPIED;
+        document.getElementById('reserved-count').textContent = statusCounts.RESERVED; // Đã thêm
+        document.getElementById('maintenance-count').textContent = statusCounts.MAINTENANCE;
+        document.getElementById('cleaning-count').textContent = statusCounts.CLEANING;
+
+        if (total > 0) {
+            const calcPercent = (count) => Math.round((count / total) * 100);
+
+            document.getElementById('available-percent').textContent = `${calcPercent(statusCounts.AVAILABLE)}%`;
+            document.getElementById('occupied-percent').textContent = `${calcPercent(statusCounts.OCCUPIED)}%`;
+            document.getElementById('reserved-percent').textContent = `${calcPercent(statusCounts.RESERVED)}%`; // Đã thêm
+            document.getElementById('maintenance-percent').textContent = `${calcPercent(statusCounts.MAINTENANCE)}%`;
+            document.getElementById('cleaning-percent').textContent = `${calcPercent(statusCounts.CLEANING)}%`;
+        } else {
+            // Đặt lại % về 0 nếu không có phòng nào
+            const allPercents = ['available-percent', 'occupied-percent', 'reserved-percent', 'maintenance-percent', 'cleaning-percent'];
+            allPercents.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = '0%';
+            });
+        }
+    }
+    // === KẾT THÚC HÀM JAVASCRIPT ĐÃ SỬA ===
+
+
+    function renderPagination() {
+        const totalPages = Math.ceil(filteredRooms.length / pageSize);
+        const pag = document.getElementById('pagination');
+        pag.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        pag.innerHTML += `<li class="page-item${currentPage === 1 ? ' disabled' : ''}"><a class="page-link" href="#" onclick="event.preventDefault(); gotoPage(${currentPage - 1});">Trước</a></li>`;
+        for (let i = 1; i <= totalPages; i++) {
+            pag.innerHTML += `<li class="page-item${i === currentPage ? ' active' : ''}"><a class="page-link" href="#" onclick="event.preventDefault(); gotoPage(${i});">${i}</a></li>`;
+        }
+        pag.innerHTML += `<li class="page-item${currentPage === totalPages ? ' disabled' : ''}"><a class="page-link" href="#" onclick="event.preventDefault(); gotoPage(${currentPage + 1});">Tiếp</a></li>`;
+    }
+
+    function gotoPage(page) {
+        const totalPages = Math.ceil(filteredRooms.length / pageSize);
+        if (page < 1 || page > totalPages) return;
+        currentPage = page;
+        renderRooms();
+        document.querySelector('.section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleView(view) {
+        const gridView = document.getElementById('roomGridView');
+        const listView = document.getElementById('roomListView');
+        if (view === 'grid') {
+            gridView.classList.remove('d-none');
+            listView.classList.add('d-none');
+        } else {
+            gridView.classList.add('d-none');
+            listView.classList.remove('d-none');
+        }
+        // GỌI LẠI RENDER ĐỂ ÁP DỤNG LOGIC MỚI
+        renderRooms();
+    }
+
+    function logout() {
+        localStorage.removeItem('jwtToken');
+        window.location.href = '../pages-login.html';
+    }
+
+    // SỬA LẠI: Hợp nhất hai khối DOMContentLoaded thành một
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Khởi tạo dữ liệu
+        fetchRoomTypes();
+        fetchAndRenderRooms();
+
+        // 2. Gắn sự kiện cho các bộ lọc
+        document.getElementById('btnFilter').onclick = applyFilters;
+        document.getElementById('filterType').onchange = applyFilters;
+        document.getElementById('filterStatus').onchange = applyFilters;
+        document.getElementById('filterSort').onchange = applyFilters;
+        document.getElementById('filterSearch').addEventListener('input', applyFilters);
+
+        // 3. Gắn sự kiện cho modal thêm/sửa phòng
+        document.getElementById('btnShowAddRoom').addEventListener('click', setupAddRoomModal);
+        document.getElementById('addRoomForm').addEventListener('submit', handleRoomFormSubmit);
+        document.getElementById('formRoomType').addEventListener('change', (e) => updateFormWithRoomType(e.target.value));
+
+        // 4. Gắn sự kiện cho chuyển đổi chế độ xem
+        document.getElementById('gridView').addEventListener('click', () => toggleView('grid'));
+        document.getElementById('listView').addEventListener('click', () => toggleView('list'));
+
+        // 5. Gắn sự kiện cho nút đăng xuất
+        const logoutBtn = document.getElementById('logoutButton');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function(event) {
+                event.preventDefault(); // Ngăn hành vi mặc định của thẻ <a>
+                logout();
+            });
+        }
+    });
+</script>
+
+
+</body>
+</html>
