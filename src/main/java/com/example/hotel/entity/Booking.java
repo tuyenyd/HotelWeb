@@ -89,7 +89,10 @@ public class Booking {
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Payment> payments = new ArrayList<>();
 
-    public BigDecimal getAmountPaid() {
+    @Column(name = "amount_paid")
+    private BigDecimal amountPaid = BigDecimal.ZERO;
+
+    /*public BigDecimal getAmountPaid() {
         if (this.payments == null || this.payments.isEmpty()) {
             return BigDecimal.ZERO;
         }
@@ -97,5 +100,8 @@ public class Booking {
         return this.payments.stream()
                 .map(Payment::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }*/
+    public BigDecimal getAmountPaid() {
+        return amountPaid == null ? BigDecimal.ZERO : amountPaid;
     }
 }

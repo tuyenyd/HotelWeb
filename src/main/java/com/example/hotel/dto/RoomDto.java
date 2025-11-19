@@ -17,5 +17,8 @@ public class RoomDto {
     private Integer capacity;
     private String description;
     private List<String> amenities;
-
+    private Double area;
+    private String imageUrl;
+    private String galleryImages;
+    private String overview;
 }

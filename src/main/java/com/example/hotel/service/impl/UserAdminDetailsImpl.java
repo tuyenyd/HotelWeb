@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class UserDetailsImpl implements UserDetails {
+public class UserAdminDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     @Getter
@@ -28,8 +28,8 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
     private boolean enabled;
-    public UserDetailsImpl(Long id, String username, String email, String password, String fullName,
-                           Collection<? extends GrantedAuthority> authorities, boolean enabled) {
+    public UserAdminDetailsImpl(Long id, String username, String email, String password, String fullName,
+                                Collection<? extends GrantedAuthority> authorities, boolean enabled) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -39,7 +39,7 @@ public class UserDetailsImpl implements UserDetails {
         this.enabled = enabled;
     }
 
-    public static UserDetailsImpl build(User user) {
+    public static UserAdminDetailsImpl build(User user) {
         List<GrantedAuthority> authorities;
         if (user.getRole() != null && !user.getRole().isEmpty()) {
             String role = "ROLE_" + user.getRole().toUpperCase();
@@ -48,7 +48,7 @@ public class UserDetailsImpl implements UserDetails {
             authorities = Collections.emptyList();
         }
 
-        return new UserDetailsImpl(
+        return new UserAdminDetailsImpl(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
@@ -96,7 +96,7 @@ public class UserDetailsImpl implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserDetailsImpl user = (UserDetailsImpl) o;
+        UserAdminDetailsImpl user = (UserAdminDetailsImpl) o;
         return Objects.equals(id, user.id);
     }
 }

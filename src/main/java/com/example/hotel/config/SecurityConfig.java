@@ -2,7 +2,7 @@
 package com.example.hotel.config;
 
 import com.example.hotel.security.AuthTokenFilter;
-import com.example.hotel.service.impl.UserDetailsServiceImpl;
+import com.example.hotel.service.impl.UserAdminDetailsServiceImpl;
 import com.example.hotel.security.jwt.AuthEntryPointJwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserAdminDetailsServiceImpl userDetailsService;
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
@@ -81,8 +81,6 @@ public class SecurityConfig {
 
                         // Yêu cầu vai trò 'ADMIN',"MANAGER" cho tất cả các API dưới /api/admin/
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "MANAGER")
-
-                        .requestMatchers("/api/users/**").authenticated()
 
                         .requestMatchers("/api/public/auth/**").permitAll()
 

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class PaymentDto {
     private Long id;
+    private Long bookingId;
     private LocalDateTime paymentDate;
     private BigDecimal amount;
     private String method;

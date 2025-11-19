@@ -66,7 +66,6 @@ public class RoomServiceImpl implements RoomService {
             // Tìm thấy một phòng có cùng số, nhưng đó không phải là phòng đang được chỉnh sửa
             throw new DataIntegrityViolationException("Room number '" + roomDto.getRoomNumber() + "' is already used by another room.");
         }
-        // =============================================================
 
         existingRoom.setRoomNumber(roomDto.getRoomNumber());
         existingRoom.setStatus(RoomStatus.valueOf(roomDto.getStatus()));
@@ -92,7 +91,7 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public void deleteRoom(Long id) {
         if (!roomRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Room not found with id: " + id);
+            throw new ResourceNotFoundException("Không tìm thấy phòng với ID: " + id);
         }
         roomRepository.deleteById(id);
     }
@@ -126,6 +125,10 @@ public class RoomServiceImpl implements RoomService {
             dto.setPricePerNight(roomType.getBasePrice());
             dto.setCapacity(roomType.getCapacity());
             dto.setDescription(roomType.getDescription());
+            dto.setArea(roomType.getArea());
+            dto.setImageUrl(roomType.getImageUrl());
+            dto.setGalleryImages(roomType.getGalleryImages());
+            dto.setOverview(roomType.getOverview());
 
             String amenitiesStr = roomType.getAmenities();
             if (amenitiesStr != null && !amenitiesStr.trim().isEmpty()) {

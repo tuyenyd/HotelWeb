@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingHistoryDto {
+    private Long id;
     private String bookingCode;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;

@@ -1,6 +1,6 @@
 package com.example.hotel.security.jwt;
 
-import com.example.hotel.service.impl.UserDetailsImpl;
+import com.example.hotel.service.impl.UserAdminDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -25,7 +25,7 @@ public class JwtUtils {
     private long jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+        UserAdminDetailsImpl userPrincipal = (UserAdminDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))

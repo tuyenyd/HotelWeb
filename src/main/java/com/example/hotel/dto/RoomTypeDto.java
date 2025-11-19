@@ -16,4 +16,7 @@ public class RoomTypeDto {
     private List<String> amenities;
     private int roomCount;
     private Integer pointsEarned;
+    private String imageUrl;
+    private String galleryImages;
+    private String overview;
 }

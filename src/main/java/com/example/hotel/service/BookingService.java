@@ -1,12 +1,12 @@
 package com.example.hotel.service;
 
-import com.example.hotel.dto.BookingDto;
-import com.example.hotel.dto.BookingHistoryDto;
-import com.example.hotel.dto.BookingRequestDTO;
-import com.example.hotel.dto.BookingResponseDTO;
+import com.example.hotel.dto.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -38,4 +38,19 @@ public interface BookingService {
      * @return DTO chứa mã đặt phòng
      */
     BookingResponseDTO createPublicBooking(BookingRequestDTO request, String token);
+    /**
+     * Lấy chi tiết đặt phòng cho khách hàng (có kiểm tra quyền sở hữu)
+     * @param customerEmail Email của khách hàng (từ token)
+     * @param bookingId ID của đặt phòng
+     * @return DTO chi tiết
+     * @throws EntityNotFoundException nếu không tìm thấy booking
+     * @throws AccessDeniedException nếu booking không thuộc về khách hàng
+     */
+    CustomerBookingDetailDTO getBookingDetailsForCustomer(String customerEmail, Long bookingId)
+            throws EntityNotFoundException, AccessDeniedException;
+
+    void processPaymentSuccess(Long bookingId, BigDecimal amount, String txnRef);
+
+    void cancelBookingByCustomer(String email, Long bookingId);
 }
+

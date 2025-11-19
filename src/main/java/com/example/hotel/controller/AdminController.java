@@ -5,7 +5,7 @@ import com.example.hotel.dto.PasswordChangeRequest;
 import com.example.hotel.dto.ProfileUpdateRequest;
 import com.example.hotel.entity.User;
 import com.example.hotel.repository.UserRepository;
-import com.example.hotel.service.impl.UserDetailsImpl;
+import com.example.hotel.service.impl.UserAdminDetailsImpl;
 import com.example.hotel.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/admin")
 public class AdminController {
 
     @Autowired
@@ -99,7 +99,7 @@ public class AdminController {
     }
     @GetMapping("/profile")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> getUserProfile(@AuthenticationPrincipal UserAdminDetailsImpl userDetails) {
         if (userDetails == null) {
             return ResponseEntity.status(401).body("Lỗi: Người dùng chưa xác thực.");
         }
@@ -118,7 +118,7 @@ public class AdminController {
     @PutMapping("/profile")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> updateUserProfile(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @AuthenticationPrincipal UserAdminDetailsImpl userDetails,
             @ModelAttribute ProfileUpdateRequest updateRequest,
             @RequestParam(value = "avatar", required = false) MultipartFile avatarFile) {
 
@@ -140,7 +140,7 @@ public class AdminController {
     @PostMapping("/change-password")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> changePassword(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @AuthenticationPrincipal UserAdminDetailsImpl userDetails,
             @RequestBody PasswordChangeRequest passwordRequest) {
 
         if (userDetails == null) {

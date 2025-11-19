@@ -1,18 +1,20 @@
 package com.example.hotel.controller;
 
-import com.example.hotel.dto.BookingHistoryDto;
-import com.example.hotel.dto.CustomerRequestDTO; // Dùng lại DTO này
-import com.example.hotel.dto.CustomerResponseDTO;
-import com.example.hotel.dto.PasswordChangeRequest;
-import com.example.hotel.dto.MessageResponse; // Dùng lại DTO này
+import com.example.hotel.dto.*;
 import com.example.hotel.service.BookingService;
 import com.example.hotel.service.CustomerService;
+import com.example.hotel.service.VnPayService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication; // Dùng để lấy người dùng đã đăng nhập
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -24,6 +26,7 @@ public class CustomerPublicController {
 
     private final CustomerService customerService;
     private final BookingService bookingService;
+    private final VnPayService vnPayService;
 
     /**
      * API: Lấy thông tin hồ sơ của khách hàng hiện tại
@@ -89,5 +92,84 @@ public class CustomerPublicController {
         // 3. Gọi service BookingService (bạn đã có sẵn hàm này)
         List<BookingHistoryDto> history = bookingService.getBookingHistoryByCustomerId(customerId);
         return ResponseEntity.ok(history);
+    }
+    /**
+     * API: Lấy chi tiết một đặt phòng (bao gồm cả thanh toán)
+     * (Dùng cho modal trong trang user-bookings.html)
+     * GET /api/public/customer/bookings/{id}
+     */
+    @GetMapping("/bookings/{id}")
+    public ResponseEntity<?> getBookingDetails(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        log.info("Khách hàng {} đang lấy chi tiết booking ID: {}", authentication.getName(), id);
+        try {
+            // Lấy email khách hàng từ token
+            String email = authentication.getName();
+
+            // Gọi service để lấy chi tiết (Service sẽ kiểm tra quyền sở hữu)
+            CustomerBookingDetailDTO bookingDetail = bookingService.getBookingDetailsForCustomer(email, id);
+
+            return ResponseEntity.ok(bookingDetail);
+
+        } catch (EntityNotFoundException e) {
+            log.warn("Không tìm thấy booking: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(e.getMessage()));
+        } catch (AccessDeniedException e) {
+            log.warn("Lỗi truy cập: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Lỗi không xác định khi lấy chi tiết booking: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Lỗi máy chủ"));
+        }
+    }
+    @PostMapping("/create-payment-url")
+    public ResponseEntity<?> createPaymentUrl(
+            Authentication authentication,
+            @RequestBody PaymentRequestDto request) {
+
+        log.info("Khách hàng {} yêu cầu tạo link thanh toán cho Booking ID: {}",
+                authentication.getName(), request.getBookingId());
+        try {
+
+            // Gọi service (giả lập) để tạo link
+            String paymentUrl = vnPayService.createPaymentUrl(request.getBookingId(), request.getAmount());
+
+            return ResponseEntity.ok(new PaymentUrlResponseDTO(paymentUrl));
+
+        } catch (Exception e) {
+            log.error("Lỗi khi tạo link thanh toán: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+    }
+    @PostMapping("/payment-success")
+    public ResponseEntity<?> confirmPaymentSuccess(
+            Authentication authentication,
+            @RequestBody PaymentSuccessRequest request) { // Chúng ta sẽ tạo DTO này bên dưới
+
+        try {
+            bookingService.processPaymentSuccess(request.getBookingId(), request.getAmount(), request.getTxnRef());
+            return ResponseEntity.ok(new MessageResponse("Thanh toán được ghi nhận thành công!"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+    }
+
+    // DTO tĩnh (hoặc tạo file riêng)
+    @Data
+    public static class PaymentSuccessRequest {
+        private Long bookingId;
+        private BigDecimal amount;
+        private String txnRef;
+    }
+    @PatchMapping("/bookings/{id}/cancel")
+    public ResponseEntity<?> cancelBooking(@PathVariable Long id, Authentication authentication) {
+        try {
+            bookingService.cancelBookingByCustomer(authentication.getName(), id);
+            return ResponseEntity.ok(new MessageResponse("Hủy đặt phòng thành công!"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
     }
 }

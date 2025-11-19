@@ -42,5 +42,14 @@ public class RoomType {
     private List<Room> rooms;
 
     @Column(name = "points_earned", nullable = false)
-    private Integer pointsEarned = 0; // Điểm cố định cho loại phòng này
+    private Integer pointsEarned = 0;// Điểm cố định cho loại phòng này
+    @Column(name = "image_url")
+    private String imageUrl; // Ví dụ: "deluxe-main.jpg"
+
+    @Column(name = "gallery_images", length = 1000)
+    private String galleryImages;
+
+    @Lob
+    @Column(name = "overview",columnDefinition = "TEXT")
+    private String overview;
 }

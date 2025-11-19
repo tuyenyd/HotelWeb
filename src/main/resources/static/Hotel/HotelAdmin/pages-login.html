@@ -171,8 +171,6 @@
                 }
             })
             .then(data => {
-                // 'data' bây giờ là đối tượng JwtResponse đầy đủ:
-                // { token: "...", type: "Bearer", username: "...", fullName: "...", role: "..." }
 
                 // 1. Lưu token
                 localStorage.setItem('jwtToken', data.token);

@@ -1,12 +1,10 @@
 package com.example.hotel.controller;
 
-import com.example.hotel.dto.BookingRequestDTO;
-import com.example.hotel.dto.BookingResponseDTO;
-import com.example.hotel.dto.RoomDto;
+import com.example.hotel.dto.*;
 import com.example.hotel.service.BookingService;
 import com.example.hotel.service.RoomService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.example.hotel.service.RoomTypeService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +23,7 @@ public class PublicBookingController {
 
     private final RoomService roomService;
     private final BookingService bookingService;
+    private final RoomTypeService roomTypeService;
 
     /**
      * API CÔNG KHAI: Tìm phòng còn trống
@@ -64,10 +63,25 @@ public class PublicBookingController {
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
     }
-
-    @Data
-    @AllArgsConstructor
-    static class MessageResponse {
-        private String message;
+    @GetMapping("/rooms")
+    public ResponseEntity<List<RoomDto>> getAllPublicRooms() {
+        // Dùng lại hàm getAllRooms() của admin
+        List<RoomDto> rooms = roomService.getAllRooms();
+        return ResponseEntity.ok(rooms);
     }
+    @GetMapping("/room-types")
+    public ResponseEntity<List<RoomTypeDto>> getAllRoomTypes() {
+        // Giả sử RoomTypeService của bạn có hàm getAllRoomTypes()
+        List<RoomTypeDto> roomTypes = roomTypeService.getAllRoomTypes();
+        return ResponseEntity.ok(roomTypes);
+    }
+
+    @GetMapping("/rooms/{id}")
+    public ResponseEntity<RoomDto> getPublicRoomById(@PathVariable Long id) {
+        // Dùng lại hàm getRoomById của admin
+        RoomDto room = roomService.getRoomById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy phòng với ID: " + id));
+        return ResponseEntity.ok(room);
+    }
+
 }

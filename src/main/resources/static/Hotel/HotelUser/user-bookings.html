@@ -5,14 +5,12 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Lịch sử đặt phòng - Grandoria</title>
-    <meta name="description" content="">
-    <meta name="keywords" content="">
 
     <link href="assets/img/favicon.png" rel="icon">
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="assets/vendor/aos/aos.css" rel="stylesheet">
@@ -21,64 +19,29 @@
     <link href="assets/css/main.css" rel="stylesheet">
 
     <style>
-        /* CSS tùy chỉnh cho thẻ đặt phòng */
+        /* (Giữ nguyên CSS cũ) */
         .booking-card {
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             margin-bottom: 25px;
-            border-left: 5px solid #0d6efd; /* Mặc định */
+            border-left: 5px solid #0d6efd;
         }
-        .booking-card-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .booking-card-body {
-            padding: 1.5rem;
-        }
-        .booking-card-footer {
-            padding: 1rem 1.5rem;
-            background-color: #f9f9f9;
-            border-top: 1px solid #eee;
-            text-align: right;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        .booking-code {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: #333;
-        }
-        .status-badge {
-            font-size: 0.8rem;
-            padding: 0.4em 0.7em;
-            font-weight: 600;
-        }
-        .booking-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
-        }
-        .info-item h6 {
-            font-size: 0.8rem;
-            color: #888;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-        .info-item p {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 0;
-        }
-        /* Màu cho các trạng thái */
+        .booking-card-header { padding: 1rem 1.25rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .booking-card-body { padding: 1.25rem; }
+        .booking-code { font-weight: 700; font-size: 1.1rem; color: #333; }
+        .status-badge { font-size: 0.8rem; padding: 0.4em 0.7em; font-weight: 600; }
+        .booking-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+        .info-item h6 { font-size: 0.8rem; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+        .info-item p { font-size: 1rem; font-weight: 500; margin-bottom: 0; }
+
         .status-pending { border-left-color: #ffc107; }
         .status-confirmed { border-left-color: #198754; }
         .status-checked-in { border-left-color: #0dcaf0; }
         .status-checked-out { border-left-color: #6c757d; }
         .status-cancelled { border-left-color: #dc3545; opacity: 0.8; }
+
+        .transaction-icon { font-size: 1.5rem; margin-right: 15px; width: 30px; text-align: center; }
     </style>
 </head>
 
@@ -134,7 +97,6 @@
 </header>
 
 <main class="main">
-
     <div class="page-title light-background">
         <div class="container d-lg-flex justify-content-between align-items-center">
             <h1 class="mb-2 mb-lg-0">Lịch sử đặt phòng</h1>
@@ -145,34 +107,82 @@
                 </ol>
             </nav>
         </div>
-    </div><section id="user-bookings" class="user-bookings section">
-    <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row">
-            <div class="col-lg-10 offset-lg-1">
+    </div>
 
-                <div id="booking-list-container">
-                    <div id="loading-spinner" class="text-center p-5">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Đang tải...</span>
+    <section id="user-bookings" class="user-bookings section">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+                    <div id="booking-list-container">
+                        <div id="loading-spinner" class="text-center p-5">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="mt-2">Đang tải lịch sử đặt phòng của bạn...</p>
                         </div>
-                        <p class="mt-2">Đang tải lịch sử đặt phòng của bạn...</p>
+                        <div id="no-bookings-message" class="alert alert-info d-none" role="alert">
+                            Bạn chưa có lịch sử đặt phòng nào. <a href="booking.html" class="alert-link">Đặt phòng ngay!</a>
+                        </div>
                     </div>
-
-                    <div id="no-bookings-message" class="alert alert-info d-none" role="alert">
-                        Bạn chưa có lịch sử đặt phòng nào. <a href="booking.html" class="alert-link">Đặt phòng ngay!</a>
-                    </div>
-
                 </div>
+            </div>
+        </div>
+    </section>
+</main>
 
+<div class="modal fade" id="bookingDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết Đặt phòng: <span id="modalBookingCode" class="text-primary">...</span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" id="customerTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-pane" type="button" role="tab">Chi tiết</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment-pane" type="button" role="tab">Lịch sử Thanh toán</button>
+                    </li>
+                </ul>
+                <div class="tab-content pt-3" id="customerTabContent">
+                    <div class="tab-pane fade show active" id="details-pane" role="tabpanel">
+                        <div id="bookingDetailsContent" class="row"></div>
+                        <div id="actionButtonsContainer" class="d-flex justify-content-end mt-3 border-top pt-3">
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="payment-pane" role="tabpanel">
+                        <div id="bookingPaymentContent"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
             </div>
         </div>
     </div>
-</section>
-
-</main>
+</div>
 
 <footer id="footer" class="footer position-relative dark-background">
+    <div class="copyright text-center">
+        <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+            <div class="d-flex flex-column align-items-center align-items-lg-start">
+                <div>
+                    © Bản quyền <strong><span>MyWebsite</span></strong>. Tất cả quyền được bảo lưu
+                </div>
+                <div class="credits">
+                    Thiết kế bởi Grandoria<a href="https://bootstrapmade.com/">BootstrapMade</a>
+                </div>
+            </div>
+            <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+                <a href=""><i class="bi bi-twitter-x"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+            </div>
+        </div>
+    </div>
 </footer>
+
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 <div id="preloader"></div>
 
@@ -184,117 +194,269 @@
 <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
 <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
 <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-<script src="assets/js/main.js"></script> <script>
+<script src="assets/js/main.js"></script>
+
+<script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        // --- 1. KIỂM TRA BẢO MẬT ---
         const token = localStorage.getItem('customerToken');
         if (!token) {
             window.location.href = 'pages-login.html';
             return;
         }
 
-        const API_URL = 'http://localhost:8080/api/public/customer'; // API mới
+        const API_URL = 'http://localhost:8080/api/public/customer';
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         };
 
-        // Lấy các element
         const container = document.getElementById('booking-list-container');
         const loadingSpinner = document.getElementById('loading-spinner');
         const noBookingsMessage = document.getElementById('no-bookings-message');
 
-        // --- 2. TẢI LỊCH SỬ ĐẶT PHÒNG ---
+        const detailModal = new bootstrap.Modal(document.getElementById('bookingDetailModal'));
+        const modalBookingCode = document.getElementById('modalBookingCode');
+        const detailsContent = document.getElementById('bookingDetailsContent');
+        const paymentContent = document.getElementById('bookingPaymentContent');
+        const actionButtonsContainer = document.getElementById('actionButtonsContainer'); // Container mới cho nút hủy
+
         async function loadBookingHistory() {
             try {
-                // API mới: GET /api/public/customer/bookings
-                // API này sẽ tự động lấy ID khách hàng từ token
                 const response = await fetch(`${API_URL}/bookings`, { headers });
-
-                if (!response.ok) {
-                    throw new Error('Không thể tải lịch sử đặt phòng.');
-                }
-
+                if (!response.ok) throw new Error('Không thể tải lịch sử đặt phòng.');
                 const bookings = await response.json();
-
-                // Ẩn spinner
                 loadingSpinner.classList.add('d-none');
 
                 if (bookings.length === 0) {
-                    // Hiển thị thông báo rỗng
                     noBookingsMessage.classList.remove('d-none');
                 } else {
-                    // Tạo HTML cho từng booking
+                    bookings.sort((a, b) => {
+                        const statusOrder = (s) => {
+                            if (s === 'CANCELLED' || s === 'CHECKED_OUT') return 1;
+                            return 0;
+                        };
+                        return statusOrder(a.status) - statusOrder(b.status) || new Date(b.checkInDate) - new Date(a.checkInDate);
+                    });
                     bookings.forEach(renderBookingCard);
+                    attachDetailButtons();
                 }
-
             } catch (error) {
                 loadingSpinner.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
             }
         }
 
-        // --- 3. HÀM TẠO HTML CHO THẺ BOOKING ---
         function renderBookingCard(booking) {
-            // (Dữ liệu từ BookingHistoryDto ở backend)
             const statusDetails = getStatusDetails(booking.status);
-
+            const bookingId = booking.id;
             const cardHtml = `
-            <div class="booking-card ${statusDetails.class}">
+            <div class="booking-card ${statusDetails.class}" data-booking-id="${bookingId}">
                 <div class="booking-card-header">
                     <span class="booking-code">Mã: ${booking.bookingCode}</span>
                     <span class="badge ${statusDetails.badgeClass} status-badge">${statusDetails.text}</span>
                 </div>
                 <div class="booking-card-body">
                     <div class="booking-info-grid">
-                        <div class="info-item">
-                            <h6>Phòng</h6>
-                            <p>${booking.roomTypeName} - ${booking.roomNumber}</p>
-                        </div>
-                        <div class="info-item">
-                            <h6>Nhận phòng</h6>
-                            <p>${formatDate(booking.checkInDate)}</p>
-                        </div>
-                        <div class="info-item">
-                            <h6>Trả phòng</h6>
-                            <p>${formatDate(booking.checkOutDate)}</p>
-                        </div>
+                        <div class="info-item"><h6>Phòng</h6><p>${booking.roomTypeName || 'N/A'} - ${booking.roomNumber || 'N/A'}</p></div>
+                        <div class="info-item"><h6>Nhận phòng</h6><p>${formatDate(booking.checkInDate)}</p></div>
+                        <div class="info-item"><h6>Trả phòng</h6><p>${formatDate(booking.checkOutDate)}</p></div>
+                        <div class="info-item"><h6>Tổng cộng</h6><p>${(booking.totalPrice || 0).toLocaleString()} VND</p></div>
+                    </div>
+                    <div class="text-end mt-3">
+                        <button class="btn btn-sm btn-view-detail" style="background-color: #2f5d50;color: white">Xem chi tiết</button>
                     </div>
                 </div>
-                <div class="booking-card-footer">
-                    <span>Tổng cộng: ${booking.totalPrice.toLocaleString()} VND</span>
-                </div>
-            </div>
-            `;
+            </div>`;
             container.innerHTML += cardHtml;
         }
 
-        // --- 4. HÀM TIỆN ÍCH ---
+        function attachDetailButtons() {
+            document.querySelectorAll('.btn-view-detail').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const card = e.target.closest('.booking-card');
+                    const bookingId = card.dataset.bookingId;
+                    if(bookingId) loadBookingDetails(bookingId);
+                });
+            });
+        }
+
+        async function loadBookingDetails(bookingId) {
+            modalBookingCode.textContent = '...';
+            detailsContent.innerHTML = `<div class="text-center p-3"><div class="spinner-border text-primary" role="status"></div></div>`;
+            paymentContent.innerHTML = `<div class="text-center p-3"><div class="spinner-border text-primary" role="status"></div></div>`;
+            actionButtonsContainer.innerHTML = ''; // Xóa nút cũ
+            detailModal.show();
+
+            const firstTab = document.querySelector('#customerTabs button[data-bs-target="#details-pane"]');
+            if (firstTab) bootstrap.Tab.getOrCreateInstance(firstTab).show();
+
+            try {
+                const response = await fetch(`${API_URL}/bookings/${bookingId}`, { headers });
+                if (!response.ok) throw new Error('Không thể tải chi tiết đặt phòng.');
+                const booking = await response.json();
+
+                modalBookingCode.textContent = booking.bookingCode;
+
+                // 1. Render Tab Chi tiết
+                detailsContent.innerHTML = `
+                    <div class="col-md-6">
+                        <div class="mb-3"> <label class="form-label fw-bold">Trạng thái</label> <div>${getStatusDetails(booking.status).text}</div> </div>
+                        <div class="mb-3"> <label class="form-label fw-bold">Phòng</label> <div>${booking.roomTypeName} - ${booking.roomNumber}</div> </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3"> <label class="form-label fw-bold">Nhận phòng</label> <div>${formatDate(booking.checkInDate)}</div> </div>
+                        <div class="mb-3"> <label class="form-label fw-bold">Trả phòng</label> <div>${formatDate(booking.checkOutDate)}</div> </div>
+                    </div>
+                    <div class="col-md-6"> <label class="form-label fw-bold">Người lớn</label> <div>${booking.soNguoiLon}</div> </div>
+                    <div class="col-md-6"> <label class="form-label fw-bold">Trẻ em</label> <div>${booking.soTreEm}</div> </div>
+                `;
+
+                // === LOGIC NÚT HỦY ===
+                if (booking.status === 'PENDING' || booking.status === 'CONFIRMED') {
+                    actionButtonsContainer.innerHTML = `
+                        <button class="btn btn-danger" id="btnCancelBooking" data-id="${booking.id}">
+                            <i class="bi bi-x-circle"></i> Hủy đặt phòng
+                        </button>
+                    `;
+
+                    // Gắn sự kiện Hủy
+                    document.getElementById('btnCancelBooking').addEventListener('click', handleCancelBooking);
+                }
+                // =====================
+
+                // 2. Render Tab Thanh toán
+                const total = booking.totalPrice || 0;
+                const paid = booking.amountPaid || 0;
+                const remaining = total - paid;
+
+                let transactionHtml = '';
+                if (booking.payments && booking.payments.length > 0) {
+                    booking.payments.forEach(t => {
+                        const iconInfo = getPaymentMethodIcon(t.method);
+                        transactionHtml += `
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi ${iconInfo.icon} ${iconInfo.color} transaction-icon"></i>
+                                <div>
+                                    <strong>${t.amount.toLocaleString()} VND</strong> - ${getPaymentMethodText(t.method)}
+                                    <br><small class="text-muted">${formatDateTime(t.paymentDate)} - ${t.notes || ''}</small>
+                                </div>
+                            </li>`;
+                    });
+                } else {
+                    transactionHtml = '<li class="list-group-item text-muted text-center">Chưa có giao dịch thanh toán nào.</li>';
+                }
+
+                // Nút thanh toán (chỉ hiện nếu chưa hủy và chưa trả phòng)
+                let paymentButtonHtml = '';
+                if (remaining > 0 && booking.status !== 'CANCELLED' && booking.status !== 'CHECKED_OUT') {
+                    paymentButtonHtml = `
+                    <div class="text-center mt-4 p-3 bg-light rounded border">
+                        <h5 class="text-primary mb-3">Thanh toán khoản còn lại</h5>
+                        <p class="mb-3">Số tiền còn nợ: <strong>${remaining.toLocaleString()} VND</strong></p>
+                        <a href="user-payment.html?bookingId=${booking.id}" class="btn btn-success btn-lg px-4">
+                            <i class="bi bi-credit-card me-2"></i> Tiến hành Thanh toán
+                        </a>
+                    </div>
+                    `;
+                }
+
+                paymentContent.innerHTML = `
+                    <ul class="list-group mb-3 shadow-sm">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Tổng tiền hóa đơn:</span><span class="fw-bold fs-5">${total.toLocaleString()} VND</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Đã thanh toán:</span><span class="fw-bold text-success fs-5">${paid.toLocaleString()} VND</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                            <span class="fw-bold">Còn lại phải thu:</span><span class="fw-bold text-danger fs-4">${remaining.toLocaleString()} VND</span>
+                        </li>
+                    </ul>
+                    <h6 class="mt-4 mb-3 fw-bold">Lịch sử Giao dịch</h6>
+                    <ul class="list-group shadow-sm">${transactionHtml}</ul>
+                    ${paymentButtonHtml}
+                `;
+
+            } catch (error) {
+                detailsContent.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+                paymentContent.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+            }
+        }
+
+        /**
+         * 5. HÀM XỬ LÝ HỦY ĐẶT PHÒNG
+         */
+        async function handleCancelBooking(e) {
+            const button = e.currentTarget;
+            const bookingId = button.dataset.id;
+
+            if(!confirm("Bạn có chắc chắn muốn hủy đặt phòng này? Hành động này không thể hoàn tác.")) {
+                return;
+            }
+
+            button.disabled = true;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang xử lý...';
+
+            try {
+                // Gọi API PATCH /cancel
+                const response = await fetch(`${API_URL}/bookings/${bookingId}/cancel`, {
+                    method: 'PATCH',
+                    headers: headers
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || 'Hủy đặt phòng thất bại.');
+
+                alert('Đã hủy đặt phòng thành công!');
+                detailModal.hide();
+
+                // Tải lại danh sách
+                container.innerHTML = '';
+                loadingSpinner.classList.remove('d-none');
+                loadBookingHistory();
+
+            } catch (error) {
+                alert('Lỗi: ' + error.message);
+                button.disabled = false;
+                button.innerHTML = '<i class="bi bi-x-circle"></i> Hủy đặt phòng';
+            }
+        }
+
+        // --- Helpers ---
         function formatDate(dateStr) {
             if (!dateStr) return 'N/A';
             const [year, month, day] = dateStr.split('-');
             return `${day}/${month}/${year}`;
         }
-
+        function formatDateTime(dateTimeStr) {
+            if (!dateTimeStr) return 'N/A';
+            return new Date(dateTimeStr).toLocaleString('vi-VN');
+        }
         function getStatusDetails(status) {
-            // (status trả về từ backend là PENDING, CONFIRMED,...)
             switch (status) {
-                case 'PENDING':
-                    return { text: 'Đang chờ', class: 'status-pending', badgeClass: 'bg-warning text-dark' };
-                case 'CONFIRMED':
-                    return { text: 'Đã xác nhận', class: 'status-confirmed', badgeClass: 'bg-success' };
-                case 'CHECKED_IN':
-                    return { text: 'Đã check-in', class: 'status-checked-in', badgeClass: 'bg-info text-dark' };
-                case 'CHECKED_OUT':
-                    return { text: 'Đã check-out', class: 'status-checked-out', badgeClass: 'bg-secondary' };
-                case 'CANCELLED':
-                    return { text: 'Đã hủy', class: 'status-cancelled', badgeClass: 'bg-danger' };
-                default:
-                    return { text: status, class: '', badgeClass: 'bg-dark' };
+                case 'PENDING': return { text: 'Đang chờ', class: 'status-pending', badgeClass: 'bg-warning text-dark' };
+                case 'CONFIRMED': return { text: 'Đã xác nhận', class: 'status-confirmed', badgeClass: 'bg-success' };
+                case 'CHECKED_IN': return { text: 'Đã check-in', class: 'status-checked-in', badgeClass: 'bg-info text-dark' };
+                case 'CHECKED_OUT': return { text: 'Đã check-out', class: 'status-checked-out', badgeClass: 'bg-secondary' };
+                case 'CANCELLED': return { text: 'Đã hủy', class: 'status-cancelled', badgeClass: 'bg-danger' };
+                default: return { text: status, class: '', badgeClass: 'bg-dark' };
             }
         }
+        function getPaymentMethodText(method) {
+            const methods = {'CASH': 'Tiền mặt', 'CREDIT_CARD_POS': 'Thẻ (POS)', 'BANK_TRANSFER': 'Chuyển khoản', 'ONLINE_GATEWAY': 'Cổng Online', 'OTHER': 'Khác'};
+            return methods[method] || method;
+        }
+        function getPaymentMethodIcon(method) {
+            const iconMap = {
+                'CASH': { icon: 'bi-cash-stack', color: 'text-success' },
+                'CREDIT_CARD_POS': { icon: 'bi-credit-card-2-front-fill', color: 'text-primary' },
+                'BANK_TRANSFER': { icon: 'bi-bank', color: 'text-info' },
+                'ONLINE_GATEWAY': { icon: 'bi-globe', color: 'text-warning' },
+                'OTHER': { icon: 'bi-question-circle', color: 'text-muted' }
+            };
+            return iconMap[method] || iconMap['OTHER'];
+        }
 
-        // Tải lịch sử khi trang được mở
         loadBookingHistory();
     });
 </script>

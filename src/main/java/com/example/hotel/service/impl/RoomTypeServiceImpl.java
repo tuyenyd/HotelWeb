@@ -71,6 +71,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         existingRoomType.setArea(roomTypeDto.getArea());
         existingRoomType.setTypeCode(generateTypeCode(roomTypeDto.getName()));
         existingRoomType.setPointsEarned(roomTypeDto.getPointsEarned());
+        existingRoomType.setImageUrl(roomTypeDto.getImageUrl());
+        existingRoomType.setGalleryImages(roomTypeDto.getGalleryImages());
+        existingRoomType.setOverview(roomTypeDto.getOverview());
+
         if (roomTypeDto.getAmenities() != null) {
             existingRoomType.setAmenities(String.join(",", roomTypeDto.getAmenities()));
         } else {
@@ -100,6 +104,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         dto.setBasePrice(roomType.getBasePrice());
         dto.setArea(roomType.getArea());
         dto.setPointsEarned(roomType.getPointsEarned());
+        dto.setOverview(roomType.getOverview());
+        dto.setImageUrl(roomType.getImageUrl());
+        dto.setGalleryImages(roomType.getGalleryImages());
+
         if (roomType.getAmenities() != null && !roomType.getAmenities().isEmpty()) {
             dto.setAmenities(Arrays.asList(roomType.getAmenities().split(",")));
         } else {
@@ -111,12 +119,19 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     private RoomType convertToEntity(RoomTypeDto dto) {
         RoomType roomType = new RoomType();
-        roomType.setId(dto.getId());
+        // (Lưu ý: Không set ID khi tạo mới)
+        // roomType.setId(dto.getId());
+
         roomType.setName(dto.getName());
         roomType.setDescription(dto.getDescription());
         roomType.setCapacity(dto.getCapacity());
         roomType.setBasePrice(dto.getBasePrice());
         roomType.setArea(dto.getArea());
+        roomType.setPointsEarned(dto.getPointsEarned());
+        roomType.setImageUrl(dto.getImageUrl());
+        roomType.setGalleryImages(dto.getGalleryImages());
+        roomType.setOverview(dto.getOverview());
+
         if (dto.getAmenities() != null) {
             roomType.setAmenities(String.join(",", dto.getAmenities()));
         }

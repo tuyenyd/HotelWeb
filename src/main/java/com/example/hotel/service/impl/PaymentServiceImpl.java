@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,10 +39,22 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setNotes(paymentDto.getNotes());
         payment.setPaymentDate(LocalDateTime.now());
 
-        // 3. Lưu vào CSDL
+        // 3. Lưu Payment vào CSDL
         Payment savedPayment = paymentRepository.save(payment);
 
-        // 4. Trả về DTO cho frontend
+        // 4. Cập nhật lại số tiền đã trả trong Booking
+        BigDecimal currentPaid = booking.getAmountPaid(); // Lấy số tiền đã trả hiện tại
+        if (currentPaid == null) {
+            currentPaid = BigDecimal.ZERO;
+        }
+
+        // Cộng thêm số tiền vừa thanh toán
+        booking.setAmountPaid(currentPaid.add(paymentDto.getAmount()));
+
+        // Lưu Booking cập nhật vào CSDL
+        bookingRepository.save(booking);
+
+        // 5. Trả về DTO cho frontend
         return convertToDto(savedPayment);
     }
 

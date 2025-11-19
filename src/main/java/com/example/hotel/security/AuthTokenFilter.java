@@ -2,7 +2,7 @@ package com.example.hotel.security;
 
 import com.example.hotel.entity.Customer;
 import com.example.hotel.repository.CustomerRepository;
-import com.example.hotel.service.impl.UserDetailsServiceImpl;
+import com.example.hotel.service.impl.UserAdminDetailsServiceImpl;
 import com.example.hotel.security.jwt.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,7 +31,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService; // Dịch vụ của Admin
+    private UserAdminDetailsServiceImpl userDetailsService; // Dịch vụ của Admin
 
     @Autowired
     private CustomerRepository customerRepository; // Repo của Customer

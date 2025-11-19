@@ -1,18 +1,13 @@
 package com.example.hotel.service.impl;
 
-import com.example.hotel.dto.BookingDto;
-import com.example.hotel.dto.BookingHistoryDto;
-import com.example.hotel.dto.BookingRequestDTO;
-import com.example.hotel.dto.BookingResponseDTO;
+import com.example.hotel.dto.*;
 import com.example.hotel.entity.*;
-import com.example.hotel.repository.CustomerRepository;
-import com.example.hotel.repository.LoyaltyTierRepository;
+import com.example.hotel.repository.*;
 import com.example.hotel.security.jwt.JwtUtils;
 import com.example.hotel.service.LoyaltyAutomationService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import com.example.hotel.exception.ResourceNotFoundException;
-import com.example.hotel.repository.BookingRepository;
-import com.example.hotel.repository.RoomRepository;
 import com.example.hotel.service.BookingService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.AccessDeniedException;
 
+//import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,7 +33,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j // <-- Đảm bảo bạn có @Slf4j để sử dụng log
+@Slf4j
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
@@ -44,6 +41,7 @@ public class BookingServiceImpl implements BookingService {
     private final CustomerRepository customerRepository;
     private final LoyaltyAutomationService loyaltyAutomationService;
     private final LoyaltyTierRepository loyaltyTierRepository;
+    private final PaymentRepository paymentRepository;
     private final JwtUtils jwtUtils;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -126,7 +124,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         booking.setStatus(BookingStatus.PENDING);
-        booking.setBookingConfirmationCode("#BK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        booking.setBookingConfirmationCode("BK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         Booking savedBooking = bookingRepository.save(booking);
         return convertToDto(savedBooking);
     }
@@ -296,6 +294,7 @@ public class BookingServiceImpl implements BookingService {
         dto.setCheckOutDate(booking.getCheckOutDate());
         dto.setTotalPrice(booking.getTotalPrice());
         dto.setStatus(booking.getStatus().name());
+        dto.setId(booking.getId());
 
         if (booking.getRoom() != null) {
             dto.setRoomNumber(booking.getRoom().getRoomNumber());
@@ -329,7 +328,6 @@ public class BookingServiceImpl implements BookingService {
         if (booking.getRoom() != null) {
             dto.setRoomId(booking.getRoom().getId());
             dto.setRoomNumber(booking.getRoom().getRoomNumber());
-            // === SỬA LỖI POTENTIAL NULL POINTER ===
             // Thêm kiểm tra null cho getRoomType()
             if (booking.getRoom().getRoomType() != null) {
                 dto.setRoomType(booking.getRoom().getRoomType().getName());
@@ -548,5 +546,122 @@ public class BookingServiceImpl implements BookingService {
     private String generateBookingCode() {
         // Tốt hơn là dùng UUID như bạn đã làm
         return "BK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public CustomerBookingDetailDTO getBookingDetailsForCustomer(String customerEmail, Long bookingId)
+            throws EntityNotFoundException, AccessDeniedException {
+
+        // 1. Tìm đặt phòng
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy đặt phòng với ID: " + bookingId));
+
+        // 2. Lấy thông tin khách hàng từ đặt phòng
+        Customer customer = booking.getCustomer();
+        if (customer == null) {
+            throw new EntityNotFoundException("Đặt phòng không liên kết với khách hàng nào.");
+        }
+
+        // 3. KIỂM TRA BẢO MẬT: Đảm bảo email từ token khớp với email của booking
+        if (!customer.getEmail().equalsIgnoreCase(customerEmail)) {
+            throw new AccessDeniedException("Bạn không có quyền xem đặt phòng này.");
+        }
+
+        // 4. Chuyển đổi sang DTO chi tiết
+        CustomerBookingDetailDTO dto = new CustomerBookingDetailDTO();
+        dto.setId(booking.getId());
+        dto.setBookingCode(booking.getBookingConfirmationCode());
+        dto.setStatus(booking.getStatus().name());
+        dto.setCheckInDate(booking.getCheckInDate());
+        dto.setCheckOutDate(booking.getCheckOutDate());
+        dto.setSoNguoiLon(booking.getSoNguoiLon());
+        dto.setSoTreEm(booking.getSoTreEm());
+
+        if (booking.getRoom() != null) {
+            dto.setRoomNumber(booking.getRoom().getRoomNumber());
+            if (booking.getRoom().getRoomType() != null) {
+                dto.setRoomTypeName(booking.getRoom().getRoomType().getName());
+            }
+        }
+
+        // 5. Thông tin tài chính
+        dto.setTotalPrice(booking.getTotalPrice());
+        dto.setAmountPaid(booking.getAmountPaid()); // Dùng hàm getAmountPaid() của Entity
+
+        // 6. Chuyển đổi lịch sử thanh toán (Payment -> PaymentDto)
+        List<PaymentDto> paymentDtos = booking.getPayments().stream()
+                .map(this::convertPaymentToDto)
+                .collect(Collectors.toList());
+        dto.setPayments(paymentDtos);
+
+        return dto;
+    }
+
+    // Hàm tiện ích mới để chuyển đổi Payment
+    private PaymentDto convertPaymentToDto(Payment payment) {
+        PaymentDto dto = new PaymentDto();
+        dto.setId(payment.getId());
+        dto.setBookingId(payment.getBooking().getId());
+        dto.setAmount(payment.getAmount());
+        dto.setMethod(payment.getMethod());
+        dto.setPaymentDate(payment.getPaymentDate());
+        dto.setNotes(payment.getNotes());
+        return dto;
+    }
+    @Override
+    @Transactional
+    public void processPaymentSuccess(Long bookingId, BigDecimal amount, String txnRef) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found: " + bookingId));
+
+        // Tạo giao dịch thanh toán mới
+        Payment payment = new Payment();
+        payment.setBooking(booking);
+        payment.setAmount(amount);
+        payment.setMethod("ONLINE_GATEWAY"); // Đánh dấu là Online
+        payment.setPaymentDate(LocalDateTime.now());
+        payment.setNotes("Thanh toán Online qua cổng giả lập. Mã GD: " + txnRef);
+
+        paymentRepository.save(payment);
+
+        // Cập nhật số tiền đã trả trong Booking
+        BigDecimal currentPaid = booking.getAmountPaid();
+        booking.setAmountPaid(currentPaid.add(amount));
+        bookingRepository.save(booking);
+
+        log.info("Đã lưu thanh toán Online cho Booking {}: {} VND", bookingId, amount);
+    }
+    //
+    @Override
+    @Transactional
+    public void cancelBookingByCustomer(String email, Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đặt phòng."));
+
+        // 1. Kiểm tra quyền sở hữu
+        if (!booking.getCustomer().getEmail().equalsIgnoreCase(email)) {
+            throw new AccessDeniedException("Bạn không có quyền hủy đặt phòng này.");
+        }
+
+        // 2. Kiểm tra trạng thái (Chỉ được hủy khi Đang chờ hoặc Đã xác nhận)
+        if (booking.getStatus() == BookingStatus.CHECKED_IN ||
+                booking.getStatus() == BookingStatus.CHECKED_OUT) {
+            throw new IllegalStateException("Không thể hủy đặt phòng đang diễn ra hoặc đã hoàn tất.");
+        }
+
+        if (booking.getStatus() == BookingStatus.CANCELLED) {
+            throw new IllegalStateException("Đặt phòng này đã bị hủy trước đó.");
+        }
+
+        // 3. Cập nhật trạng thái
+        booking.setStatus(BookingStatus.CANCELLED);
+        bookingRepository.save(booking);
+
+        // (Tùy chọn: Nếu phòng đang bị giữ trạng thái RESERVED bởi booking này, trả nó về AVAILABLE)
+        // Logic này tùy thuộc vào cách bạn quản lý trạng thái phòng.
+        // Nhưng quan trọng nhất là Booking đã chuyển sang CANCELLED,
+        // nên thuật toán tìm phòng trống (findAvailableRooms) sẽ tự động thấy phòng này trống.
+
+        log.info("Khách hàng {} đã hủy booking {}", email, bookingId);
     }
 }

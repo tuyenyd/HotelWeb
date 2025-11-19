@@ -12,6 +12,7 @@ import com.example.hotel.repository.CustomerRepository;
 import com.example.hotel.service.CustomerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,18 +108,21 @@ public class CustomerServiceImpl implements CustomerService {
         if (!customerRepository.existsById(customerId)) {
             throw new EntityNotFoundException("Không tìm thấy khách hàng với ID: " + customerId);
         }
-        // Thêm kiểm tra ràng buộc (ví dụ: không xóa nếu có booking đang diễn ra) nếu cần
         customerRepository.deleteById(customerId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public CustomerResponseDTO getCustomerProfileByEmail(String email) {
+        // 1. Tìm khách hàng
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy khách hàng với email: " + email));
 
-        // Dùng hàm mapToResponseDTO (phiên bản không cần list booking, nhanh hơn)
-        return mapToResponseDTO(customer);
+        // 2. (SỬA LỖI) Lấy lịch sử đặt phòng của khách hàng này
+        List<Booking> customerBookings = bookingRepository.findByCustomerIdOrderByCheckInDateDesc(customer.getId());
+
+        // 3. (SỬA LỖI) Gọi hàm map (2 tham số) để tính toán
+        return mapToResponseDTO(customer, customerBookings);
     }
 
     @Override
@@ -144,7 +148,11 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer updatedCustomer = customerRepository.save(existingCustomer);
 
-        return mapToResponseDTO(updatedCustomer);
+        // (SỬA LỖI) Lấy lịch sử đặt phòng của khách hàng này
+        List<Booking> customerBookings = bookingRepository.findByCustomerIdOrderByCheckInDateDesc(updatedCustomer.getId());
+
+        // (SỬA LỖI) Gọi hàm map (2 tham số) để tính toán
+        return mapToResponseDTO(updatedCustomer, customerBookings);
     }
 
     @Override
@@ -167,6 +175,10 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setPassword(passwordEncoder.encode(newPassword));
         customerRepository.save(customer);
     }
+
+    // === KẾT THÚC SỬA LỖI ===
+    //
+
     // --- Hàm tiện ích để chuyển đổi (mapping) ---
 
     private Customer mapToEntity(CustomerRequestDTO dto) {
@@ -181,6 +193,9 @@ public class CustomerServiceImpl implements CustomerService {
         return customer;
     }
 
+    // === SỬA LỖI (TỐI ƯU HÓA) ===
+    // Sửa tên tham số từ 'allBookings' thành 'customerBookings'
+    // và bỏ qua bước lọc `.stream().filter()` thừa
     private CustomerResponseDTO mapToResponseDTO(Customer entity, List<Booking> allBookings) {
         CustomerResponseDTO dto = new CustomerResponseDTO();
         dto.setId(entity.getId());
@@ -202,19 +217,21 @@ public class CustomerServiceImpl implements CustomerService {
             dto.setLoyaltyTierId(null); dto.setLoyaltyTierName("N/A"); dto.setLoyaltyBenefitsJson("[]");
         }
 
-        // === TÍNH TOÁN THỐNG KÊ TỪ BOOKING ===
-        // Lọc booking chỉ của khách hàng này (nếu đầu vào là allBookings)
-        // Nếu đầu vào đã là customerBookings thì không cần lọc lại
+        // === BẮT ĐẦU SỬA LỖI (THÊM LẠI BỘ LỌC) ===
+
+        // 1. Lọc booking CHỈ của khách hàng này (từ danh sách 'allBookings')
         List<Booking> customerBookings = allBookings.stream()
                 .filter(b -> b.getCustomer() != null && b.getCustomer().getId().equals(entity.getId()))
                 .collect(Collectors.toList());
 
-        // Lọc các booking đã hoàn thành (CHECKED_OUT)
+        // 2. Lọc các booking đã hoàn thành (CHECKED_OUT)
         List<Booking> completedBookings = customerBookings.stream()
                 .filter(b -> b.getStatus() == BookingStatus.CHECKED_OUT)
                 .collect(Collectors.toList());
 
-        // Tính toán
+        // === KẾT THÚC SỬA LỖI ===
+
+        // 3. Tính toán (Giữ nguyên)
         int bookingsCount = completedBookings.size();
         long totalNights = completedBookings.stream()
                 .filter(b -> b.getCheckInDate() != null && b.getCheckOutDate() != null) // Đảm bảo ngày hợp lệ
@@ -233,6 +250,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     // Hàm mapToResponseDTO cũ (không cần List<Booking>) - Dùng khi không cần tính thống kê
+    // (Hàm này vẫn được giữ lại để createCustomer sử dụng)
     private CustomerResponseDTO mapToResponseDTO(Customer entity) {
         CustomerResponseDTO dto = new CustomerResponseDTO();
         dto.setId(entity.getId());
@@ -255,9 +273,9 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         // Không tính toán thống kê ở đây
-        dto.setBookings(0); // Hoặc null
-        dto.setNights(0L); // Hoặc null
-        dto.setSpend(BigDecimal.ZERO); // Hoặc null
+        dto.setBookings(0); // Trả về 0
+        dto.setNights(0L); // Trả về 0
+        dto.setSpend(BigDecimal.ZERO); // Trả về 0
 
         return dto;
     }

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Kết quả Thanh toán - Grandoria</title>
+
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <style>
+        .payment-result-section {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+        .result-card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        .success-icon {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error-icon {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #eee;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<header id="header" class="header sticky-top">
+
+    <div class="branding d-flex align-items-cente">
+
+        <div class="container position-relative d-flex align-items-center justify-content-between">
+            <a href="indexes.html" class="logo d-flex align-items-center">
+                <img src="assets/img/img_1.png" alt="logo">
+                <h1 class="sitename">Grandoria</h1>
+            </a>
+
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="indexes.html" class="active">Trang chủ</a></li>
+                    <li><a href="about.html">Giới thiệu</a></li>
+                    <li><a href="rooms.html">Phòng</a></li>
+                    <li><a href="amenities.html">Tiện ích</a></li>
+                    <li><a href="location.html">Vị trí</a></li>
+                    <li class="dropdown"><a href="#"><span>Trang</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="room-details.html">Chi tiết phòng</a></li>
+                            <li><a href="restaurant.html">Nhà hàng</a></li>
+                            <li><a href="offers.html">Ưu đãi</a></li>
+                            <li><a href="hotel-events.html">Sự kiện</a></li>
+                            <li><a href="gallery.html">Thư viện ảnh</a></li>
+                            <li><a href="booking.html">Đặt phòng</a></li>
+                            <li><a href="terms.html">Điều khoản</a></li>
+                            <li><a href="privacy.html">Chính sách bảo mật</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contact.html">Liên hệ</a></li>
+
+                    <li class="dropdown" id="userProfileMenu" style="display: none;">
+                        <a href="#">
+                            <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
+                            <span id="userProfileName" class="ms-1">Tài khoản</span>
+                            <i class="bi bi-chevron-down toggle-dropdown ms-1"></i>
+                        </a>
+                        <ul>
+                            <li><a href="user-profile.html">Hồ sơ của tôi</a></li>
+                            <li><a href="user-bookings.html">Lịch sử đặt phòng</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="#" id="userLogoutButton">Đăng xuất</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="loginLink"><a href="pages-login.html">Đăng nhập</a></li>
+                    <li id="registerLink"><a href="pages-register.html">Đăng ký</a></li>
+
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+
+        </div>
+
+    </div>
+
+</header>
+
+<main class="main">
+    <div class="page-title light-background">
+        <div class="container">
+            <h1>Kết quả Thanh toán</h1>
+        </div>
+    </div>
+
+    <section class="payment-result-section">
+        <div class="container d-flex justify-content-center">
+
+            <div id="processingState" class="result-card">
+                <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
+                <h4>Đang xử lý kết quả...</h4>
+                <p class="text-muted">Vui lòng không tắt trình duyệt.</p>
+            </div>
+
+            <div id="successState" class="result-card d-none">
+                <div class="icon-box success-icon">
+                    <i class="bi bi-check-lg"></i>
+                </div>
+                <h3 class="text-success mb-3">Thanh toán Thành công!</h3>
+                <p class="mb-4">Cảm ơn bạn. Giao dịch của bạn đã được ghi nhận.</p>
+
+                <div class="payment-details mb-4 text-start">
+                    <div class="info-row">
+                        <span class="text-muted">Mã giao dịch:</span>
+                        <span class="fw-bold" id="txnRef">...</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="text-muted">Số tiền:</span>
+                        <span class="fw-bold text-primary" id="amount">...</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="text-muted">Ngân hàng:</span>
+                        <span id="bankCode">...</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="text-muted">Nội dung:</span>
+                        <span id="orderInfo">...</span>
+                    </div>
+                </div>
+
+                <a href="user-bookings.html" class="btn btn-primary w-100">Xem Lịch sử Đặt phòng</a>
+            </div>
+
+            <div id="errorState" class="result-card d-none">
+                <div class="icon-box error-icon">
+                    <i class="bi bi-x-lg"></i>
+                </div>
+                <h3 class="text-danger mb-3">Thanh toán Thất bại!</h3>
+                <p class="mb-4" id="errorMessage">Có lỗi xảy ra trong quá trình thanh toán hoặc giao dịch bị hủy.</p>
+
+                <div class="d-grid gap-2">
+                    <a href="user-bookings.html" class="btn btn-outline-secondary">Quay lại</a>
+                    <a href="contact.html" class="btn btn-outline-primary">Liên hệ Hỗ trợ</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<footer id="footer" class="footer position-relative dark-background">
+
+
+    <div class="copyright text-center">
+        <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+
+            <div class="d-flex flex-column align-items-center align-items-lg-start">
+                <div>
+                    © Bản quyền <strong><span>MyWebsite</span></strong>. Tất cả quyền được bảo lưu
+                </div>
+                <div class="credits">
+                    Thiết kế bởi Grandoria<a href="https://bootstrapmade.com/">BootstrapMade</a>
+                </div>
+            </div>
+
+            <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+                <a href=""><i class="bi bi-twitter-x"></i></a>
+                <a href=""><i class="bi bi-facebook"></i></a>
+                <a href=""><i class="bi bi-instagram"></i></a>
+                <a href=""><i class="bi bi-linkedin"></i></a>
+            </div>
+
+        </div>
+    </div>
+
+</footer>
+
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<div id="preloader"></div>
+
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/php-email-form/validate.js"></script>
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+<script src="assets/js/main.js"></script>
+
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        // 1. Lấy các tham số từ URL
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const responseCode = urlParams.get('vnp_ResponseCode');
+        const amountStr = urlParams.get('vnp_Amount');
+        const bookingId = urlParams.get('bookingId');
+        const txnRef = urlParams.get('vnp_TxnRef');
+        const bankCode = urlParams.get('vnp_BankCode');
+        const orderInfo = urlParams.get('vnp_OrderInfo');
+
+        const processingState = document.getElementById('processingState');
+        const successState = document.getElementById('successState');
+        const errorState = document.getElementById('errorState');
+
+        // 2. Kiểm tra kết quả từ VNPay (giả lập)
+        if (responseCode === '00') {
+            // === TRƯỜNG HỢP THÀNH CÔNG ===
+
+            // Gọi API backend để lưu thanh toán
+            try {
+                const token = localStorage.getItem('customerToken');
+                if (!token) throw new Error('Bạn chưa đăng nhập.');
+
+                // Số tiền từ VNPay thường nhân 100 (VND), cần chia lại nếu là thật.
+                // Nhưng trong stub Service của chúng ta, chúng ta truyền nguyên giá trị.
+                // Hãy đảm bảo logic này khớp với VnPayService.java của bạn.
+                const amount = parseFloat(amountStr);
+
+                const response = await fetch('http://localhost:8080/api/public/customer/payment-success', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        bookingId: bookingId,
+                        amount: amount,
+                        txnRef: txnRef
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ghi nhận thanh toán thất bại tại server.');
+                }
+
+                // Hiển thị giao diện thành công
+                document.getElementById('txnRef').textContent = txnRef;
+                document.getElementById('amount').textContent = amount.toLocaleString() + ' VND';
+                document.getElementById('bankCode').textContent = bankCode;
+                document.getElementById('orderInfo').textContent = orderInfo.replace(/\+/g, ' ');
+
+                processingState.classList.add('d-none');
+                successState.classList.remove('d-none');
+
+            } catch (error) {
+                console.error(error);
+                showError("Giao dịch thành công nhưng lỗi khi lưu vào hệ thống: " + error.message);
+            }
+
+        } else {
+            // === TRƯỜNG HỢP THẤT BẠI ===
+            showError("Mã lỗi từ cổng thanh toán: " + (responseCode || 'Unknown'));
+        }
+
+        function showError(msg) {
+            processingState.classList.add('d-none');
+            errorState.classList.remove('d-none');
+            document.getElementById('errorMessage').textContent = msg;
+        }
+    });
+</script>
+
+</body>
+</html>
