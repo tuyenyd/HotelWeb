@@ -12,7 +12,7 @@
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="assets/vendor/aos/aos.css" rel="stylesheet">
@@ -71,6 +71,7 @@
         </div>
     </div>
 </header>
+
 <main class="main">
 
     <div class="page-title light-background">
@@ -86,14 +87,13 @@
     </div>
 
     <section id="rooms-2" class="rooms-2 section">
-
         <div class="container" data-aos="fade-up" data-aos-delay="100">
 
             <div class="room-filters" data-aos="fade-up" data-aos-delay="200">
                 <div class="row g-3 align-items-center">
                     <div class="col-lg-4 col-md-6">
                         <label class="form-label">Tìm kiếm</label>
-                        <input type="text" class="form-control" id="filter-search" placeholder="Tìm theo số phòng, tiện nghi...">
+                        <input type="text" class="form-control" id="filter-search" placeholder="Tìm theo tên phòng, tiện nghi...">
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <label class="form-label">Loại phòng</label>
@@ -104,7 +104,7 @@
                     <div class="col-lg-4 col-md-6">
                         <label class="form-label">Sắp xếp theo</label>
                         <select class="form-select" id="filter-sort">
-                            <option value="default">Mặc định (Số phòng)</option>
+                            <option value="default">Mặc định</option>
                             <option value="asc">Giá: Thấp đến Cao</option>
                             <option value="desc">Giá: Cao đến Thấp</option>
                         </select>
@@ -125,12 +125,14 @@
                 </div>
             </div>
         </div>
-
     </section>
 
 </main>
 
 <footer id="footer" class="footer position-relative dark-background">
+    <div class="copyright text-center">
+        &copy; Bản quyền <strong><span>Grandoria</span></strong>. Tất cả quyền được bảo lưu
+    </div>
 </footer>
 
 <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -145,13 +147,12 @@
 <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
 <script src="assets/js/main.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        const API_ROOMS_URL = 'http://localhost:8080/api/public/rooms';
-        const API_TYPES_URL = 'http://localhost:8080/api/public/room-types';
+        const API_URL = 'http://localhost:8080/api/public/room-types';
 
-        let allRooms = [];
         let allRoomTypes = [];
 
         const container = document.getElementById('room-list-container');
@@ -165,20 +166,14 @@
 
         async function loadInitialData() {
             try {
-                const [typesResponse, roomsResponse] = await Promise.all([
-                    fetch(API_TYPES_URL),
-                    fetch(API_ROOMS_URL)
-                ]);
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Không thể tải danh sách loại phòng.');
 
-                if (!typesResponse.ok) throw new Error('Không thể tải danh sách loại phòng.');
-                if (!roomsResponse.ok) throw new Error('Không thể tải danh sách phòng.');
-
-                allRoomTypes = await typesResponse.json();
-                allRooms = await roomsResponse.json();
+                allRoomTypes = await response.json();
 
                 populateTypeFilter();
 
-                if (allRooms.length === 0) {
+                if (allRoomTypes.length === 0) {
                     showEmpty();
                 } else {
                     applyFiltersAndRender();
@@ -186,12 +181,12 @@
             } catch (error) {
                 showError(error.message);
             } finally {
-                // SỬA LỖI: Luôn kiểm tra 'loadingIndicator' trước khi sử dụng
                 if(loadingIndicator) loadingIndicator.classList.add('d-none');
             }
         }
 
         function populateTypeFilter() {
+            typeFilter.innerHTML = '<option value="">Tất cả loại phòng</option>';
             allRoomTypes.forEach(type => {
                 const option = document.createElement('option');
                 option.value = type.id;
@@ -207,89 +202,100 @@
             const typeValue = typeFilter.value;
             const sortValue = sortFilter.value;
 
-            let filteredRooms = allRooms.filter(room => {
-                const amenitiesString = (room.amenities || []).join(' ').toLowerCase();
+            // Lọc trên danh sách RoomTypeDto
+            let filtered = allRoomTypes.filter(rt => {
+                // 1. Tìm kiếm (theo Tên hoặc Tiện nghi)
+                const amenitiesString = (Array.isArray(rt.amenities) ? rt.amenities.join(' ') : rt.amenities || '').toLowerCase();
                 const matchSearch = !searchValue ||
-                    (room.roomNumber && room.roomNumber.toLowerCase().includes(searchValue)) ||
-                    (amenitiesString.includes(searchValue));
+                    rt.name.toLowerCase().includes(searchValue) ||
+                    amenitiesString.includes(searchValue);
 
-                const matchType = !typeValue || room.roomTypeId == typeValue;
-                const matchStatus = room.status === 'AVAILABLE';
+                // 2. Lọc theo loại (Dropdown)
+                const matchType = !typeValue || rt.id == typeValue;
 
-                return matchSearch && matchType && matchStatus;
+                return matchSearch && matchType;
             });
 
+            // Sắp xếp (Dùng basePrice)
             if (sortValue === "asc") {
-                filteredRooms.sort((a, b) => (a.pricePerNight || 0) - (b.pricePerNight || 0));
+                filtered.sort((a, b) => (a.basePrice || 0) - (b.basePrice || 0));
             } else if (sortValue === "desc") {
-                filteredRooms.sort((a, b) => (b.pricePerNight || 0) - (a.pricePerNight || 0));
-            } else {
-                filteredRooms.sort((a,b) => (a.roomNumber || '').localeCompare(b.roomNumber || ''));
+                filtered.sort((a, b) => (b.basePrice || 0) - (a.basePrice || 0));
             }
 
-            renderRooms(filteredRooms);
+            renderRooms(filtered);
         }
 
-        function renderRooms(rooms) {
+        function renderRooms(roomTypes) {
             container.querySelectorAll('.room-card-wrapper').forEach(el => el.remove());
 
-            if (rooms.length === 0) {
+            if (roomTypes.length === 0) {
                 noResultsMessage.classList.remove('d-none');
                 return;
             }
 
-            // SỬA LỖI: Đường dẫn cơ sở
             const imageBasePath = 'assets/img/hotel/';
-            const defaultImage = imageBasePath + 'room-1.webp'; // Ảnh dự phòng
+            const defaultImage = imageBasePath + 'room-1.webp';
 
-            rooms.forEach(room => {
-                const price = room.pricePerNight || 0;
-                const capacity = room.capacity || 0;
+            roomTypes.forEach(rt => {
+                const price = rt.basePrice || 0;
+                const capacity = rt.capacity || 0;
+                const area = rt.area || 0;
 
-                const amenities = (Array.isArray(room.amenities) ? room.amenities : []).slice(0, 3);
-                const amenitiesHtml = amenities.length > 0
-                    ? amenities.map(a => `<span><i class="bi bi-check-circle"></i> ${a}</span>`).join('')
-                    : '<span><i class="bi bi-check-circle"></i> Tiện nghi cơ bản</span>';
+                // Xử lý tiện nghi (lấy 3 cái đầu)
+                let amenities = [];
+                if (typeof rt.amenities === 'string') amenities = rt.amenities.split(',');
+                else if (Array.isArray(rt.amenities)) amenities = rt.amenities;
 
-                const roomType = allRoomTypes.find(t => t.id === room.roomTypeId);
-                const area = (roomType ? roomType.area : 0) || 0;
+                const amenitiesHtml = amenities.slice(0, 3).map(a =>
+                    `<span><i class="bi bi-check-circle"></i> ${a.trim()}</span>`
+                ).join('') || '<span>Tiện nghi cơ bản</span>';
 
-                // SỬA LỖI: Xây dựng đường dẫn ảnh
+                // Xử lý ảnh (Dùng imageUrl của RoomType)
                 let imageUrl = defaultImage;
-                if (room.imageUrl && room.imageUrl.trim() !== "" && room.imageUrl.trim() !== "null") {
-                    imageUrl = imageBasePath + room.imageUrl;
+                if (rt.imageUrl && rt.imageUrl.trim()) {
+                    imageUrl = imageBasePath + rt.imageUrl;
+                } else if (rt.galleryImages) {
+                    // Nếu không có ảnh chính, lấy ảnh đầu tiên trong gallery
+                    const firstImg = rt.galleryImages.split(',')[0].trim();
+                    if(firstImg) imageUrl = imageBasePath + firstImg;
                 }
 
-                const roomCardHtml = `
+                // Link chuyển sang chi tiết (Dùng ID của Loại phòng)
+                const detailLink = `room-details.html?id=${rt.id}`;
+
+                const cardHtml = `
                 <div class="col-xl-4 col-lg-6 room-card-wrapper">
                     <div class="room-card">
                         <div class="room-image">
-                            <img src="${imageUrl}" alt="${room.roomTypeName}" class="img-fluid" onerror="this.src='${defaultImage}'">
+                            <img src="${imageUrl}" alt="${rt.name}" class="img-fluid" onerror="this.src='${defaultImage}'">
+                            <div class="room-features">
 
+                                <span class="feature-badge" style="background: #2f5d50">${rt.name}</span>
+                            </div>
                         </div>
                         <div class="room-content">
                             <div class="room-header">
-                                <h3>Phòng ${room.roomNumber} (${room.roomTypeName})</h3>
+                                <h3>${rt.name}</h3>
                             </div>
-                            <p class="room-description">${room.description || 'Không có mô tả chi tiết.'}</p>
+                            <p class="room-description text-truncate">${rt.description || 'Mô tả đang cập nhật'}</p>
 
                             <div class="room-footer">
                                 <div class="room-price">
-                                    <span class="price-from">Giá</span>
+                                    <span class="price-from">Giá từ</span>
                                     <span class="price-amount">${price.toLocaleString()}₫</span>
                                     <span class="price-period">/ đêm</span>
                                 </div>
-                                <a href="room-details.html?id=${room.id}" class="btn-room-details">Xem chi tiết</a>
+                                <a href="${detailLink}" class="btn-room-details">Xem chi tiết</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 `;
-                container.innerHTML += roomCardHtml;
+                container.innerHTML += cardHtml;
             });
         }
 
-        // --- 5. Các hàm tiện ích hiển thị thông báo (Đã sửa) ---
         function showError(message) {
             if(loadingIndicator) loadingIndicator.classList.add('d-none');
             if(noResultsMessage) noResultsMessage.classList.add('d-none');
@@ -302,7 +308,7 @@
             if(loadingIndicator) loadingIndicator.classList.add('d-none');
             if(errorMessage) errorMessage.classList.add('d-none');
             if(noResultsMessage) {
-                noResultsMessage.textContent = 'Hiện không có phòng nào sẵn sàng để hiển thị.';
+                noResultsMessage.textContent = 'Hiện chưa có loại phòng nào.';
                 noResultsMessage.classList.remove('d-none');
             }
         }
@@ -311,13 +317,11 @@
             if(noResultsMessage) noResultsMessage.classList.add('d-none');
         }
 
-        // --- 6. Gắn sự kiện cho các bộ lọc ---
         [searchFilter, typeFilter, sortFilter].forEach(filter => {
             const eventType = (filter.id === 'filter-search') ? 'input' : 'change';
             filter.addEventListener(eventType, applyFiltersAndRender);
         });
 
-        // --- 7. Chạy hàm tải dữ liệu ---
         loadInitialData();
     });
 </script>

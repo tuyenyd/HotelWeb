@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Chi tiết Phòng - Grandoria</title>
+    <title>Chi tiết Loại phòng - Grandoria</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
 
@@ -12,11 +12,12 @@
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet"> <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
     <link href="assets/css/main.css" rel="stylesheet">
 
     <style>
@@ -111,14 +112,15 @@
                 <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Đang tải...</span>
                 </div>
-                <p class="mt-2">Đang tải chi tiết phòng...</p>
+                <p class="mt-2">Đang tải thông tin loại phòng...</p>
             </div>
 
             <div id="error-details" class="alert alert-danger d-none col-12" role="alert">
-                Không tìm thấy phòng bạn yêu cầu.
+                Không tìm thấy loại phòng bạn yêu cầu.
             </div>
 
             <div id="room-content-wrapper" class="d-none">
+
                 <div class="row align-items-center mb-5">
                     <div class="col-lg-7" data-aos="fade-right" data-aos-delay="200">
                         <div class="room-header-image">
@@ -151,7 +153,7 @@
 
                             <div class="room-price">
                                 <span class="price-amount" id="room-price">...</span>
-                                <span class="price-period">mỗi đêm</span>
+                                <span class="price-period">/ đêm</span>
                             </div>
                             <a href="booking.html" class="btn btn-book-now" id="btn-book-top">Đặt ngay</a>
                         </div>
@@ -159,22 +161,20 @@
                 </div>
 
                 <div class="room-gallery mb-5 d-none" data-aos="fade-up" data-aos-delay="200" id="room-gallery-section">
-                    <h3 class="section-subtitle mb-4">Hình ảnh Phòng</h3>
+                    <h3 class="section-subtitle mb-4">Thư viện Hình ảnh</h3>
                     <div class="gallery-grid">
-                        <div class="gallery-main">
-                            <a href="assets/img/hotel/room-12.webp" class="glightbox" id="gallery-main-link">
-                                <img src="assets/img/hotel/room-12.webp" alt="Nội thất" class="img-fluid" id="gallery-main-img">
-                            </a>
+                        <div class="gallery-main" id="gallery-main-container">
                         </div>
                         <div class="gallery-thumbnails" id="gallery-thumbnails-container">
                         </div>
                     </div>
                 </div>
+
                 <div class="row mb-5">
                     <div class="col-lg-12" data-aos="fade-up" data-aos-delay="200">
                         <div class="room-description">
-                            <h3 class="section-subtitle">Tổng quan về Phòng</h3>
-                            <p id="room-description">...</p>
+                            <h3 class="section-subtitle">Tổng quan về Loại phòng</h3>
+                            <p id="room-description" style="white-space: pre-wrap;">...</p>
                         </div>
                     </div>
                 </div>
@@ -183,13 +183,13 @@
                     <div class="booking-card">
                         <div class="row align-items-center">
                             <div class="col-lg-8">
-                                <h4 id="cta-title">Sẵn sàng đặt phòng?</h4>
-                                <p>Phòng này hiện đang trống. Đặt ngay để có giá tốt nhất.</p>
+                                <h4 id="cta-title">Sẵn sàng trải nghiệm?</h4>
+                                <p>Đặt phòng ngay để có mức giá tốt nhất cho kỳ nghỉ của bạn.</p>
                             </div>
                             <div class="col-lg-4 text-center text-lg-end">
                                 <div class="price-display">
                                     <span class="price" id="cta-price">...</span>
-                                    <span class="period">mỗi đêm</span>
+                                    <span class="period">/ đêm</span>
                                 </div>
                                 <a href="booking.html" class="btn btn-primary btn-lg" id="btn-book-bottom">Đặt ngay</a>
                             </div>
@@ -201,22 +201,14 @@
     </section>
 
 </main>
+
 <footer id="footer" class="footer position-relative dark-background">
     <div class="copyright text-center">
         <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
             <div class="d-flex flex-column align-items-center align-items-lg-start">
                 <div>
-                    © Bản quyền <strong><span>MyWebsite</span></strong>. Tất cả quyền được bảo lưu
+                    © Bản quyền <strong><span>Grandoria</span></strong>. Tất cả quyền được bảo lưu
                 </div>
-                <div class="credits">
-                    Thiết kế bởi Grandoria<a href="https://bootstrapmade.com/">BootstrapMade</a>
-                </div>
-            </div>
-            <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
-                <a href=""><i class="bi bi-twitter-x"></i></a>
-                <a href=""><i class="bi bi-facebook"></i></a>
-                <a href=""><i class="bi bi-instagram"></i></a>
-                <a href=""><i class="bi bi-linkedin"></i></a>
             </div>
         </div>
     </div>
@@ -229,7 +221,8 @@
 <script src="assets/vendor/php-email-form/validate.js"></script>
 <script src="assets/vendor/aos/aos.js"></script>
 <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-<script src="assets/vendor/glightbox/js/glightbox.min.js"></script> <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
 <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
 <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
@@ -238,50 +231,57 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        const API_ROOM_URL = 'http://localhost:8080/api/public/rooms';
+        // 1. Gọi API lấy thông tin LOẠI PHÒNG (RoomType)
+        const API_URL = 'http://localhost:8080/api/public/room-types';
+
         const loadingIndicator = document.getElementById('loading-details');
         const errorDetails = document.getElementById('error-details');
         const roomContentWrapper = document.getElementById('room-content-wrapper');
 
-        // === Biến JS mới cho Gallery ===
         const gallerySection = document.getElementById('room-gallery-section');
-        const mainImgLink = document.getElementById('gallery-main-link');
-        const mainImg = document.getElementById('gallery-main-img');
+        const galleryMainContainer = document.getElementById('gallery-main-container');
         const thumbnailsContainer = document.getElementById('gallery-thumbnails-container');
-        let lightboxInstance = null; // Biến để lưu trữ GLightbox
+        let lightboxInstance = null;
 
-        // (Hàm getAmenityIcon, getRoomIdFromUrl giữ nguyên)
         function getAmenityIcon(amenityName) {
             const lowerName = amenityName.toLowerCase();
-            if (lowerName.includes('wifi')) { return 'bi-wifi'; }
-            if (lowerName.includes('tv') || lowerName.includes('tivi')) { return 'bi-tv'; }
-            if (lowerName.includes('ban công')) { return 'bi-border-width'; }
-            if (lowerName.includes('view') || lowerName.includes('biển')) { return 'bi-water'; }
-            if (lowerName.includes('thành phố')) { return 'bi-buildings'; }
-            if (lowerName.includes('điều hòa') || lowerName.includes('máy lạnh')) { return 'bi-snow'; }
-            if (lowerName.includes('bồn tắm')) { return 'bi-droplet-half'; }
-            if (lowerName.includes('tủ lạnh')) { return 'bi-archive'; }
+            if (lowerName.includes('wifi')) return 'bi-wifi';
+            if (lowerName.includes('tv') || lowerName.includes('tivi')) return 'bi-tv';
+            if (lowerName.includes('ban công')) return 'bi-border-width';
+            if (lowerName.includes('view') || lowerName.includes('biển')) return 'bi-water';
+            if (lowerName.includes('thành phố')) return 'bi-buildings';
+            if (lowerName.includes('điều hòa') || lowerName.includes('máy lạnh')) return 'bi-snow';
+            if (lowerName.includes('bồn tắm')) return 'bi-droplet-half';
+            if (lowerName.includes('tủ lạnh')) return 'bi-archive';
+            if (lowerName.includes('bể bơi')) return 'bi-water';
+            if (lowerName.includes('gym')) return 'bi-heart-pulse';
+            if (lowerName.includes('spa')) return 'bi-flower1';
             return 'bi-check2';
         }
+
         function getRoomIdFromUrl() {
             const params = new URLSearchParams(window.location.search);
+            // Lấy tham số 'id' từ URL (đây là ID của Loại phòng)
             return params.get('id');
         }
 
         async function loadRoomDetails() {
-            const roomId = getRoomIdFromUrl();
-            if (!roomId) {
-                showError("Không tìm thấy ID phòng trong URL.");
+            const id = getRoomIdFromUrl();
+            if (!id) {
+                showError("Không tìm thấy ID loại phòng trong URL.");
                 return;
             }
 
             try {
-                const response = await fetch(`${API_ROOM_URL}/${roomId}`);
+                // Gọi API: /api/public/room-types/{id}
+                const response = await fetch(`${API_URL}/${id}`);
                 if (!response.ok) {
-                    throw new Error('Không tìm thấy phòng hoặc đã xảy ra lỗi.');
+                    throw new Error('Không tìm thấy loại phòng hoặc đã xảy ra lỗi.');
                 }
-                const roomData = await response.json();
-                populatePage(roomData);
+                const roomType = await response.json(); // Dữ liệu là RoomTypeDto
+
+                populatePage(roomType);
+
                 loadingIndicator.classList.add('d-none');
                 roomContentWrapper.classList.remove('d-none');
 
@@ -290,48 +290,67 @@
             }
         }
 
-        /**
-         * 3. Điền dữ liệu vào trang (ĐÃ CẬP NHẬT)
-         */
-        function populatePage(room) {
-            document.title = `${room.roomTypeName} - Phòng ${room.roomNumber}`;
-            document.getElementById('breadcrumb-title').textContent = `Phòng ${room.roomNumber}`;
-            document.getElementById('breadcrumb-current').textContent = room.roomTypeName;
+        function populatePage(rt) {
+            // Điền thông tin từ RoomTypeDto (rt)
+            document.title = `${rt.name} - Chi tiết`;
+            document.getElementById('breadcrumb-title').textContent = rt.name;
+            document.getElementById('breadcrumb-current').textContent = rt.name;
 
-            // Xử lý chuỗi galleryImages (giả sử là "img1.jpg,img2.jpg,img3.jpg")
-            // (Bạn cần đảm bảo backend trả về trường "galleryImages" trong RoomDto)
+            // Tên loại phòng
+            document.getElementById('room-title').textContent = rt.name;
+            document.getElementById('room-badge-name').textContent = rt.name;
+
+            // Xử lý ảnh
+            const imageBasePath = 'assets/img/hotel/';
+            const defaultImg = imageBasePath + 'room-15.webp';
+
             let galleryImageUrls = [];
-            if (room.galleryImages && typeof room.galleryImages === 'string') {
-                galleryImageUrls = room.galleryImages.split(',')
+            if (rt.galleryImages && typeof rt.galleryImages === 'string') {
+                galleryImageUrls = rt.galleryImages.split(',')
                     .map(img => img.trim())
                     .filter(img => img.length > 0)
-                    .map(img => `assets/img/hotel/${img.trim()}`); // <-- Giả sử ảnh nằm ở đây
+                    .map(img => imageBasePath + img);
             }
 
-            // Lấy ảnh đại diện (ảnh đầu tiên trong gallery hoặc ảnh đại diện của phòng)
-            const defaultImg = 'assets/img/hotel/room-15.webp';
-            let mainDisplayImage = room.imageUrl || defaultImg;
-            if (galleryImageUrls.length > 0) {
-                mainDisplayImage = galleryImageUrls[0]; // Ưu tiên ảnh đầu tiên của gallery
+            // Ảnh đại diện
+            let mainDisplayImage = defaultImg;
+            if (rt.imageUrl && rt.imageUrl.trim() !== "") {
+                mainDisplayImage = imageBasePath + rt.imageUrl;
+            } else if (galleryImageUrls.length > 0) {
+                mainDisplayImage = galleryImageUrls[0];
             }
-
-            // Điền ảnh chính (ở header)
             document.getElementById('room-main-image').src = mainDisplayImage;
 
-            // (Điền các thông tin khác ở header)
-            document.getElementById('room-badge-name').textContent = room.roomTypeName;
-            document.getElementById('room-title').textContent = `Phòng ${room.roomNumber} (${room.roomTypeName})`;
-            document.getElementById('room-tagline').textContent = room.description || 'Trải nghiệm dịch vụ tuyệt vời tại phòng của chúng tôi.';
-            document.getElementById('room-capacity').textContent = `Tối đa ${room.capacity || 0} khách`;
-            document.getElementById('room-area').textContent = `${room.area || 0} m²`;
+            // Mô tả ngắn
+            document.getElementById('room-tagline').textContent = rt.description || 'Trải nghiệm dịch vụ tuyệt vời.';
 
-            // (Điền tiện nghi ở header)
+            // Thông số
+            document.getElementById('room-capacity').textContent = `Tối đa ${rt.capacity || 0} khách`;
+            document.getElementById('room-area').textContent = `${rt.area || 0} m²`;
+
+            // Giá (basePrice)
+            const price = rt.basePrice || 0;
+            document.getElementById('room-price').textContent = `${price.toLocaleString()} VNĐ`;
+            document.getElementById('cta-price').textContent = `${price.toLocaleString()} VNĐ`;
+
+            // Nút đặt phòng
+            const bookingUrl = `booking.html`; // Không truyền roomId vì chưa chọn phòng
+            document.getElementById('btn-book-top').href = bookingUrl;
+            document.getElementById('btn-book-bottom').href = bookingUrl;
+
+            // Tổng quan (Overview)
+            document.getElementById('room-description').textContent = rt.overview || rt.description || 'Đang cập nhật thông tin...';
+
+            document.getElementById('cta-title').textContent = `Đặt phòng ${rt.name} ngay?`;
+
+            // Tiện nghi
             const headerAmenitiesList = document.getElementById('header-amenities-list');
             headerAmenitiesList.innerHTML = '';
-            let amenities = room.amenities || [];
+            let amenities = rt.amenities || [];
             if (typeof amenities === 'string') {
                 amenities = amenities.split(',').map(a => a.trim());
             }
+
             if (amenities.length > 0) {
                 const mainAmenities = amenities.slice(0, 6);
                 let amenitiesHtml = mainAmenities.map(item => {
@@ -343,61 +362,41 @@
                 headerAmenitiesList.innerHTML = '<p class="text-muted small">Không có tiện nghi nổi bật.</p>';
             }
 
-            // (Điền giá và nút)
-            const price = room.pricePerNight || 0;
-            document.getElementById('room-price').textContent = `${price.toLocaleString()} VNĐ`;
-            const bookingUrl = `booking.html?roomId=${room.id}`;
-            document.getElementById('btn-book-top').href = bookingUrl;
-            document.getElementById('btn-book-bottom').href = bookingUrl;
-
-            // (Điền mô tả)
-            document.getElementById('room-description').textContent = room.overview || room.description || 'Không có mô tả chi tiết cho loại phòng này.';
-            // (Điền CTA)
-            document.getElementById('cta-title').textContent = `Đặt phòng ${room.roomNumber} ngay?`;
-            document.getElementById('cta-price').textContent = `${price.toLocaleString()} VNĐ`;
-
-            //
-            // === LOGIC MỚI: ĐIỀN THƯ VIỆN ẢNH ===
-            //
+            // Xử lý Gallery
             if (galleryImageUrls.length > 0) {
-                // 1. Điền ảnh chính của gallery
-                mainImgLink.href = galleryImageUrls[0];
-                mainImg.src = galleryImageUrls[0];
-                mainImg.alt = room.roomTypeName;
+                // Tạo ảnh chính
+                galleryMainContainer.innerHTML = `
+                    <a href="${galleryImageUrls[0]}" class="glightbox" data-gallery="room-gallery" data-type="image">
+                        <img src="${galleryImageUrls[0]}" alt="${rt.name}" class="img-fluid">
+                    </a>
+                `;
 
-                // 2. Điền 4 ảnh thumbnails
-                thumbnailsContainer.innerHTML = ''; // Xóa ảnh cũ
-                const thumbnails = galleryImageUrls.slice(0, 4); // Lấy 4 ảnh đầu
-
+                // Tạo thumbnails
+                thumbnailsContainer.innerHTML = '';
+                const thumbnails = galleryImageUrls.slice(0, 4);
                 thumbnails.forEach(url => {
                     thumbnailsContainer.innerHTML += `
-                        <a href="${url}" class="glightbox">
+                        <a href="${url}" class="glightbox" data-gallery="room-gallery" data-type="image">
                             <img src="${url}" alt="Ảnh gallery" class="img-fluid">
                         </a>
                     `;
                 });
 
-                // 3. Hiển thị khu vực gallery
                 gallerySection.classList.remove('d-none');
 
-                // 4. Khởi tạo lại GLightbox (RẤT QUAN TRỌNG)
-                // (Phải chờ một chút để DOM cập nhật)
                 setTimeout(() => {
-                    // Hủy GLightbox cũ nếu đã tồn tại
-                    if (lightboxInstance) {
-                        lightboxInstance.destroy();
-                    }
-                    // Tạo GLightbox mới
+                    if (lightboxInstance) lightboxInstance.destroy();
                     lightboxInstance = GLightbox({
-                        selector: '.glightbox'
+                        selector: '.glightbox',
+                        touchNavigation: true,
+                        loop: true,
+                        autoplayVideos: false
                     });
                 }, 100);
 
             } else {
-                // Ẩn gallery nếu không có ảnh
                 gallerySection.classList.add('d-none');
             }
-            // === KẾT THÚC LOGIC GALLERY ===
         }
 
         function showError(message) {

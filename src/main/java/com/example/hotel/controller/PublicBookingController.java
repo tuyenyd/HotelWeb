@@ -1,6 +1,7 @@
 package com.example.hotel.controller;
 
 import com.example.hotel.dto.*;
+import com.example.hotel.exception.ResourceNotFoundException;
 import com.example.hotel.service.BookingService;
 import com.example.hotel.service.RoomService;
 import com.example.hotel.service.RoomTypeService;
@@ -82,6 +83,12 @@ public class PublicBookingController {
         RoomDto room = roomService.getRoomById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy phòng với ID: " + id));
         return ResponseEntity.ok(room);
+    }
+    @GetMapping("/room-types/{id}")
+    public ResponseEntity<RoomTypeDto> getRoomTypeById(@PathVariable Long id) {
+        RoomTypeDto roomType = roomTypeService.getRoomTypeById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy loại phòng ID: " + id));
+        return ResponseEntity.ok(roomType);
     }
 
 }

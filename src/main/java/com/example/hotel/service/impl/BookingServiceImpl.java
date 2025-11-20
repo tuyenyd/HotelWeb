@@ -47,62 +47,70 @@ public class BookingServiceImpl implements BookingService {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
 
-
     @Override
     @Transactional(readOnly = true)
     public Page<BookingDto> findBookings(String status, LocalDate fromDate, LocalDate toDate, Long roomTypeId, String search, Pageable pageable) {
         Specification<Booking> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
+
+            // 1. Lọc theo trạng thái
             if (status != null && !status.isEmpty()) {
-                // Tách chuỗi status (VD: "PENDING,CONFIRMED,CHECKED_IN")
                 String[] statuses = status.split(",");
                 List<BookingStatus> bookingStatuses = new ArrayList<>();
                 for (String s : statuses) {
                     try {
-                        // Chuyển đổi từng trạng thái
                         bookingStatuses.add(BookingStatus.valueOf(s.replace('-', '_').toUpperCase()));
                     } catch (IllegalArgumentException e) {
-                        // Bỏ qua trạng thái không hợp lệ nếu có
-                        log.warn("Trạng thái không hợp lệ bị bỏ qua: {}", s);
+                        log.warn("Trạng thái không hợp lệ: {}", s);
                     }
                 }
                 if (!bookingStatuses.isEmpty()) {
-                    // Dùng "IN" thay vì "="
                     predicates.add(root.get("status").in(bookingStatuses));
                 }
             }
-            if (fromDate != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get("checkInDate"), fromDate));
-            }
-            if (toDate != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get("checkOutDate"), toDate));
-            }
-            if (roomTypeId != null) {
-                predicates.add(cb.equal(root.get("room").get("roomType").get("id"), roomTypeId));
-            }
-            if (search != null && !search.isEmpty()) {
-                String likePattern = "%" + search.toLowerCase() + "%";
-                predicates.add(cb.or(
-                        cb.like(cb.lower(root.get("customerFullName")), likePattern),
-                        cb.like(cb.lower(root.get("customerPhone")), likePattern),
-                        cb.like(cb.lower(root.get("bookingConfirmationCode")), likePattern),
-                        cb.like(cb.lower(root.get("room").get("roomNumber")), likePattern)
-                ));
-            }
 
-            if (search != null && search.matches("\\d+")) { // Nếu search là số
-                predicates.add(cb.or(
-                        // ... (các điều kiện cũ)
-                        cb.equal(root.get("customer").get("id"), Long.parseLong(search))
-                ));
+            // 2. Lọc theo ngày
+            if (fromDate != null) predicates.add(cb.greaterThanOrEqualTo(root.get("checkInDate"), fromDate));
+            if (toDate != null) predicates.add(cb.lessThanOrEqualTo(root.get("checkOutDate"), toDate));
+
+            // 3. Lọc theo loại phòng
+            if (roomTypeId != null) predicates.add(cb.equal(root.get("room").get("roomType").get("id"), roomTypeId));
+
+            // 4. TÌM KIẾM ĐA NĂNG
+            if (search != null && !search.trim().isEmpty()) {
+                String searchTrim = search.trim();
+                String likePattern = "%" + searchTrim.toLowerCase() + "%";
+
+                List<Predicate> searchPredicates = new ArrayList<>();
+
+                // Tìm theo Mã đặt phòng
+                searchPredicates.add(cb.like(cb.lower(root.get("bookingConfirmationCode")), likePattern));
+                // Tìm theo Tên khách
+                searchPredicates.add(cb.like(cb.lower(root.get("customerFullName")), likePattern));
+                // Tìm theo SĐT khách
+                searchPredicates.add(cb.like(cb.lower(root.get("customerPhone")), likePattern));
+                // Tìm theo Số phòng
+                searchPredicates.add(cb.like(cb.lower(root.get("room").get("roomNumber")), likePattern));
+                // Tìm theo Tên trong bảng Customer gốc
+                searchPredicates.add(cb.like(cb.lower(root.get("customer").get("fullName")), likePattern));
+
+                // Nếu là số -> Tìm thêm theo ID Customer (để chắc chắn)
+                if (searchTrim.matches("\\d+")) {
+                    try {
+                        searchPredicates.add(cb.equal(root.get("customer").get("id"), Long.parseLong(searchTrim)));
+                    } catch (NumberFormatException ignored) {}
+                }
+
+                // QUAN TRỌNG: Dùng OR cho tất cả các điều kiện tìm kiếm
+                predicates.add(cb.or(searchPredicates.toArray(new Predicate[0])));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
+
         Page<Booking> bookings = bookingRepository.findAll(spec, pageable);
         return bookings.map(this::convertToDto);
     }
-
     @Override
     @Transactional(readOnly = true)
     public BookingDto getBookingById(Long id) {
