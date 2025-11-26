@@ -78,7 +78,7 @@ public class AuthAdminController {
                 registerRequest.getFullName(),
                 registerRequest.getEmail(),
                 encoder.encode(registerRequest.getPassword()),
-                "ADMIN"
+                "STAFF"
         );
         userRepository.save(user);
 

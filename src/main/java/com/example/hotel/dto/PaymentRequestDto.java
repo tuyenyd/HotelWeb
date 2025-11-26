@@ -9,4 +9,5 @@ public class PaymentRequestDto {
     private BigDecimal amount;
     private String method;
     private String notes;
+    private String transactionReference;
 }

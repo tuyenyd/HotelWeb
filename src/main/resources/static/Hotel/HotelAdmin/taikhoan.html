@@ -269,7 +269,8 @@
 
     </ul>
 
-</aside><main id="main" class="main">
+</aside>
+<main id="main" class="main">
 
     <div class="pagetitle d-flex justify-content-between align-items-center">
         <h1>Quản lý Tài khoản</h1>
@@ -344,9 +345,9 @@
                             <select class="form-select" id="role" required>
                                 <option value="">Chọn vai trò...</option>
                                 <option value="ADMIN">Admin</option>
-                                <option value="MANAGER">Manager (Quản lý)</option>
-                                <option value="RECEPTIONIST">Receptionist (Lễ tân)</option>
-                                <option value="HOUSEKEEPING">Housekeeping</option>
+                                <option value="MANAGER">Manager</option>
+                                <option value="STAFF">Staff</option>
+                                <option value="LEADER">Leader</option>
                             </select>
                         </div>
                     </div>
@@ -429,7 +430,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let datatable = null;
-        const API_URL = '/api/admin'; // Đường dẫn API
+        const API_URL = '/api/admin/users'; // Đường dẫn API
 
         const tableContainer = document.getElementById('tableContainer');
         const addModal = new bootstrap.Modal(document.getElementById('addAccountModal'));

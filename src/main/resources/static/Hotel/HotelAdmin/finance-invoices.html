@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Lịch sử Hóa đơn & Giao dịch - Quản lý Khách sạn</title>
+    <link href="assets/img/img.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+
+    <style>
+        .alert-custom { position: fixed; top: 100px; right: 20px; z-index: 9999; min-width: 300px; }
+        .truncate-tx { max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; }
+        .filter-section { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        /* CSS cho Modal chi tiết */
+        .modal-detail-label { font-weight: bold; color: #555; }
+        .modal-detail-value { font-size: 1.05rem; }
+    </style>
+</head>
+
+<body>
+<header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center">
+            <img src="assets/img/logo.png" alt="Logo">
+            <span class="d-none d-lg-block">Grandoria</span>
+        </a>
+        <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+    <div class="search-bar">
+        <form class="search-form d-flex align-items-center" method="POST" action="#">
+            <input type="text" name="query" placeholder="Tìm kiếm..." title="Nhập từ khóa tìm kiếm">
+            <button type="submit" title="Tìm kiếm"><i class="bi bi-search"></i></button>
+        </form>
+    </div>
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+            <li class="nav-item dropdown pe-3">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                    <img src="assets/img/profile-img.jpg" alt="Hồ sơ" class="rounded-circle">
+                    <span class="d-none d-md-block dropdown-toggle ps-2" id="profileName">Đang tải...</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                    <li class="dropdown-header">
+                        <h6 id="profileDropdownName">...</h6>
+                        <span id="profileDropdownRole">...</span>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item d-flex align-items-center" href="users-profile.html"><i class="bi bi-person"></i><span>Hồ sơ của tôi</span></a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item d-flex align-items-center" href="pages-login.html" id="logoutButton"><i class="bi bi-box-arrow-right"></i><span>Đăng xuất</span></a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="index.html">
+                <i class="bi bi-house-door"></i><span>Bảng Điều Khiển</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#booking-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-calendar-check"></i><span>Quản lý Đặt phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="booking-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li><a href="tatcadatphong.html"><i class="bi bi-circle"></i><span>Tất cả đặt phòng</span></a></li>
+                <li><a href="checkin.html"><i class="bi bi-circle"></i><span>Check-in</span></a></li>
+                <li><a href="checkout.html"><i class="bi bi-circle"></i><span>Check-out</span></a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#room-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-door-closed"></i><span>Quản lý Phòng</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="room-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li><a href="danhsachphong.html"><i class="bi bi-circle"></i><span>Danh sách phòng</span></a></li>
+                <li><a href="loaiphong.html"><i class="bi bi-circle"></i><span>Loại phòng</span></a></li>
+                <li><a href="tinhtrangphong.html"><i class="bi bi-circle"></i><span>Tình trạng phòng</span></a></li>
+                <li><a href="giaphong.html"><i class="bi bi-circle"></i><span>Giá phòng</span></a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#customer-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-people"></i><span>Quản lý Khách hàng</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="customer-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li><a href="danhsachkhachhang.html"><i class="bi bi-circle"></i><span>Danh sách khách hàng</span></a></li>
+                <li><a href="chuongtrinhthanhvien.html"><i class="bi bi-circle"></i><span>Chương trình thành viên</span></a></li>
+                <li><a href="danhgia&phanhoi.html"><i class="bi bi-circle"></i><span>Đánh giá & Phản hồi</span></a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="baocao&thongke.html">
+                <i class="bi bi-bar-chart"></i><span>Báo cáo & Thống kê</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-cash-coin"></i><span>Tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="finance-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="finance-invoices.html" class="active">
+                        <i class="bi bi-circle"></i><span>Hóa đơn</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="finance-payments.html">
+                        <i class="bi bi-circle"></i><span>Thanh toán</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="finance-revenue.html">
+                        <i class="bi bi-circle"></i><span>Doanh thu</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-heading">Trang</li>
+        <li class="nav-item"><a class="nav-link collapsed" href="users-profile.html"><i class="bi bi-person"></i><span>Hồ sơ</span></a></li>
+        <li class="nav-item"><a class="nav-link collapsed" href="pages-contact.html"><i class="bi bi-envelope"></i><span>Liên hệ</span></a></li>
+        <li class="nav-item"><a class="nav-link collapsed" href="users.html"><i class="bi bi-person-gear"></i><span>Nhân viên</span></a></li>
+        <li class="nav-item"><a class="nav-link collapsed" href="taikhoan.html"><i class="bi bi-person-badge"></i><span>Tài khoản</span></a></li>
+        <li class="nav-item"><a class="nav-link collapsed" href="settings.html"><i class="bi bi-gear"></i><span>Cài đặt</span></a></li>
+    </ul>
+</aside>
+
+<main id="main" class="main">
+
+    <div class="pagetitle d-flex justify-content-between align-items-center">
+        <h1>Lịch sử Hóa đơn & Giao dịch</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                <li class="breadcrumb-item">Tài chính</li>
+                <li class="breadcrumb-item active">Hóa đơn</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Tất cả Giao dịch</h5>
+
+                        <div class="filter-section mb-4">
+                            <form id="filterForm" class="row g-3">
+                                <div class="col-md-3">
+                                    <label for="filterStartDate" class="form-label fw-bold">Từ ngày:</label>
+                                    <input type="date" class="form-control" id="filterStartDate">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filterEndDate" class="form-label fw-bold">Đến ngày:</label>
+                                    <input type="date" class="form-control" id="filterEndDate">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filterMethod" class="form-label fw-bold">Phương thức:</label>
+                                    <select class="form-select" id="filterMethod">
+                                        <option value="">Tất cả</option>
+                                        <option value="CASH">Tiền mặt</option>
+                                        <option value="CREDIT_CARD">Thẻ (POS)</option>
+                                        <option value="BANK_TRANSFER">Chuyển khoản</option>
+                                        <option value="ONLINE_GATEWAY">Online (VNPay...)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 d-flex align-items-end">
+                                    <div class="d-flex gap-2 w-100">
+                                        <button type="submit" class="btn btn-primary flex-grow-1" id="btnFilter">
+                                            <i class="bi bi-filter me-1"></i> Lọc
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary" id="btnClearFilter" title="Xóa bộ lọc">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="dataLoadingError" class="alert alert-danger d-none" role="alert"></div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="invoicesTable">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#ID</th>
+                                    <th scope="col">Mã Đặt phòng</th>
+                                    <th scope="col">Khách hàng</th>
+                                    <th scope="col" class="text-end">Số tiền</th>
+                                    <th scope="col">Phương thức</th>
+                                    <th scope="col">Ngày giờ</th>
+                                    <th scope="col" class="text-center" style="min-width: 120px;">Hành động</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <div class="spinner-border text-primary spinner-border-sm me-2" role="status"></div>
+                                        Đang tải dữ liệu...
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Bản quyền <strong><span>HotelAdmin</span></strong>. Tất cả các quyền được bảo lưu
+    </div>
+    <div class="credits">
+        Thiết kế bởi <a href="#">Nhóm Phát triển</a>
+    </div>
+</footer>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<div class="modal fade" id="transactionDetailModal" tabindex="-1" aria-labelledby="transactionDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="transactionDetailModalLabel">Chi tiết Giao dịch #<span id="modalTxId"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalTxBody">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary me-2" role="status"></div>
+                    Đang tải thông tin chi tiết...
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <a href="#" id="modalLinkBooking" class="btn btn-outline-primary me-auto d-none" target="_blank">
+                    <i class="bi bi-box-arrow-up-right me-1"></i> Xem Đơn đặt phòng
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="modalBtnPrint" onclick="printInvoiceFromModal()">
+                    <i class="bi bi-printer me-1"></i> In Phiếu
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/main.js"></script>
+
+<script>
+    // --- CÁC HÀM TIỆN ÍCH TOÀN CỤC (Đưa ra ngoài để dùng được trong Modal) ---
+    const formatCurrencyGlobal = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount || 0);
+    const formatDateTimeGlobal = (dateString) => dateString ? new Date(dateString).toLocaleString('vi-VN') : '';
+    const getMethodBadgeGlobal = (method) => {
+        const m = (method || '').toUpperCase();
+        let cls = 'bg-secondary', txt = method || 'Chưa rõ';
+        if (m.includes('ONLINE') || m === 'VNPAY') { cls = 'bg-primary'; txt = 'VNPay Online'; }
+        else if (m.includes('CASH') || m === 'TIỀN MẶT') { cls = 'bg-success'; txt = 'Tiền mặt'; }
+        else if (m.includes('TRANSFER') || m === 'CHUYỂN KHOẢN') { cls = 'bg-info text-dark'; txt = 'Chuyển khoản'; }
+        else if (m.includes('CARD') || m.includes('POS')) { cls = 'bg-warning text-dark'; txt = 'Thẻ (POS)'; }
+        return `<span class="badge ${cls} fs-6">${txt}</span>`;
+    };
+
+    // --- HÀM HIỂN THỊ MODAL CHI TIẾT (Được gọi khi click nút Mắt) ---
+    window.showTransactionDetails = async function(paymentId) {
+        const modal = new bootstrap.Modal(document.getElementById('transactionDetailModal'));
+        const modalBody = document.getElementById('modalTxBody');
+        const modalTxId = document.getElementById('modalTxId');
+        const modalLinkBooking = document.getElementById('modalLinkBooking');
+        const modalBtnPrint = document.getElementById('modalBtnPrint');
+
+        // Reset modal về trạng thái loading
+        modalTxId.textContent = paymentId;
+        modalBody.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary me-2"></div>Đang tải thông tin chi tiết...</div>';
+        modalLinkBooking.classList.add('d-none');
+        modalBtnPrint.setAttribute('onclick', `printInvoice(${paymentId})`); // Cập nhật ID cho nút in
+        modal.show();
+
+        try {
+            // GỌI API LẤY CHI TIẾT 1 GIAO DỊCH (Yêu cầu Backend phải có endpoint này)
+            // Ví dụ: GET /api/admin/payments/123
+            if (typeof fetchWithAuth === 'undefined') throw new Error("Lỗi auth.js");
+            const response = await fetchWithAuth(`/api/admin/payments/${paymentId}`, { method: 'GET' });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.message || `Lỗi máy chủ: ${response.status}`);
+            }
+
+            const payment = await response.json();
+
+            // Render nội dung chi tiết vào Modal Body
+            modalBody.innerHTML = `
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-light h-100">
+                            <h6 class="text-muted mb-3">Thông tin cơ bản</h6>
+
+                            <div class="mb-2">
+                                <span class="modal-detail-label">Thời gian:</span>
+                                <span class="modal-detail-value">${formatDateTimeGlobal(payment.paymentDate)}</span>
+                            </div>
+                             <div class="mb-2">
+                                <span class="modal-detail-label">Phương thức:</span>
+                                <div>${getMethodBadgeGlobal(payment.method)}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-light h-100">
+                             <h6 class="text-muted mb-3">Thông tin Đặt phòng & Khách hàng</h6>
+                            <div class="mb-2">
+                                <span class="modal-detail-label">Mã đặt phòng:</span>
+                                <span class="modal-detail-value fw-bold text-primary">${payment.bookingCode || 'N/A'}</span>
+                            </div>
+                             <div class="mb-2">
+                                <span class="modal-detail-label">Khách hàng:</span>
+                                <span class="modal-detail-value">${payment.customerName || 'Khách lẻ'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-4 border rounded bg-white text-center">
+                             <h6 class="text-muted mb-2">Số tiền thanh toán</h6>
+                             <h2 class="text-success fw-bold m-0">${formatCurrencyGlobal(payment.amount)}</h2>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-3 border rounded bg-light">
+                            <h6 class="text-muted mb-2">Mã tham chiếu (Transaction Ref)</h6>
+                            <p class="mb-2 fw-bold">${payment.transactionReference || 'Không có'}</p>
+                            <h6 class="text-muted mb-2 mt-3">Ghi chú</h6>
+                            <p class="mb-0 fst-italic bg-white p-2 rounded border-start border-4 border-secondary text-break">
+                                ${payment.notes || 'Không có ghi chú thêm.'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Cập nhật nút link đến booking
+            if (payment.bookingCode) {
+                modalLinkBooking.href = `tatcadatphong.html?search=${payment.bookingCode}`;
+                modalLinkBooking.classList.remove('d-none');
+            }
+
+        } catch (error) {
+            console.error("Error showing details:", error);
+            modalBody.innerHTML = `
+                <div class="alert alert-danger d-flex align-items-center my-4">
+                    <i class="bi bi-exclamation-triangle-fill fs-3 me-3"></i>
+                    <div>
+                        <strong>Không thể tải chi tiết giao dịch.</strong><br>
+                        <small>${error.message}</small>
+                    </div>
+                </div>`;
+        }
+    };
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof fetchWithAuth === 'undefined') { console.error("LỖI: auth.js thiếu."); return; }
+
+        // --- KHỞI TẠO BIẾN & SỰ KIỆN ---
+        const tableBody = document.querySelector('#invoicesTable tbody');
+        const errorDiv = document.getElementById('dataLoadingError');
+        const filterForm = document.getElementById('filterForm');
+        const btnClearFilter = document.getElementById('btnClearFilter');
+        let dataTable;
+
+        filterForm.addEventListener('submit', (e) => { e.preventDefault(); loadInvoices(); });
+        btnClearFilter.addEventListener('click', () => { filterForm.reset(); loadInvoices(); });
+
+        // --- HÀM LOAD DỮ LIỆU CHÍNH ---
+        async function loadInvoices() {
+            const startDate = document.getElementById('filterStartDate').value;
+            const endDate = document.getElementById('filterEndDate').value;
+            const method = document.getElementById('filterMethod').value;
+
+            const params = new URLSearchParams();
+            if (startDate) params.append('startDate', startDate);
+            if (endDate) params.append('endDate', endDate);
+            if (method) params.append('method', method);
+
+            // Cập nhật colspan từ 8 xuống 7
+            tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4"><div class="spinner-border text-primary spinner-border-sm me-2"></div>Đang tải dữ liệu...</td></tr>';
+            errorDiv.classList.add('d-none');
+
+            try {
+                const response = await fetchWithAuth(`/api/admin/payments?${params.toString()}`, { method: 'GET' });
+                if (!response.ok) throw new Error((await response.json()).message || `Lỗi: ${response.status}`);
+
+                let payments = await response.json();
+                if (payments.content) payments = payments.content;
+                renderTable(payments);
+
+            } catch (error) {
+                console.error('Error loading invoices:', error);
+                if (error.message !== 'Phiên đăng nhập hết hạn' && error.message !== 'Unauthorized') {
+                    errorDiv.textContent = `Không thể tải dữ liệu: ${error.message}`;
+                    errorDiv.classList.remove('d-none');
+                    // Cập nhật colspan từ 8 xuống 7
+                    tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Lỗi khi tải dữ liệu.</td></tr>`;
+                }
+            }
+        }
+
+        // --- HÀM RENDER BẢNG ---
+        function renderTable(payments) {
+            if (dataTable) dataTable.destroy();
+            tableBody.innerHTML = '';
+
+            if (!payments || payments.length === 0) {
+                // Cập nhật colspan từ 8 xuống 7
+                tableBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted fst-italic py-4">Không tìm thấy giao dịch nào phù hợp.</td></tr>';
+                initDataTable();
+                return;
+            }
+
+            payments.forEach(payment => {
+                // Link booking trong bảng vẫn giữ lại để tiện click nhanh
+                const bookingLink = payment.bookingCode
+                    ? `<a href="tatcadatphong.html?search=${payment.bookingCode}" class="fw-bold text-primary" target="_blank">${payment.bookingCode}</a>`
+                    : '<span class="text-muted">N/A</span>';
+
+                // NÚT XEM CHI TIẾT: GỌI HÀM showTransactionDetails thay vì là link
+                const btnView = `<button class="btn btn-sm btn-outline-primary me-1" title="Xem chi tiết" onclick="showTransactionDetails(${payment.id})"><i class="bi bi-eye"></i></button>`;
+
+                const btnPrint = `<button class="btn btn-sm btn-outline-secondary" title="In phiếu" onclick="printInvoice(${payment.id})"><i class="bi bi-printer"></i></button>`;
+
+                // Đã xóa cột Mã giao dịch khỏi chuỗi rowStr
+                const rowStr = `
+                    <tr>
+                        <th scope="row">#${payment.id}</th>
+                        <td>${bookingLink}</td>
+                        <td>${payment.customerName || 'Khách lẻ'}</td>
+                        <td class="text-end fw-bold">${formatCurrencyGlobal(payment.amount)}</td>
+                        <td>${getMethodBadgeGlobal(payment.method)}</td>
+                        <td>${formatDateTimeGlobal(payment.paymentDate)}</td>
+                        <td class="text-center text-nowrap">${btnView}${btnPrint}</td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', rowStr);
+            });
+            initDataTable();
+        }
+
+        function initDataTable() {
+            const tableElement = document.querySelector('#invoicesTable');
+            if (tableElement) {
+                dataTable = new simpleDatatables.DataTable(tableElement, {
+                    perPage: 10, perPageSelect: [5, 10, 20, 50, ["All", "Tất cả"]],
+                    labels: { placeholder: "Tìm kiếm...", perPage: "mục/trang", noRows: "Không tìm thấy dữ liệu", info: "Hiển thị {start} đến {end} / {rows}" },
+                    // Cập nhật lại index cột không sắp xếp: từ 7 xuống 6
+                    columns: [{ select: 0, type: 'number' }, { select: 3, type: 'number' }, { select: 5, type: 'date', format: 'DD/MM/YYYY HH:mm:ss' }, { select: 6, sortable: false }],
+                    fixedHeight: false
+                });
+            }
+        }
+
+        // --- CÁC HÀM TOÀN CỤC KHÁC ---
+        window.printInvoice = function(paymentId) {
+            alert(`Chức năng IN phiếu giao dịch #${paymentId} đang được phát triển.`);
+            // window.open(`/api/admin/payments/${paymentId}/print`, '_blank');
+        };
+        // Hàm này được gọi từ nút In trong Modal
+        window.printInvoiceFromModal = function() {
+            const paymentId = document.getElementById('modalTxId').textContent;
+            if(paymentId) printInvoice(paymentId);
+        }
+
+
+        loadInvoices(); // Chạy lần đầu
+    });
+</script>
+
+</body>
+</html>

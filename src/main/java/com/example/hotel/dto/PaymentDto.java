@@ -12,4 +12,8 @@ public class PaymentDto {
     private BigDecimal amount;
     private String method;
     private String notes;
+    private String bookingCode;   // Để hiển thị mã đặt phòng
+    private String customerName;  // Để hiển thị tên khách hàng
+    private String transactionReference;
+
 }

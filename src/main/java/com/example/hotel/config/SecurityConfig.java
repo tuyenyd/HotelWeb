@@ -1,12 +1,13 @@
-// src/main/java/com/example/hotel/security/SecurityConfig.java
 package com.example.hotel.config;
 
 import com.example.hotel.security.AuthTokenFilter;
-import com.example.hotel.service.impl.UserAdminDetailsServiceImpl;
 import com.example.hotel.security.jwt.AuthEntryPointJwt;
+import com.example.hotel.service.impl.UserAdminDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -22,9 +23,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+// --- IMPORTS CHO PHÂN CẤP ROLE ---
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+// prePostEnabled = true là bắt buộc để dùng @PreAuthorize
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -35,11 +42,6 @@ public class SecurityConfig {
 
     @Autowired
     private AuthTokenFilter authTokenFilter;
-
-    /*@Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
-    }*/
 
     @Bean
     public GrantedAuthoritiesMapper authoritiesMapper() {
@@ -66,29 +68,42 @@ public class SecurityConfig {
     }
 
     @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String hierarchy = "ROLE_MANAGER > ROLE_LEADER \n " +
+                "ROLE_LEADER > ROLE_STAFF";
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
+    }
+    @Bean
+    public MethodSecurityExpressionHandler methodSecurityExpressionHandler(RoleHierarchy roleHierarchy) {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy);
+        return expressionHandler;
+    }
+
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Cho phép truy cập công khai vào các API xác thực
+                        // --- API CÔNG KHAI (Không cần đăng nhập) ---
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/public/**").permitAll()
+
+                        // --- TÀI NGUYÊN TĨNH (Ảnh, CSS, JS...) ---
+                        .requestMatchers("/avatars/**", "/assets/**", "/css/**", "/js/**").permitAll()
 
                         .requestMatchers("/Hotel/HotelAdmin/**").permitAll()
 
                         .requestMatchers("/Hotel/HotelUser/**").permitAll()
 
-                        .requestMatchers("/avatars/**").permitAll()
+                        .requestMatchers("/api/admin/**").authenticated()
 
-                        // Yêu cầu vai trò 'ADMIN',"MANAGER" cho tất cả các API dưới /api/admin/
-                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/api/customer/**").authenticated()
 
-                        .requestMatchers("/api/public/auth/**").permitAll()
-
-                        .requestMatchers("/api/public/**").permitAll()
-
-                        .requestMatchers("/api/public/customer/**").authenticated()
-
-                        // Yêu cầu xác thực cho tất cả các yêu cầu còn lại
+                        // Mọi request khác bắt buộc phải xác thực
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))

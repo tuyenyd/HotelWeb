@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/users")
 public class AdminController {
 
     @Autowired
@@ -33,13 +33,13 @@ public class AdminController {
     PasswordEncoder passwordEncoder; // Dùng để mã hóa mật khẩu
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return userRepository.findById(id)
                 .map(ResponseEntity::ok)
@@ -47,7 +47,7 @@ public class AdminController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<?> createUser(@RequestBody User newUser) {
         if (userRepository.existsByUsername(newUser.getUsername())) {
             return ResponseEntity.badRequest().body("Error: Username is already taken!");
@@ -63,7 +63,7 @@ public class AdminController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isEmpty()) {
@@ -89,7 +89,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         if (!userRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -98,7 +98,7 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/profile")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> getUserProfile(@AuthenticationPrincipal UserAdminDetailsImpl userDetails) {
         if (userDetails == null) {
             return ResponseEntity.status(401).body("Lỗi: Người dùng chưa xác thực.");
@@ -116,7 +116,7 @@ public class AdminController {
      * Dùng @ModelAttribute để nhận cả DTO và file
      */
     @PutMapping("/profile")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> updateUserProfile(
             @AuthenticationPrincipal UserAdminDetailsImpl userDetails,
             @ModelAttribute ProfileUpdateRequest updateRequest,
@@ -138,7 +138,7 @@ public class AdminController {
      * API: Thay đổi mật khẩu
      */
     @PostMapping("/change-password")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<?> changePassword(
             @AuthenticationPrincipal UserAdminDetailsImpl userDetails,
             @RequestBody PasswordChangeRequest passwordRequest) {

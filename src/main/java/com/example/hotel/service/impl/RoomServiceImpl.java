@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -31,18 +34,21 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "rooms", key = "'all'")
     public List<RoomDto> getAllRooms() {
         return roomRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "room", key = "#id")
     public Optional<RoomDto> getRoomById(Long id) {
         return roomRepository.findById(id).map(this::convertToDto);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "rooms", key = "'all'")
     public RoomDto createRoom(RoomDto roomDto) {
         // Kiểm tra số phòng trùng lặp khi tạo mới ===
         if (roomRepository.findByRoomNumber(roomDto.getRoomNumber()).isPresent()) {
@@ -56,6 +62,10 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "rooms", key = "'all'"),
+            @CacheEvict(value = "room", key = "#id")
+    })
     public RoomDto updateRoom(Long id, RoomDto roomDto) {
         Room existingRoom = roomRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + id));
@@ -89,6 +99,10 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "rooms", key = "'all'"),
+            @CacheEvict(value = "room", key = "#id")
+    })
     public void deleteRoom(Long id) {
         if (!roomRepository.existsById(id)) {
             throw new ResourceNotFoundException("Không tìm thấy phòng với ID: " + id);
@@ -165,6 +179,10 @@ public class RoomServiceImpl implements RoomService {
     }
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "rooms", key = "'all'"),
+            @CacheEvict(value = "room", key = "#id")
+    })
     public RoomDto updateRoomStatus(Long id, String status) {
         Room existingRoom = roomRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + id));

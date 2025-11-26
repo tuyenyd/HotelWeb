@@ -32,4 +32,7 @@ public class Payment {
 
     @Column(nullable = false)
     private LocalDateTime paymentDate; // Ngày thanh toán
+
+    @Column(name = "transaction_reference", length = 100)
+    private String transactionReference;
 }

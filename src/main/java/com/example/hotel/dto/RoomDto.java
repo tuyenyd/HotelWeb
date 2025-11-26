@@ -1,12 +1,15 @@
 package com.example.hotel.dto;
 
 import lombok.Data;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
 // DTO để nhận và gửi dữ liệu phòng
 @Data
-public class RoomDto {
+public class RoomDto implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
     private String roomNumber;
     private Long roomTypeId;

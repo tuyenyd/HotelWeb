@@ -2,13 +2,16 @@ package com.example.hotel.repository;
 
 import com.example.hotel.entity.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor; // 1. Thêm import này
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
-public interface PaymentRepository extends JpaRepository<Payment, Long> {
+@Repository
+// 2. Thêm ", JpaSpecificationExecutor<Payment>" vào cuối dòng này
+public interface PaymentRepository extends JpaRepository<Payment, Long>, JpaSpecificationExecutor<Payment> {
 
-    /**
-     * Tìm tất cả thanh toán của một Booking,
-     * sắp xếp theo ngày thanh toán mới nhất trước.
-     */
+    // Các phương thức khác giữ nguyên...
     List<Payment> findByBookingIdOrderByPaymentDateDesc(Long bookingId);
+    //List<Payment> findAllByOrderByPaymentDateDesc();
 }

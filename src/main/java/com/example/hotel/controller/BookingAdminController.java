@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@PreAuthorize("hasRole('STAFF')")
 @RequestMapping("/api/admin/bookings")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")

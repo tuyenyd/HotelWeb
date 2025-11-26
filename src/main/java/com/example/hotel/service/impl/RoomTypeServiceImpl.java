@@ -8,6 +8,9 @@ import com.example.hotel.service.RoomTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 
 import java.text.Normalizer;
 import java.util.Arrays;
@@ -38,6 +41,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "roomTypes", key = "'all'")
     public List<RoomTypeDto> getAllRoomTypes() {
         return roomTypeRepository.findAll().stream()
                 .map(this::convertToDto)
@@ -45,12 +49,14 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
     // Thêm phương thức này vào lớp RoomTypeServiceImpl
     @Override
+    @Cacheable(value = "roomType", key = "#id")
     public Optional<RoomTypeDto> getRoomTypeById(Long id) {
         return roomTypeRepository.findById(id).map(this::convertToDto);
     }
 
     @Override
     @Transactional
+    @CacheEvict(value = "roomTypes", key = "'all'")
     public RoomTypeDto createRoomType(RoomTypeDto roomTypeDto) {
         RoomType roomType = convertToEntity(roomTypeDto);
         roomType.setTypeCode(generateTypeCode(roomType.getName()));
@@ -60,6 +66,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "roomTypes", key = "'all'"),
+            @CacheEvict(value = "roomType", key = "#id")
+    })
     public RoomTypeDto updateRoomType(Long id, RoomTypeDto roomTypeDto) {
         RoomType existingRoomType = roomTypeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("RoomType not found with id: " + id));
@@ -87,6 +97,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     @Override
     @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "roomTypes", key = "'all'"),
+            @CacheEvict(value = "roomType", key = "#id")
+    })
     public void deleteRoomType(Long id) {
         if (!roomTypeRepository.existsById(id)) {
             throw new ResourceNotFoundException("RoomType not found with id: " + id);

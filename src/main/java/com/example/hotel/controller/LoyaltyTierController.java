@@ -4,11 +4,13 @@ import com.example.hotel.dto.LoyaltyTierDto;
 import com.example.hotel.service.LoyaltyTierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@PreAuthorize("hasRole('MANAGER')")
 @RequestMapping("/api/admin/loyalty-tiers")
 @RequiredArgsConstructor
 public class LoyaltyTierController {
