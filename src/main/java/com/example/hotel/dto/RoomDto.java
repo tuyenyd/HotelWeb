@@ -24,4 +24,5 @@ public class RoomDto implements Serializable {
     private String imageUrl;
     private String galleryImages;
     private String overview;
+    private BigDecimal currentPrice;
 }

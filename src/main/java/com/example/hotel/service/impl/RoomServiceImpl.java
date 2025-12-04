@@ -7,6 +7,7 @@ import com.example.hotel.entity.RoomType;
 import com.example.hotel.exception.ResourceNotFoundException;
 import com.example.hotel.repository.RoomRepository;
 import com.example.hotel.repository.RoomTypeRepository;
+import com.example.hotel.service.PriceService;
 import com.example.hotel.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,6 +17,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +33,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Autowired
     private RoomTypeRepository roomTypeRepository;
+
+    @Autowired
+    private  PriceService priceService;
 
     @Override
     @Transactional(readOnly = true)
@@ -143,6 +148,10 @@ public class RoomServiceImpl implements RoomService {
             dto.setImageUrl(roomType.getImageUrl());
             dto.setGalleryImages(roomType.getGalleryImages());
             dto.setOverview(roomType.getOverview());
+            LocalDate today = LocalDate.now();
+            // Gọi hàm tính giá daily bạn đã viết trong PriceService
+            BigDecimal calculatedPrice = priceService.calculateDailyPrice(room.getRoomType(), today);
+            dto.setCurrentPrice(calculatedPrice);
 
             String amenitiesStr = roomType.getAmenities();
             if (amenitiesStr != null && !amenitiesStr.trim().isEmpty()) {
@@ -204,10 +213,13 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalArgumentException("Ngày check-out phải sau ngày check-in.");
         }
 
-        // 1. Gọi Repository
+        // 1. Gọi Repository để tìm phòng trống
         List<Room> rooms = roomRepository.findAvailableRooms(checkin, checkout, totalGuests);
 
-        // 2. Chuyển List<Room> thành List<RoomDto>
+        // Lấy ngày hôm nay để tính giá hiển thị
+        LocalDate today = LocalDate.now();
+
+        // 2. Chuyển List<Room> thành List<RoomDto> và tính giá
         return rooms.stream().map(room -> {
             RoomDto dto = new RoomDto();
             dto.setId(room.getId());
@@ -215,15 +227,22 @@ public class RoomServiceImpl implements RoomService {
             dto.setStatus(room.getStatus().name());
             dto.setFloor(room.getFloor());
 
-            // Lấy thông tin từ RoomType
             if (room.getRoomType() != null) {
                 RoomType rt = room.getRoomType();
                 dto.setRoomTypeId(rt.getId());
                 dto.setRoomTypeName(rt.getName());
                 dto.setCapacity(rt.getCapacity());
                 dto.setDescription(rt.getDescription());
+                // Giá gốc (base price) lấy từ loại phòng
+                dto.setPricePerNight(rt.getBasePrice());
 
-                // Lấy tiện nghi (amenities)
+                // --- BỔ SUNG QUAN TRỌNG: TÍNH GIÁ CHO NGÀY HÔM NAY ---
+                // Gọi service để tính giá động dựa trên các quy tắc giá
+                BigDecimal todayPrice = priceService.calculateDailyPrice(rt, today);
+                // Gán vào field currentPrice của DTO (đảm bảo RoomDto có field này)
+                dto.setCurrentPrice(todayPrice);
+                // -----------------------------------------------------
+
                 String amenitiesStr = rt.getAmenities();
                 if (amenitiesStr != null && !amenitiesStr.trim().isEmpty()) {
                     dto.setAmenities(Arrays.asList(amenitiesStr.trim().split("\\s*,\\s*")));
@@ -231,10 +250,6 @@ public class RoomServiceImpl implements RoomService {
                     dto.setAmenities(Collections.emptyList());
                 }
             }
-
-            // Quan trọng: Dùng giá của Room (room.getPrice())
-            // Hàm convertToDto cũ của bạn đang dùng roomType.getBasePrice() là không chính xác
-            dto.setPricePerNight(room.getPrice());
 
             return dto;
         }).collect(Collectors.toList());

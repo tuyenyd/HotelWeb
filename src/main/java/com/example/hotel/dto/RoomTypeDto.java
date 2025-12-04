@@ -22,4 +22,5 @@ public class RoomTypeDto implements Serializable {
     private String imageUrl;
     private String galleryImages;
     private String overview;
+    private BigDecimal currentPrice;
 }

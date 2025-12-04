@@ -536,6 +536,7 @@
 <script src="assets/js/auth.js"></script>
 
 <script>
+
     const API_URL = 'http://localhost:8080/api/admin';
     const TOKEN = localStorage.getItem('jwtToken'); // Giả sử token được lưu ở đây sau khi đăng nhập
 
@@ -563,7 +564,7 @@
         document.getElementById('btnApplyFilter').disabled = !enabled;
     }
 
-    // THÊM MỚI: Hàm chuyển đổi chế độ xem Lưới/Danh sách
+    // Hàm chuyển đổi chế độ xem Lưới/Danh sách
     function toggleView(view) {
         const gridView = document.getElementById('bookingGridView');
         const listView = document.getElementById('bookingListView');
@@ -577,7 +578,7 @@
         }
     }
 
-    // === ⭐ 2. HÀM "NÃO BỘ" ĐÃ CẬP NHẬT (XỬ LÝ THÙNG RÁC) ===
+    // === ⭐ 2. HÀM FETCH CHÍNH ===
     async function fetchAndRenderBookings() {
         const params = new URLSearchParams();
         params.append('page', currentFilters.page);
@@ -588,11 +589,9 @@
 
         // --- Logic mới để kiểm tra Thùng Rác ---
         if (currentFilters.status === 'trash') {
-            // Nếu là thùng rác, gọi API riêng và tắt bộ lọc
             endpoint = `${API_URL}/bookings/trash`;
             toggleFilterControls(false); // Vô hiệu hóa các bộ lọc khác
         } else {
-            // Nếu là bộ lọc bình thường, thêm các tham số lọc
             if (currentFilters.status) params.append('status', currentFilters.status);
             if (currentFilters.fromDate) params.append('fromDate', currentFilters.fromDate);
             if (currentFilters.toDate) params.append('toDate', currentFilters.toDate);
@@ -600,10 +599,8 @@
             if (currentFilters.search) params.append('search', currentFilters.search);
             toggleFilterControls(true); // Bật các bộ lọc
         }
-        // --- Kết thúc logic mới ---
 
         try {
-            // Dùng biến "endpoint" đã được xác định
             const response = await fetch(`${endpoint}?${params.toString()}`, {
                 headers: {
                     'Authorization': `Bearer ${TOKEN}`
@@ -627,8 +624,7 @@
         }
     }
 
-
-    // CẬP NHẬT: Hiển thị danh sách đặt phòng (cho cả Lưới và Danh sách)
+    // Hiển thị danh sách đặt phòng (cho cả Lưới và Danh sách)
     function renderBookings(bookings) {
         const grid = document.getElementById('bookingGridView');
         const listBody = document.getElementById('bookingListBody');
@@ -638,7 +634,6 @@
         listBody.innerHTML = '';
 
         if (!bookings || bookings.length === 0) {
-            // === LOGIC MỚI: Hiển thị thông báo thùng rác trống ===
             let emptyMessage = (currentFilters.status === 'trash')
                 ? 'Thùng rác trống.'
                 : 'Không tìm thấy đặt phòng nào.';
@@ -658,8 +653,7 @@
                 'checked-out': "secondary", 'cancelled': "danger"
             }[b.status] || "primary";
 
-            // === LOGIC MỚI: Xử lý nút thao tác cho thùng rác ===
-            // Ẩn tất cả các nút khi ở trong thùng rác
+            // Xử lý nút thao tác cho thùng rác
             const isTrashView = currentFilters.status === 'trash';
 
             const gridActionButtons = isTrashView ? '' : `
@@ -687,7 +681,6 @@
                 ${(b.status === "pending" || b.status === "confirmed") ? `
                 <button class="btn btn-sm btn-danger w-100 mt-2" onclick="cancelBooking(${b.id})"><i class="bi bi-x-circle"></i> Hủy</button>
                 ` : ""}`;
-            // === KẾT THÚC LOGIC MỚI ===
 
             // --- 1. Render Chế độ Lưới (Grid View) ---
             grid.innerHTML += `
@@ -757,7 +750,6 @@
         });
     }
 
-
     // Hiển thị phân trang
     function renderPagination(page) {
         const pag = document.getElementById('pagination');
@@ -779,10 +771,8 @@
         fetchAndRenderBookings();
     }
 
-    // === ⭐ 3. HÀM `applyFilters` ĐÃ CẬP NHẬT ===
-    // (Hàm này giờ CHỈ xử lý nút "Áp dụng" cho ngày/loại phòng/tìm kiếm)
+    // === ⭐ 3. HÀM APPLY FILTERS ===
     function applyFilters() {
-        // currentFilters.status = ... // <-- XÓA DÒNG NÀY
         currentFilters.fromDate = document.getElementById('filterFromDate').value;
         currentFilters.toDate = document.getElementById('filterToDate').value;
         currentFilters.roomTypeId = document.getElementById('filterRoomType').value;
@@ -791,45 +781,47 @@
         fetchAndRenderBookings();
     }
 
-
-    // === CÁC HÀM ĐÃ CẬP NHẬT (SỬA LỖI CUSTOMER ID) ===
+    // === CÁC HÀM XỬ LÝ MODAL VÀ API ===
 
     // Thêm/Sửa đặt phòng
     async function saveBooking() {
         const form = document.getElementById('bookingForm');
-
-        // Lấy dữ liệu từ dropdown khách hàng
         const customerSelect = document.getElementById('inputCustomerSelect');
         const selectedOption = customerSelect.options[customerSelect.selectedIndex];
+        const totalInputStr = document.getElementById('inputTotal').value;
+
+        // Kiểm tra nếu đang tính toán hoặc lỗi
+        if (!totalInputStr || totalInputStr.includes("Đang") || totalInputStr.includes("Lỗi")) {
+            alert("Vui lòng đợi tính toán tổng tiền hoặc kiểm tra lại ngày tháng.");
+            return;
+        }
 
         const bookingData = {
-            // Gửi customerId lên backend
             customerId: customerSelect.value,
-
-            // Vẫn gửi kèm tên và sđt (vì DTO của bạn có)
             customer: selectedOption.dataset.name || selectedOption.text.split(' (')[0],
             phone: document.getElementById('inputPhone').value.trim(),
-
-            // Các trường còn lại
             roomId: document.getElementById('inputRoomId').value,
             checkin: document.getElementById('inputCheckin').value,
             checkout: document.getElementById('inputCheckout').value,
-            total: parseFloat(document.getElementById('inputTotal').value) || 0,
-
-            // === BẮT ĐẦU SỬA ĐỔI ===
+            // Lấy giá trị số từ input total
+            total: parseFloat(totalInputStr) || 0,
             soNguoiLon: parseInt(document.getElementById('inputSoNguoiLon').value) || 1,
             soTreEm: parseInt(document.getElementById('inputSoTreEm').value) || 0
-            // === KẾT THÚC SỬA ĐỔI ===
         };
 
         if (!bookingData.customerId || !bookingData.roomId || !bookingData.checkin || !bookingData.checkout) {
-            alert("Vui lòng chọn khách hàng, phòng và ngày.");
+            alert("Vui lòng chọn khách hàng, phòng và ngày nhận/trả.");
+            return;
+        }
+
+        if (new Date(bookingData.checkin) >= new Date(bookingData.checkout)) {
+            alert("Ngày trả phòng phải sau ngày nhận phòng.");
             return;
         }
 
         const method = editBookingId ? 'PUT' : 'POST';
         const url = editBookingId ? `${API_URL}/bookings/${editBookingId}` : `${API_URL}/bookings`;
-        let statusChanged = false; // Biến kiểm tra thay đổi trạng thái
+        let statusChanged = false;
 
         try {
             // Bước 1: Luôn lưu thông tin chính (PUT/POST)
@@ -846,8 +838,8 @@
             // Bước 2: Nếu là CHỈNH SỬA, kiểm tra và cập nhật trạng thái
             if (editBookingId) {
                 const newStatus = document.getElementById('inputStatus').value;
-                if (newStatus !== originalBookingStatus) { // Chỉ gọi API nếu trạng thái thay đổi
-                    await updateBookingStatus(editBookingId, newStatus, true); // true = gọi từ bên trong
+                if (newStatus !== originalBookingStatus) {
+                    await updateBookingStatus(editBookingId, newStatus, true);
                     statusChanged = true;
                 }
             }
@@ -867,30 +859,25 @@
         try {
             const response = await fetch(`${API_URL}/bookings/${id}`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
             if (!response.ok) throw new Error('Không tìm thấy thông tin đặt phòng.');
-            const b = await response.json(); // b là BookingDto
+            const b = await response.json();
 
             editBookingId = id;
-            originalBookingStatus = b.status; // Lưu trạng thái gốc
+            originalBookingStatus = b.status;
             document.getElementById('bookingModalTitle').textContent = "Chỉnh sửa đặt phòng";
 
-            // Không set 'inputCustomer' (text) nữa
             document.getElementById('inputPhone').value = b.phone;
             document.getElementById('inputCheckin').value = b.checkin;
             document.getElementById('inputCheckout').value = b.checkout;
             document.getElementById('inputTotal').value = b.total;
-
-            // === BẮT ĐẦU SỬA ĐỔI ===
             document.getElementById('inputSoNguoiLon').value = b.soNguoiLon;
             document.getElementById('inputSoTreEm').value = b.soTreEm;
-            // === KẾT THÚC SỬA ĐỔI ===
 
-            // Hiển thị và cài đặt trường trạng thái
             document.getElementById('statusRow').classList.remove('d-none');
             document.getElementById('inputStatus').value = b.status;
 
-            // Tải và chọn đúng khách hàng, phòng
+            // Tải danh sách và chọn đúng item
             await loadRoomsIntoModal(b.roomId);
-            await loadCustomersIntoModal(b.customerId); // Dùng customerId từ DTO
+            await loadCustomersIntoModal(b.customerId);
 
             new bootstrap.Modal(document.getElementById('addBookingModal')).show();
         } catch (error) {
@@ -901,30 +888,24 @@
     // Nút mở modal Thêm mới
     document.querySelector('[data-bs-target="#addBookingModal"]').onclick = function() {
         editBookingId = null;
-        originalBookingStatus = null; // Reset trạng thái gốc
+        originalBookingStatus = null;
         document.getElementById('bookingModalTitle').textContent = "Thêm đặt phòng mới";
         document.getElementById('bookingForm').reset();
-
-        // Ẩn hàng trạng thái đi khi thêm mới
         document.getElementById('statusRow').classList.add('d-none');
 
-        // Tải cả 2 danh sách
         loadRoomsIntoModal();
-        loadCustomersIntoModal(); // Tải khách hàng
+        loadCustomersIntoModal();
     };
-
     // === HÀM MỚI ĐỂ TẢI KHÁCH HÀNG ===
     async function loadCustomersIntoModal(selectedCustomerId = null) {
         const select = document.getElementById('inputCustomerSelect');
         select.innerHTML = '<option value="">-- Đang tải... --</option>';
         try {
-            // Gọi API /api/admin/customers
             const response = await fetch(`${API_URL}/customers`, {
                 headers: { 'Authorization': `Bearer ${TOKEN}` }
             });
             if (!response.ok) throw new Error('Lỗi tải danh sách khách hàng');
-
-            const customers = await response.json(); // Giả sử API này trả về List, không phải Page
+            const customers = await response.json();
 
             select.innerHTML = '<option value="">-- Chọn khách hàng --</option>';
             customers.forEach(c => {
@@ -1046,63 +1027,99 @@
 
     // Tải danh sách phòng vào modal
     async function loadRoomsIntoModal(selectedRoomId = null) {
+        const select = document.getElementById('inputRoomId');
+        select.innerHTML = '<option value="">-- Đang tải... --</option>';
         try {
             const response = await fetch(`${API_URL}/rooms`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
 
             if (!response.ok) {
-                console.error("Failed to load rooms. Status: " + response.status);
                 throw new Error('Lỗi tải danh sách phòng.');
             }
             const rooms = await response.json();
-            const select = document.getElementById('inputRoomId');
             select.innerHTML = '<option value="">Chọn phòng</option>';
             rooms.forEach(r => {
                 const isSelected = r.id == selectedRoomId;
-
-                if(r.status=="AVAILABLE" || isSelected) { // Cho phép hiển thị phòng Sẵn có HOẶC phòng đang được chọn (để sửa)
-
+                if(r.status=="AVAILABLE" || isSelected) {
+                    // Ưu tiên hiển thị currentPrice
+                    const displayPrice = r.currentPrice !== undefined ? r.currentPrice : (r.pricePerNight || 0);
                     select.innerHTML += `<option
                                         value="${r.id}"
-                                        data-price="${r.pricePerNight || 0}"
                                         ${isSelected ? 'selected' : ''}>
-                                        ${r.roomNumber} - ${r.roomTypeName}
+                                        ${r.roomNumber} - ${r.roomTypeName} (Giá hôm nay: ${displayPrice.toLocaleString()} VND)
                                     </option>`;
                 }
             });
         } catch (error)
         {
             console.error(error.message);
+            select.innerHTML = '<option value="">Lỗi tải phòng</option>';
         }
     }
-
     // Hàm tự động tính tổng tiền
-    function calculateTotalPrice() {
+    async function calculateTotalPrice() {
         const roomSelect = document.getElementById('inputRoomId');
         const checkinDateEl = document.getElementById('inputCheckin');
         const checkoutDateEl = document.getElementById('inputCheckout');
         const totalEl = document.getElementById('inputTotal');
 
-        try {
-            const selectedOption = roomSelect.options[roomSelect.selectedIndex];
-            const pricePerNight = parseFloat(selectedOption.dataset.price || 0);
-            const checkin = new Date(checkinDateEl.value);
-            const checkout = new Date(checkoutDateEl.value);
+        const roomId = roomSelect.value;
+        const checkin = checkinDateEl.value;
+        const checkout = checkoutDateEl.value;
 
-            if (!isNaN(checkin.getTime()) && !isNaN(checkout.getTime()) && pricePerNight > 0) {
-                const timeDiff = checkout.getTime() - checkin.getTime();
-                const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-
-                if (nights > 0) {
-                    totalEl.value = nights * pricePerNight;
-                } else {
-                    totalEl.value = 0;
-                }
-            } else {
-                totalEl.value = 0;
+        // Chỉ tính khi đã chọn đủ thông tin
+        if (!roomId || !checkin || !checkout) {
+            // Nếu đang sửa và chưa thay đổi gì thì giữ nguyên giá cũ, không reset về 0
+            if (!editBookingId) {
+                totalEl.value = '';
             }
+            return;
+        }
+
+        if (new Date(checkin) >= new Date(checkout)) {
+            totalEl.value = '';
+            totalEl.placeholder = "Ngày trả phải sau ngày nhận";
+            return;
+        }
+
+        // Hiển thị trạng thái đang tính toán
+        totalEl.value = "";
+        totalEl.placeholder = "Đang tính toán...";
+
+        try {
+
+            const params = new URLSearchParams({
+                roomId: roomId,
+                checkIn: checkin,
+                checkOut: checkout
+            });
+
+            const response = await fetch(`${API_URL}/bookings/calculate-price?${params.toString()}`, {
+                headers: {
+                    'Authorization': `Bearer ${TOKEN}`
+                }
+            });
+
+            if (!response.ok) {
+                // Cố gắng lấy thông báo lỗi từ server
+                let errorMessage = 'Lỗi khi tính giá từ server.';
+                try {
+                    const errorData = await response.json();
+                    if(errorData.message) errorMessage = errorData.message;
+                } catch(e) {}
+                throw new Error(errorMessage);
+            }
+
+            // API trả về con số tổng tiền (ví dụ: 2500000)
+            const totalPrice = await response.json();
+
+            // Cập nhật vào ô tổng tiền
+            totalEl.value = totalPrice;
+            totalEl.placeholder = "";
+
         } catch (error) {
-            console.error("Lỗi khi tính giá:", error);
-            totalEl.value = 0;
+            console.error("Lỗi khi gọi API tính giá:", error);
+            totalEl.value = "";
+            totalEl.placeholder = error.message || "Lỗi tính giá";
         }
     }
 
@@ -1120,73 +1137,45 @@
     // === ⭐ 4. KHỐI GÁN SỰ KIỆN ĐÃ CẬP NHẬT ===
     document.getElementById('btnApplyFilter').onclick = applyFilters;
     document.getElementById('filterSearch').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            applyFilters();
-        }
+        if (e.key === 'Enter') applyFilters();
     });
 
     const btnShowTrash = document.getElementById('btnShowTrash');
-
-    // 1. Khi nhấn vào một bộ lọc trạng thái (Tất cả, Đang chờ,...)
     document.querySelectorAll('#statusFilterGroup input[type="radio"]').forEach(radio => {
         radio.addEventListener('change', () => {
-            // Đặt trạng thái theo radio
             currentFilters.status = radio.value;
-            currentFilters.page = 0; // Reset trang
-
-            // Gọi hàm fetch chính
+            currentFilters.page = 0;
             fetchAndRenderBookings();
-
-            // Tắt "active" của nút Thùng Rác (nếu nó đang active)
             btnShowTrash.classList.remove('active');
         });
     });
-
-    // 2. Khi nhấn vào nút "Thùng Rác"
     btnShowTrash.addEventListener('click', () => {
-        // Đặt trạng thái (status) là 'trash'
         currentFilters.status = 'trash';
-        currentFilters.page = 0; // Reset trang
-
-        // Gọi hàm fetch chính (hàm này đã biết cách xử lý 'trash')
+        currentFilters.page = 0;
         fetchAndRenderBookings();
-
-        // Tắt "checked" của nhóm radio (bỏ check tất cả)
         document.querySelectorAll('#statusFilterGroup input[type="radio"]').forEach(r => r.checked = false);
-        // Set "Tất cả" (id btnradio1) làm checked về mặt logic, nhưng ko kích hoạt sự kiện
         document.getElementById('btnradio1').checked = true;
-
-
-        // Tự bật "active" cho nút Thùng Rác
         btnShowTrash.classList.add('active');
     });
 
-
     document.getElementById('btnSaveBooking').onclick = saveBooking;
-    // === KẾT THÚC THAY THẾ KHỐI SỰ KIỆN ===
 
+    // Gắn sự kiện tính giá mới cho các trường input
     document.getElementById('inputRoomId').addEventListener('change', calculateTotalPrice);
     document.getElementById('inputCheckin').addEventListener('change', calculateTotalPrice);
     document.getElementById('inputCheckout').addEventListener('change', calculateTotalPrice);
 
-
-    // CẬP NHẬT: Khởi tạo khi tải trang
+    // Khởi tạo khi tải trang
     document.addEventListener('DOMContentLoaded', () => {
         if (!TOKEN) {
             alert('Bạn chưa đăng nhập. Đang chuyển đến trang đăng nhập.');
             window.location.href = 'pages-login.html';
             return;
         }
-
-        // THÊM MỚI: Gắn sự kiện cho các nút chuyển đổi chế độ xem
         document.getElementById('gridView').addEventListener('click', () => toggleView('grid'));
         document.getElementById('listView').addEventListener('click', () => toggleView('list'));
-
-        // Tải dữ liệu ban đầu
         loadRoomTypes();
         fetchAndRenderBookings();
-
-        // THÊM MỚI: Kích hoạt chế độ xem mặc định (grid)
         toggleView('grid');
     });
 </script>

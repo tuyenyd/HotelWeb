@@ -106,7 +106,7 @@ public class PaymentServiceImpl implements PaymentService {
         };
 
         // 2. Gọi repository với Specification và sắp xếp giảm dần theo ngày
-        List<Payment> payments = paymentRepository.findAll();
+        List<Payment> payments = paymentRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "paymentDate"));
 
         // 3. Convert sang DTO
         return payments.stream()

@@ -22,7 +22,45 @@
     <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
     <link href="assets/css/main.css" rel="stylesheet">
+    <style>
 
+        /* Container chứa giá để căn chỉnh hàng ngang */
+        .price-container {
+            display: flex;
+            align-items: baseline; /* Căn chân chữ cho thẳng hàng */
+            flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ nếu giá quá dài */
+            gap: 8px; /* Khoảng cách giữa giá cũ và giá mới */
+        }
+        /* 1. STYLE CHO GIÁ GỐC (Nhỏ, Xám, Gạch ngang) */
+        .original-price {
+            color: #999999;       /* Màu xám nhạt */
+            text-decoration: line-through; /* Gạch ngang */
+            font-size: 1rem;      /* Cỡ chữ nhỏ vừa phải */
+            font-weight: 400;     /* Chữ thường */
+        }
+
+        /* 2. STYLE CHO GIÁ THỰC TẾ (TO, Đậm, Nổi bật) */
+        .current-price {
+            color: #2f5d50;       /* Màu ĐỎ nổi bật (hoặc dùng màu chủ đạo của bạn) */
+            font-size: 1.3rem;    /* Cỡ chữ RẤT TO (gấp 1.6 lần chữ thường) */
+            font-weight: 600;     /* In đậm */
+            line-height: 1;
+        }
+
+        /* Style cho chữ "/đêm" */
+        .per-night {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: normal;
+        }
+
+        /* Style mặc định khi không có giảm giá */
+        .normal-price {
+            color: #333; /* Màu đen thông thường */
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <body class="index-page">
@@ -701,15 +739,10 @@
             try {
                 const response = await fetch(API_URL);
                 if (!response.ok) throw new Error('Lỗi kết nối API');
-
                 const allRooms = await response.json();
-
-                // Chỉ lấy 3 hoặc 4 phòng đầu tiên để hiển thị trang chủ
-                // Bạn có thể đổi số 3 thành 6 nếu muốn hiện nhiều hơn
+                // Lấy 3 phòng đầu tiên
                 const featuredRooms = allRooms.slice(0, 3);
-
                 renderRooms(featuredRooms);
-
             } catch (error) {
                 console.error('Error:', error);
                 container.innerHTML = '<div class="alert alert-danger">Không thể tải danh sách phòng.</div>';
@@ -722,36 +755,60 @@
                 container.innerHTML = '<div class="alert alert-info">Chưa có phòng nào được cập nhật.</div>';
                 return;
             }
-
-            // Xóa loading
-            container.innerHTML = '';
+            container.innerHTML = ''; // Xóa loading
 
             rooms.forEach((room, index) => {
-                // Xử lý ảnh: Nếu API trả về tên ảnh, ghép với đường dẫn. Nếu không, dùng ảnh mặc định.
-                let imageUrl = 'assets/img/hotel/room-1.webp'; // Ảnh mặc định
-                if (room.imageUrl) {
-                    imageUrl = imageBasePath + room.imageUrl;
-                } else if (room.galleryImages) {
-                    // Lấy ảnh đầu tiên trong gallery nếu không có ảnh đại diện
-                    imageUrl = imageBasePath + room.galleryImages.split(',')[0].trim();
+                // Xử lý ảnh
+                let imageUrl = 'assets/img/hotel/room-1.webp';
+                if (room.imageUrl) imageUrl = imageBasePath + room.imageUrl;
+                else if (room.galleryImages) imageUrl = imageBasePath + room.galleryImages.split(',')[0].trim();
+
+                // --- XỬ LÝ HIỂN THỊ GIÁ (GIAO DIỆN MỚI) ---
+                // Ưu tiên dùng giá hiện tại, fallback về basePrice
+                const finalPrice = room.currentPrice !== undefined ? room.currentPrice : (room.basePrice || 0);
+                const basePrice = room.basePrice || 0;
+
+                let priceHtml = '';
+
+                // LOGIC: Nếu có giá hiện tại VÀ giá gốc, VÀ chúng khác nhau -> Hiển thị kiểu giảm giá
+                if (room.currentPrice !== undefined && basePrice > 0 && room.currentPrice < basePrice) {
+                    // Sử dụng cấu trúc CSS tùy chỉnh đã tạo
+                    priceHtml = `
+                        <div class="price-container mb-3">
+                            Giá từ <span class="original-price">${basePrice.toLocaleString()} VNĐ</span>
+                            <div class="d-flex align-items-baseline">
+                                <span class="current-price"> ${finalPrice.toLocaleString()} VNĐ</span>
+                                <span class="per-night ms-1">/đêm</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Hiển thị giá bình thường (không có gạch ngang)
+                    priceHtml = `
+                        <div class="price-container mb-3">
+                            <div class="d-flex align-items-baseline">
+                                <span class="normal-price">Giá từ ${finalPrice.toLocaleString()} VNĐ</span>
+                                <span class="per-night ms-1">/đêm</span>
+                            </div>
+                        </div>
+                    `;
                 }
+                // ------------------------------------
 
-                // Xử lý giá tiền
-                const price = room.basePrice ? room.basePrice.toLocaleString() : 0;
-
-                // Tạo HTML cho từng thẻ phòng (Sử dụng style "minimal-room-card" có sẵn trong CSS của bạn)
+                // Tạo HTML cho thẻ phòng
                 const html = `
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="${100 + (index * 100)}">
-                        <div class="minimal-room-card h-100"> <div class="room-image">
+                        <div class="minimal-room-card h-100">
+                            <div class="room-image">
                                 <img src="${imageUrl}" alt="${room.name}" class="img-fluid" style="height: 250px; object-fit: cover; width: 100%;" onerror="this.src='assets/img/hotel/room-1.webp'">
                                 <div class="hover-overlay">
-                                    <a href="room-details.html?id=${room.id}" class="view-room">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
+                                    <a href="room-details.html?id=${room.id}" class="view-room"><i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
-                            <div class="room-summary p-4"> <h5 class="mb-2"><a href="room-details.html?id=${room.id}" class="text-dark text-decoration-none">${room.name}</a></h5>
-                                <div class="price-tag  fw-bold mb-3">${price}₫<span>/đêm</span></div>
+                            <div class="room-summary p-4">
+                                <h5 class="mb-2"><a href="room-details.html?id=${room.id}" class="text-dark text-decoration-none">${room.name}</a></h5>
+
+                                ${priceHtml}
 
                                 <div class="basic-amenities d-flex gap-3 text-muted">
                                     <i class="bi bi-wifi" title="Wifi miễn phí"></i>
@@ -763,12 +820,10 @@
                         </div>
                     </div>
                 `;
-
                 container.insertAdjacentHTML('beforeend', html);
             });
         }
 
-        // Chạy hàm
         loadFeaturedRooms();
     });
 </script>

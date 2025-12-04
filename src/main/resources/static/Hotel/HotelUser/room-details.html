@@ -345,7 +345,7 @@
             document.getElementById('room-area').textContent = `${rt.area || 0} m²`;
 
             // Giá (basePrice)
-            const price = rt.basePrice || 0;
+            const price = rt.currentPrice || 0;
             document.getElementById('room-price').textContent = `${price.toLocaleString()} VNĐ`;
             document.getElementById('cta-price').textContent = `${price.toLocaleString()} VNĐ`;
 

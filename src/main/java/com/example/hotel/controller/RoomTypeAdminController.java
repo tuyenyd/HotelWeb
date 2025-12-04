@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@PreAuthorize("hasRole('MANAGER')")
+@PreAuthorize("hasRole('STAFF')")
 @RequestMapping("/api/admin/room-types")
 public class RoomTypeAdminController {
 

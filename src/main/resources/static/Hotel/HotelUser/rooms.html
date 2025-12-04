@@ -260,7 +260,13 @@
             const defaultImage = imageBasePath + 'room-1.webp';
 
             roomTypes.forEach(rt => {
-                const price = rt.basePrice || 0;
+                const price = rt.currentPrice !== undefined ? rt.currentPrice : (rt.basePrice || 0);
+                // (Tùy chọn) Tạo hiệu ứng hiển thị nếu giá hôm nay khác giá gốc
+                let priceHtml = `<span class="price-amount">${price.toLocaleString()} VNĐ</span>`;
+                if (rt.currentPrice && rt.basePrice && rt.currentPrice !== rt.basePrice) {
+                    // Ví dụ: Hiển thị giá gốc bị gạch ngang nhỏ bên cạnh
+                     priceHtml = `<small class="text-muted text-decoration-line-through me-2" style="font-size: 1rem">${rt.basePrice.toLocaleString()} VNĐ</small>` + priceHtml;
+                }
                 const capacity = rt.capacity || 0;
                 const area = rt.area || 0;
 
@@ -304,11 +310,13 @@
 
                             <div class="room-footer">
                                 <div class="room-price">
-                                    <span class="price-from">Giá từ</span>
-                                    <span class="price-amount">${price.toLocaleString()}₫</span>
-                                    <span class="price-period">/ đêm</span>
+                                   <span class="price-from">Giá từ</span> ${priceHtml} <span class="price-period">/ đêm</span>
                                 </div>
-                                <a href="${detailLink}" class="btn-room-details">Xem chi tiết</a>
+
+                            </div>
+                            <div class="room-footer">
+
+                            <a href="${detailLink}" class="btn-room-details">Xem chi tiết</a>
                             </div>
                         </div>
                     </div>

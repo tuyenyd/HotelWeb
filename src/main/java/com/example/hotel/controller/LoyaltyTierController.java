@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('MANAGER')")
+@PreAuthorize("hasRole('STAFF')")
 @RequestMapping("/api/admin/loyalty-tiers")
 @RequiredArgsConstructor
 public class LoyaltyTierController {

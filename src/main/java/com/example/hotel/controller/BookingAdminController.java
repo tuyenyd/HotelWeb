@@ -4,6 +4,7 @@ import com.example.hotel.dto.BookingDto;
 import com.example.hotel.dto.PaymentDto;
 import com.example.hotel.service.BookingService;
 import com.example.hotel.service.PaymentService;
+import com.example.hotel.service.PriceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ public class BookingAdminController {
 
     private final BookingService bookingService;
     private final PaymentService paymentService;
+    private final PriceService priceService;
 
     @GetMapping
     public ResponseEntity<Page<BookingDto>> getAllBookings(
@@ -98,5 +101,16 @@ public class BookingAdminController {
     @GetMapping("/{id}/payments")
     public ResponseEntity<List<PaymentDto>> getBookingPayments(@PathVariable Long id) {
         return ResponseEntity.ok(paymentService.getPaymentsForBooking(id));
+    }
+    @GetMapping("/calculate-price")
+    public ResponseEntity<BigDecimal> calculateBookingPrice(
+            @RequestParam Long roomId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut) {
+
+        // Gọi service để thực hiện logic tính toán
+        BigDecimal totalPrice = priceService.calculateTotalBookingPriceById(roomId, checkIn, checkOut);
+
+        return ResponseEntity.ok(totalPrice);
     }
 }
