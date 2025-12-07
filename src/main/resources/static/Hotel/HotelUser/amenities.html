@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -9,32 +8,56 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
 
-    <!-- Favicons -->
     <link href="assets/img/favicon.png" rel="icon">
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+            rel="stylesheet">
 
-    <!-- Vendor CSS Files -->
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="assets/vendor/aos/aos.css" rel="stylesheet">
     <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
     <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-    <!-- Main CSS File -->
     <link href="assets/css/main.css" rel="stylesheet">
 
-    <!-- =======================================================
-    * Tên mẫu: Grandoria
-    * URL mẫu: https://bootstrapmade.com/grandoria-bootstrap-hotel-template/
-    * Cập nhật: 29/07/2025 với Bootstrap v5.3.7
-    * Tác giả: BootstrapMade.com
-    * Giấy phép: https://bootstrapmade.com/license/
-    ======================================================== -->
+    <style>
+        /* CSS cho các item tải động/tĩnh */
+        .service-item {
+            text-align: center;
+            padding: 20px 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            transition: all 0.3s;
+            min-height: 180px;
+        }
+
+        .service-item:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .service-icon {
+            font-size: 2rem;
+            color: #ff9900;
+            /* Màu nhấn */
+            margin-bottom: 10px;
+        }
+
+        .service-item h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .service-item p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
 </head>
 
 <body class="amenities-page">
@@ -56,7 +79,8 @@
                     <li><a href="rooms.html">Phòng</a></li>
                     <li><a href="amenities.html">Tiện ích</a></li>
                     <li><a href="location.html">Vị trí</a></li>
-                    <li class="dropdown"><a href="#"><span>Trang</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                    <li class="dropdown"><a href="#"><span>Trang</span> <i
+                            class="bi bi-chevron-down toggle-dropdown"></i></a>
                         <ul>
                             <li><a href="room-details.html">Chi tiết phòng</a></li>
                             <li><a href="restaurant.html">Nhà hàng</a></li>
@@ -79,7 +103,9 @@
                         <ul>
                             <li><a href="user-profile.html">Hồ sơ của tôi</a></li>
                             <li><a href="user-bookings.html">Lịch sử đặt phòng</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a href="#" id="userLogoutButton">Đăng xuất</a></li>
                         </ul>
                     </li>
@@ -99,7 +125,6 @@
 
 <main class="main">
 
-    <!-- Tiêu đề trang -->
     <div class="page-title light-background">
         <div class="container d-lg-flex justify-content-between align-items-center">
             <h1 class="mb-2 mb-lg-0">Tiện ích</h1>
@@ -110,161 +135,61 @@
                 </ol>
             </nav>
         </div>
-    </div><!-- Kết thúc Tiêu đề trang -->
-
-    <!-- Phần Tiện ích -->
-    <section id="amenities" class="amenities section">
+    </div>
+    <section id="amenities-activity-cards" class="amenities-cards section">
 
         <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-            <div class="row gy-4">
-
-                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="amenity-card">
-                        <div class="amenity-image">
-                            <img src="assets/img/hotel/amenities-1.webp" alt="Hồ bơi trên mái" class="img-fluid">
-                        </div>
-                        <div class="amenity-content">
-                            <h3>Hồ bơi Vô cực &amp; Sân thượng</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
-                            <ul class="amenity-features">
-                                <li><i class="bi bi-clock"></i> Mở cửa từ 6h sáng - 10h tối</li>
-                                <li><i class="bi bi-droplet"></i> Hồ bơi được sưởi ấm quanh năm</li>
-                                <li><i class="bi bi-cup-hot"></i> Dịch vụ quầy bar bên hồ bơi</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div><!-- Kết thúc Thẻ Tiện ích -->
-
-                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="amenity-card">
-                        <div class="amenity-image">
-                            <img src="assets/img/hotel/amenities-2.webp" alt="Spa & Sức khỏe" class="img-fluid">
-                        </div>
-                        <div class="amenity-content">
-                            <h3>Spa &amp; Sức khỏe Sang trọng</h3>
-                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.</p>
-                            <ul class="amenity-features">
-                                <li><i class="bi bi-calendar2-check"></i> Đặt liệu pháp trực tuyến</li>
-                                <li><i class="bi bi-heart"></i> Phòng massage cho cặp đôi</li>
-                                <li><i class="bi bi-flower1"></i> Sản phẩm spa hữu cơ</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div><!-- Kết thúc Thẻ Tiện ích -->
-
-                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
-                    <div class="amenity-card">
-                        <div class="amenity-image">
-                            <img src="assets/img/hotel/dining-3.webp" alt="Nhà hàng Đặc trưng" class="img-fluid">
-                        </div>
-                        <div class="amenity-content">
-                            <h3>Nhà hàng Đặc trưng</h3>
-                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.</p>
-                            <ul class="amenity-features">
-                                <li><i class="bi bi-award"></i> Đầu bếp đạt sao Michelin</li>
-                                <li><i class="bi bi-wine"></i> Hầm rượu từng đoạt giải thưởng</li>
-                                <li><i class="bi bi-moon-stars"></i> Mở cửa từ thứ Ba đến Chủ Nhật</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div><!-- Kết thúc Thẻ Tiện ích -->
-
-                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="500">
-                    <div class="amenity-card">
-                        <div class="amenity-image">
-                            <img src="assets/img/hotel/amenities-4.webp" alt="Trung tâm Thể dục" class="img-fluid">
-                        </div>
-                        <div class="amenity-content">
-                            <h3>Trung tâm Thể dục 24/7</h3>
-                            <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi.</p>
-                            <ul class="amenity-features">
-                                <li><i class="bi bi-lightning"></i> Thiết bị hiện đại</li>
-                                <li><i class="bi bi-person-check"></i> Huấn luyện viên cá nhân sẵn có</li>
-                                <li><i class="bi bi-shield-check"></i> Khăn tắm miễn phí</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div><!-- Kết thúc Thẻ Tiện ích -->
+            <div class="container section-title" data-aos="fade-up">
+                <span class="description-title">Tiện ích</span>
+                <h2>Tiện ích</h2>
 
             </div>
 
-            <div class="row mt-5">
-                <div class="col-12" data-aos="fade-up" data-aos-delay="600">
-                    <div class="amenities-grid">
-                        <h3 class="text-center mb-4">Dịch vụ Khách sạn Bổ sung</h3>
-                        <div class="row g-4">
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="service-item">
-                                    <div class="service-icon">
-                                        <i class="bi bi-wifi"></i>
-                                    </div>
-                                    <h4>Wi-Fi Miễn phí</h4>
-                                    <p>Internet tốc độ cao trên toàn khu vực</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="service-item">
-                                    <div class="service-icon">
-                                        <i class="bi bi-car-front"></i>
-                                    </div>
-                                    <h4>Đỗ xe Có Nhân viên</h4>
-                                    <p>Dịch vụ đỗ xe miễn phí cho tất cả khách</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="service-item">
-                                    <div class="service-icon">
-                                        <i class="bi bi-airplane"></i>
-                                    </div>
-                                    <h4>Xe đưa đón Sân bay</h4>
-                                    <p>Chuyến đưa đón theo lịch trình đến các sân bay lớn</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="service-item">
-                                    <div class="service-icon">
-                                        <i class="bi bi-headset"></i>
-                                    </div>
-                                    <h4>Lễ tân</h4>
-                                    <p>Hỗ trợ 24/7 cho việc đặt chỗ và tour du lịch</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="service-item">
-                                    <div class="service-icon">
-                                        <i class="bi bi-bell"></i>
-                                    </div>
-                                    <h4>Dịch vụ Phòng</h4>
-                                    <p>Ẩm thực cao cấp được giao đến phòng của bạn</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="service-item">
-                                    <div class="service-icon">
-                                        <i class="bi bi-shield-check"></i>
-                                    </div>
-                                    <h4>Két an toàn</h4>
-                                    <p>Lưu trữ an toàn cho các vật phẩm giá trị của bạn</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="service-item">
-                                    <div class="service-icon">
-                                        <i class="bi bi-translate"></i>
-                                    </div>
-                                    <h4>Nhân viên Đa ngôn ngữ</h4>
-                                    <p>Dịch vụ bằng tiếng Anh, Tây Ban Nha, Pháp và nhiều ngôn ngữ khác</p>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="service-item">
-                                    <div class="service-icon">
-                                        <i class="bi bi-heart-pulse"></i>
-                                    </div>
-                                    <h4>Thân thiện với Thú cưng</h4>
-                                    <p>Tiện ích chào đón cho những người bạn bốn chân</p>
-                                </div>
+            <div class="row g-5" id="dynamic-amenities-container">
+                <div id="loading-amenities" class="col-12 text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Đang tải...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="call-to-action" class="call-to-action section light-background">
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
+                    <div class="content">
+                        <h2>Trải nghiệm sang trọng chưa từng có</h2>
+                        <p>Đắm mình trong sự thoải mái và tinh tế chưa từng có tại khách sạn cao cấp của chúng tôi.
+                            Từ các phòng được trang bị tinh tế đến tiện ích đẳng cấp thế giới, mọi chi tiết đều được
+                            thiết kế để vượt xa mong đợi của bạn. Đặt kỳ nghỉ đặc biệt của bạn ngay hôm nay và tạo
+                            nên những kỷ niệm khó quên.</p>
+                        <ul class="features-list">
+                            <li><i class="bi bi-check-circle"></i> Bữa sáng và Wi-Fi miễn phí</li>
+                            <li><i class="bi bi-check-circle"></i> Dịch vụ lễ tân và phòng 24/7</li>
+                            <li><i class="bi bi-check-circle"></i> Spa và trung tâm thể dục hiện đại</li>
+                            <li><i class="bi bi-check-circle"></i> Vị trí đắc địa với tầm nhìn thành phố tuyệt đẹp
+                            </li>
+                        </ul>
+                        <div class="cta-buttons">
+                            <a href="#" class="btn-primary">Đặt kỳ nghỉ của bạn</a>
+                            <a href="#" class="btn-secondary">Xem phòng</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
+                    <div class="image-wrapper">
+                        <img src="assets/img/hotel/showcase-9.webp" alt="Trải nghiệm khách sạn sang trọng"
+                             class="img-fluid">
+                        <div class="overlay-content">
+                            <div class="special-offer">
+                                <span class="label">Ưu đãi đặc biệt</span>
+                                <span class="discount">Tiết kiệm 30%</span>
                             </div>
                         </div>
                     </div>
@@ -273,44 +198,17 @@
 
         </div>
 
-    </section><!-- /Phần Tiện ích -->
-
+    </section>
 </main>
 
 <footer id="footer" class="footer position-relative dark-background">
-
-
-    <div class="copyright text-center">
-        <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
-
-            <div class="d-flex flex-column align-items-center align-items-lg-start">
-                <div>
-                    © Bản quyền <strong><span>MyWebsite</span></strong>. Tất cả quyền được bảo lưu
-                </div>
-                <div class="credits">
-                    Thiết kế bởi Grandoria<a href="https://bootstrapmade.com/">BootstrapMade</a>
-                </div>
-            </div>
-
-            <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
-                <a href=""><i class="bi bi-twitter-x"></i></a>
-                <a href=""><i class="bi bi-facebook"></i></a>
-                <a href=""><i class="bi bi-instagram"></i></a>
-                <a href=""><i class="bi bi-linkedin"></i></a>
-            </div>
-
-        </div>
-    </div>
-
 </footer>
 
-<!-- Nút cuộn lên trên -->
-<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
 
-<!-- Tải trước -->
 <div id="preloader"></div>
 
-<!-- Vendor JS Files -->
 <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="assets/vendor/php-email-form/validate.js"></script>
 <script src="assets/vendor/aos/aos.js"></script>
@@ -320,8 +218,98 @@
 <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
 <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
-<!-- Main JS File -->
 <script src="assets/js/main.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const API_URL = '/api/public/amenities';
+        const staticDefaults = [
+            'Wi-Fi Miễn phí', 'Đỗ xe Có Nhân viên', 'Xe đưa đón Sân bay', 'Dịch vụ Phòng 24/7',
+            'Mini Bar', 'Lễ tân Hỗ trợ'
+        ].map(name => name.toLowerCase().trim());
+
+        // Hàm helper để loại bỏ Loading Indicator
+        function removeLoadingIndicator(container, loadingElement) {
+            if (loadingElement && container.contains(loadingElement)) {
+                loadingElement.remove();
+            }
+        }
+
+        async function fetchDynamicAmenities() {
+            const container = document.getElementById('dynamic-amenities-container');
+            const loadingIndicator = document.getElementById('loading-amenities');
+
+            if (!container) {
+                console.error("Lỗi: Không tìm thấy phần tử 'dynamic-amenities-container'.");
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL + '?page=0&size=100');
+
+                if (!response.ok) {
+                    throw new Error(`Lỗi tải dữ liệu: ${response.statusText}`);
+                }
+
+                const responseData = await response.json();
+
+
+                const amenities = responseData.content || [];
+
+                // Loại bỏ trạng thái tải
+                removeLoadingIndicator(container, loadingIndicator);
+
+                const dynamicAmenities = amenities.filter(a => {
+
+                    const name = (a.name || '').toLowerCase().trim();
+                    return a.name && !staticDefaults.includes(name);
+                });
+
+                if (dynamicAmenities.length === 0) {
+                    container.innerHTML += '<div class="col-12 text-center text-muted"><p>Không có dịch vụ bổ sung nào khác.</p></div>';
+                    return;
+                }
+
+                dynamicAmenities.forEach(amenity => {
+                    const col = document.createElement('div');
+                    //class nhỏ hơn một chút cho các tiện ích phụ (col-lg-3)
+                    col.className = 'col-lg-3 col-md-4 col-sm-6';
+
+                    col.innerHTML = `
+
+                    <div class="facility-card" class="service-item" data-aos="fade-up">
+            <div class="facility-image">
+                <div class="facility-overlay" class="service-icon">
+                    <i class="bi ${amenity.iconClass || 'bi-stars'}"></i>
+                </div>
+            </div>
+            <div class="facility-info">
+                <h4>${amenity.name}</h4>
+                <p>${amenity.description}</p>
+                <div class="facility-features">
+                    <span><i class="bi bi-check-circle"></i></span>
+                    <span> ${amenity.type}</span>
+                </div>
+            </div>
+        </div>
+                `;
+                    container.appendChild(col);
+                });
+
+            } catch (error) {
+                removeLoadingIndicator(container, loadingIndicator);
+                container.innerHTML += `<div class="col-12 text-center text-danger">
+                <i class="bi bi-exclamation-octagon"></i>
+                <p class="mt-2">Lỗi tải dữ liệu. Vui lòng thử lại sau.</p>
+            </div>`;
+                console.error("Lỗi khi tải tiện ích:", error);
+            }
+        }
+
+        fetchDynamicAmenities();
+    });
+</script>
 
 </body>
 
