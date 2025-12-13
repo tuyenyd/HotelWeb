@@ -20,6 +20,7 @@ public class CustomerResponseDTO {
     private Long loyaltyTierId;
     private String loyaltyTierName;
     private String loyaltyBenefitsJson;
+    private BigDecimal loyaltyDiscountPercent;
     private Integer bookings; // Số lần đặt phòng (CHECKED_OUT)
     private Long nights;      // Tổng số đêm đã ở
     private BigDecimal spend; // Tổng số tiền đã chi tiêu

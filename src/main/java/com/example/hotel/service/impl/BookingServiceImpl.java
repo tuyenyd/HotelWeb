@@ -295,6 +295,61 @@ public class BookingServiceImpl implements BookingService {
         return deletedBookings.map(this::convertToDto);
     }
 
+    @Override
+    @Transactional
+    public void processRealtimePayment(String bookingCode, BigDecimal amount, String txnRef) {
+        log.info("Bắt đầu xử lý thanh toán realtime cho mã: {}, số tiền: {}", bookingCode, amount);
+
+        // 1. Tìm booking bằng mã code
+        // (Chúng ta cần viết thêm hàm này trong Repository, xem bước tiếp theo)
+        Booking booking = bookingRepository.findByBookingConfirmationCode(bookingCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy booking với mã: " + bookingCode));
+
+        // 2. Kiểm tra trạng thái booking
+        if (booking.getStatus() == BookingStatus.CANCELLED || booking.getStatus() == BookingStatus.CHECKED_OUT) {
+            log.warn("Booking {} đang ở trạng thái {} không thể nhận thêm thanh toán.", bookingCode, booking.getStatus());
+            // Có thể cần cơ chế hoàn tiền thủ công ở đây
+            return;
+        }
+
+        // 3. Tạo và lưu giao dịch thanh toán (Payment entity)
+        Payment payment = new Payment();
+        payment.setBooking(booking);
+        payment.setAmount(amount);
+        payment.setMethod("ONLINE_GATEWAY"); // Đánh dấu nguồn
+        payment.setPaymentDate(LocalDateTime.now());
+        payment.setNotes("Thanh toán tự động qua Webhook. Mã GD NH: " + txnRef);
+        paymentRepository.save(payment);
+
+        // 4. Cập nhật số tiền đã trả và trạng thái Booking
+        BigDecimal currentPaid = booking.getAmountPaid();
+        BigDecimal newTotalPaid = currentPaid.add(amount);
+        booking.setAmountPaid(newTotalPaid);
+
+        log.info("Booking {}: Đã trả trước đó: {}, Mới trả: {}, Tổng đã trả: {}",
+                bookingCode, currentPaid, amount, newTotalPaid);
+
+        // So sánh tổng đã trả với tổng giá trị đơn hàng
+        // Sử dụng compareTo: kết quả >= 0 nghĩa là newTotalPaid >= TotalPrice
+        if (newTotalPaid.compareTo(booking.getTotalPrice()) >= 0) {
+            // Nếu đã trả đủ hoặc thừa -> Cập nhật trạng thái thành CONFIRMED (Đã xác nhận)
+            // Lưu ý: Nếu trước đó là PENDING thì chuyển sang CONFIRMED.
+            // Nếu đang CHECKED_IN thì giữ nguyên.
+            if (booking.getStatus() == BookingStatus.PENDING) {
+                booking.setStatus(BookingStatus.CONFIRMED);
+                log.info("Booking {} đã thanh toán đủ. Trạng thái chuyển sang CONFIRMED.", bookingCode);
+
+                // (Tùy chọn) Gửi email xác nhận thanh toán thành công cho khách
+            } else {
+                log.info("Booking {} đã thanh toán đủ. Trạng thái hiện tại là {}, không thay đổi.", bookingCode, booking.getStatus());
+            }
+        } else {
+            log.info("Booking {} chưa thanh toán đủ. Vẫn giữ trạng thái {}.", bookingCode, booking.getStatus());
+        }
+
+        bookingRepository.save(booking);
+        log.info("Hoàn tất xử lý thanh toán realtime cho booking {}", bookingCode);
+    }
     private BookingHistoryDto mapBookingToHistoryDto(Booking booking) {
         BookingHistoryDto dto = new BookingHistoryDto();
         dto.setBookingCode(booking.getBookingConfirmationCode());
@@ -359,7 +414,10 @@ public class BookingServiceImpl implements BookingService {
         dto.setSoNguoiLon(booking.getSoNguoiLon());
         dto.setSoTreEm(booking.getSoTreEm());
         dto.setAmountPaid(booking.getAmountPaid());
-
+        boolean isPaidEnough = booking.getAmountPaid() != null &&
+                booking.getTotalPrice() != null &&
+                booking.getAmountPaid().compareTo(booking.getTotalPrice()) >= 0;
+        dto.setIsFullyPaid(isPaidEnough);
         return dto;
     }
 

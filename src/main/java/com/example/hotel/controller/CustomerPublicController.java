@@ -172,4 +172,27 @@ public class CustomerPublicController {
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
     }
+    @PostMapping("/confirm-manual-payment")
+    public ResponseEntity<?> confirmManualPayment(
+            Authentication authentication,
+            @RequestBody ManualPaymentConfirmDTO request) {
+
+        log.info("Khách hàng {} xác nhận đã chuyển khoản thủ công cho Booking ID: {}, Số tiền: {}",
+                authentication.getName(), request.getBookingId(), request.getAmount());
+
+        try {
+            // Tạo một mã giao dịch giả để ghi nhận (vì không có mã từ cổng thanh toán)
+            String fakeTxnRef = "QR_MANUAL_" + System.currentTimeMillis();
+
+            // Gọi lại hàm xử lý thanh toán thành công đã có sẵn của bạn
+            // Hàm này sẽ cộng tiền vào booking và cập nhật trạng thái
+            bookingService.processPaymentSuccess(request.getBookingId(), request.getAmount(), fakeTxnRef);
+
+            return ResponseEntity.ok(new MessageResponse("Đã ghi nhận thông báo thanh toán. Nhân viên sẽ sớm kiểm tra và xác nhận."));
+        } catch (Exception e) {
+            log.error("Lỗi khi ghi nhận thanh toán thủ công: {}", e.getMessage());
+            // Trả về lỗi để frontend hiển thị
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+    }
 }

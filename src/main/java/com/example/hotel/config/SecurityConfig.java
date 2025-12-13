@@ -70,8 +70,7 @@ public class SecurityConfig {
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "ROLE_MANAGER > ROLE_LEADER \n " +
-                "ROLE_LEADER > ROLE_STAFF";
+        String hierarchy = "ROLE_MANAGER > ROLE_STAFF";
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
     }
@@ -91,6 +90,7 @@ public class SecurityConfig {
                         // --- API CÔNG KHAI (Không cần đăng nhập) ---
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/api/webhook/**").permitAll()
 
                         // --- TÀI NGUYÊN TĨNH (Ảnh, CSS, JS...) ---
                         .requestMatchers("/avatars/**", "/assets/**", "/css/**", "/js/**").permitAll()

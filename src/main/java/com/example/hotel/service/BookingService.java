@@ -52,5 +52,7 @@ public interface BookingService {
     void processPaymentSuccess(Long bookingId, BigDecimal amount, String txnRef);
 
     void cancelBookingByCustomer(String email, Long bookingId);
+
+    void processRealtimePayment(String bookingCode, BigDecimal amount, String txnRef);
 }
 

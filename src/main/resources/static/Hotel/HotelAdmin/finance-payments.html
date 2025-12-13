@@ -179,13 +179,13 @@
                     <span>Đăng xuất</span>
                 </a>
             </li>
-        </ul></li></ul>
+</ul></li></ul>
 </nav></header><aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="index.html">
+            <a class="nav-link " href="index.html">
                 <i class="bi bi-house-door"></i>
                 <span>Bảng Điều Khiển</span>
             </a>
@@ -258,35 +258,31 @@
             </li>
         </ul>
     </li><li class="nav-item">
+            <a class="nav-link collapsed"  href="quanlytienich.html">
+                <i class="bi bi-gift"></i><span>Quản lý Tiện ích</span>
+            </a>
+        </li><li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
+            <i class="bi bi-cash-coin"></i><span>Quản lý tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="finance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+            <li>
+                <a href="finance-invoices.html">
+                    <i class="bi bi-circle"></i><span>Hóa đơn</span>
+                </a>
+            </li>
+            <li>
+                <a href="finance-payments.html" class="active">
+                    <i class="bi bi-circle"></i><span>Thanh toán</span>
+                </a>
+            </li>
+        </ul>
+    </li><li class="nav-item">
         <a class="nav-link collapsed" href="baocao&thongke.html">
             <i class="bi bi-bar-chart"></i>
             <span>Báo cáo & Thống kê</span>
         </a>
     </li>
-
-        <li class="nav-item">
-            <a class="nav-link " data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-cash-coin"></i><span>Tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="finance-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="finance-invoices.html">
-                        <i class="bi bi-circle"></i><span>Hóa đơn</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="finance-payments.html" class="active">
-                        <i class="bi bi-circle"></i><span>Thanh toán</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="finance-revenue.html">
-                        <i class="bi bi-circle"></i><span>Doanh thu</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
         <li class="nav-heading">Trang</li>
 
         <li class="nav-item">
@@ -295,11 +291,6 @@
                 <span>Hồ sơ</span>
             </a>
         </li><li class="nav-item">
-        <a class="nav-link collapsed" href="pages-contact.html">
-            <i class="bi bi-envelope"></i>
-            <span>Liên hệ</span>
-        </a>
-    </li><li class="nav-item">
         <a class="nav-link collapsed" href="users.html">
             <i class="bi bi-person-gear"></i>
             <span>Nhân viên</span>
@@ -421,7 +412,7 @@
                                         <option value="CASH">Tiền mặt</option>
                                         <option value="CREDIT_CARD_POS">Thẻ tín dụng (Quẹt máy POS)</option>
                                         <option value="BANK_TRANSFER">Chuyển khoản ngân hàng</option>
-                                        <option value="ONLINE_GATEWAY">Cổng thanh toán Online (VNPay,...)</option>
+                                        <option value="ONLINE_GATEWAY">Cổng thanh toán Online (Quét mã QR)</option>
                                         <option value="OTHER">Khác</option>
                                     </select>
                                 </div>
@@ -835,3 +826,4 @@
 </body>
 
 </html>
+

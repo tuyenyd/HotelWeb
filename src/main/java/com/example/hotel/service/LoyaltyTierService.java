@@ -39,6 +39,7 @@ public class LoyaltyTierService {
         tier.setPointsRequired(dto.getPointsRequired());
         tier.setDescription(dto.getDescription());
         tier.setBenefitsJson(dto.getBenefitsJson());
+        tier.setDiscountPercentage(dto.getDiscountPercentage());
 
         LoyaltyTier updatedTier = loyaltyTierRepository.save(tier);
         return convertToDto(updatedTier);
@@ -62,6 +63,7 @@ public class LoyaltyTierService {
         dto.setPointsRequired(tier.getPointsRequired());
         dto.setDescription(tier.getDescription());
         dto.setBenefitsJson(tier.getBenefitsJson());
+        dto.setDiscountPercentage(tier.getDiscountPercentage());
         return dto;
     }
 
@@ -72,6 +74,7 @@ public class LoyaltyTierService {
         tier.setPointsRequired(dto.getPointsRequired());
         tier.setDescription(dto.getDescription());
         tier.setBenefitsJson(dto.getBenefitsJson());
+        tier.setDiscountPercentage(dto.getDiscountPercentage());
         return tier;
     }
 }

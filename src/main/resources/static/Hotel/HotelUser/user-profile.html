@@ -285,6 +285,8 @@
         const passwordSpinner = document.getElementById('passwordSpinner');
         const loyaltyCardContainer = document.getElementById('loyalty-card-container');
 
+        // Sửa lại hàm loadProfile trong thẻ <script> của user-profile.html
+
         async function loadProfile() {
             try {
                 const response = await fetch(`${API_URL}/profile`, { headers });
@@ -292,6 +294,12 @@
                     throw new Error('Không thể tải thông tin hồ sơ.');
                 }
                 const customer = await response.json();
+
+                // === BỔ SUNG QUAN TRỌNG: Cập nhật ngay localStorage ===
+                // Lưu thông tin mới nhất (bao gồm hạng và % giảm giá) vào bộ nhớ trình duyệt
+                // để trang Đặt phòng có thể sử dụng.
+                localStorage.setItem('currentCustomer', JSON.stringify(customer));
+                // =====================================================
 
                 fillProfileForm(customer);
                 fillLoyaltyCard(customer);
@@ -301,7 +309,6 @@
                 loyaltyCardContainer.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
             }
         }
-
         function fillLoyaltyCard(customer) {
             const levelName = customer.loyaltyTierName || 'Bronze';
             let benefitsHtml = '<li class="text-muted">Không có quyền lợi đặc biệt.</li>';

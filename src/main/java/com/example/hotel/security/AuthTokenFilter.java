@@ -38,6 +38,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -52,49 +53,58 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
                 UserDetails userDetails = null;
 
+                // LOGIC MỚI: Xác định loại người dùng dựa trên URL hoặc thử cả hai
                 if (servletPath.startsWith("/api/admin") || servletPath.startsWith("/api/users")) {
-
-                    logger.info("--> AuthTokenFilter: Đang xử lý token cho ADMIN (path: {})", servletPath);
+                    // --- Xử lý cho ADMIN (giữ nguyên) ---
+                    logger.info("--> AuthTokenFilter: Đang xử lý token ADMIN (path: {})", servletPath);
                     try {
                         userDetails = userDetailsService.loadUserByUsername(username);
                     } catch (UsernameNotFoundException e) {
-                        logger.error("!!! Token ADMIN không hợp lệ. Không tìm thấy User (Admin): {}", username);
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token Admin không hợp lệ");
-                        return;
+                        logger.error("!!! Token ADMIN không hợp lệ. User không tồn tại: {}", username);
+                        // Tùy chọn: Có thể trả về lỗi 401 ngay lập tức nếu muốn chặn triệt để
+                        // response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token Admin không hợp lệ");
+                        // return;
+                    }
+                } else {
+                    // --- Xử lý cho CUSTOMER (cho TẤT CẢ các path còn lại, bao gồm /api/public/...) ---
+                    // Logic này giả định: Nếu không phải là Admin thì thử xem có phải là Customer không.
+                    // Điều này cho phép các API public nhận diện được khách hàng.
+
+                    logger.info("--> AuthTokenFilter: Đang xử lý token CUSTOMER cho path public/khác: {}", servletPath);
+                    // Tìm khách hàng trong DB
+                    Customer customer = customerRepository.findByEmail(username).orElse(null);
+
+                    if (customer != null) {
+                        // Nếu tìm thấy khách hàng -> Tạo userDetails
+                        userDetails = new User(
+                                customer.getEmail(),
+                                // Password có thể null nếu là khách vãng lai đăng ký nhanh, xử lý để tránh lỗi
+                                customer.getPassword() != null ? customer.getPassword() : "",
+                                new ArrayList<>() // Danh sách quyền (authorities) rỗng cho Customer
+                        );
+                    } else {
+                        // Nếu token hợp lệ về mặt kỹ thuật nhưng không tìm thấy khách hàng trong DB
+                        logger.warn("!!! Token hợp lệ nhưng không tìm thấy CUSTOMER với email: {}. Coi như khách vãng lai.", username);
                     }
                 }
-                else if (servletPath.startsWith("/api/public/customer")) {
-                    logger.info("--> AuthTokenFilter: Đang xử lý token cho CUSTOMER (path: {})", servletPath);
-                    Customer customer = customerRepository.findByEmail(username)
-                            .orElseThrow(() -> new UsernameNotFoundException("Token CUSTOMER không hợp lệ: " + username));
 
-                    userDetails = new User(
-                            customer.getEmail(),
-                            customer.getPassword() != null ? customer.getPassword() : "",
-                            new ArrayList<>()
-                    );
-                }
-                else {
-                    logger.warn("--> AuthTokenFilter: Bỏ qua (cho phép) đường dẫn public: {}", servletPath);
-                }
-
-                // Nếu userDetails được tạo (từ Admin hoặc Customer) -> Xác thực
+                // --- PHẦN CHUNG: NẾU XÁC ĐỊNH ĐƯỢC NGƯỜI DÙNG -> XÁC THỰC ---
                 if (userDetails != null) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    logger.info("--> Xác thực thành công cho '{}'. Đã cập nhật SecurityContext.", username);
+                    logger.info("--> Xác thực thành công cho '{}'. SecurityContext đã được cập nhật.", username);
                 }
             }
         } catch (Exception e) {
-            logger.error("!!! Không thể xác thực người dùng (AuthTokenFilter): {}", e.getMessage());
+            logger.error("!!! Lỗi không xác định trong AuthTokenFilter: {}", e.getMessage());
         }
 
+        // Luôn cho request đi tiếp (để các cấu hình .permitAll() hoặc .authenticated() trong SecurityConfig xử lý tiếp)
         filterChain.doFilter(request, response);
     }
-
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 

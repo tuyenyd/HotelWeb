@@ -16,13 +16,80 @@
     <link href="assets/css/main.css" rel="stylesheet">
 
     <style>
-        .payment-page { background-color: #f8f9fa; }
-        .payment-container { max-width: 600px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .payment-page { background-color: #f0f2f5; } /* Màu nền sáng hơn chút */
+        .payment-wrapper { padding: 40px 0; }
+
+        /* Container chính - Mặc định cho mobile */
+        .payment-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin: 0 auto;
+            max-width: 600px; /* Mobile giữ nguyên độ rộng này */
+        }
+
+        /* Style cho màn hình lớn (Desktop) */
+        @media (min-width: 992px) {
+            .payment-card {
+                max-width: 1000px; /* Mở rộng container trên desktop */
+                padding: 35px;
+            }
+            /* Đường kẻ dọc phân chia giữa 2 cột trên desktop */
+            .col-divider {
+                border-right: 1px solid #eee;
+                padding-right: 30px;
+            }
+        }
+
         .amount-input-group { position: relative; }
-        .amount-input-group .currency { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-weight: bold; color: #6c757d; }
-        .info-row { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #eee; }
+        .amount-input-group .currency { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-weight: bold; color: #6c757d; font-size: 1.1rem; }
+        .form-control-lg { font-size: 1.2rem; font-weight: 600; color: #2f5d50; }
+
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #eee; font-size: 0.95rem; }
         .info-row:last-of-type { border-bottom: none; }
-        .total-row { font-size: 1.2rem; font-weight: bold; color: #2f5d50; border-top: 2px solid #eee; padding-top: 15px; margin-top: 10px; }
+        .total-row { font-size: 1.1rem; font-weight: bold; color: #2f5d50; border-top: 2px solid #eee; padding-top: 15px; margin-top: 10px; }
+
+        /* Style khu vực QR */
+        #vietqr-container {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .qr-bank-info {
+            text-align: left; font-size: 0.9rem; background-color: #f8f9fa; padding: 15px; border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .qr-bank-info p { margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .qr-highlight { color: #2f5d50; font-weight: 700; font-size: 1rem; }
+        .copy-btn {
+            font-size: 0.75rem; padding: 4px 10px; margin-left: 10px; border-radius: 20px;
+            background-color: #e9ecef; border: none; cursor: pointer; color: #495057; transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .copy-btn:hover { background-color: #2f5d50; color: white; }
+
+        /* Placeholder khi chưa hiện QR */
+        #qr-placeholder {
+            height: 100%; min-height: 300px; display: flex; align-items: center; justify-content: center;
+            background-color: #f8f9fa; border-radius: 12px; border: 2px dashed #dee2e6; color: #adb5bd;
+            flex-direction: column;
+        }
+        #qr-placeholder i { font-size: 3rem; margin-bottom: 1rem; }
+
+        /* Style cho trạng thái chờ */
+        #payment-waiting-status {
+            background-color: #e7f1ff;
+            border-color: #b6d4fe;
+            color: #084298;
+            font-weight: 500;
+        }
     </style>
 </head>
 
@@ -79,66 +146,129 @@
     </div>
 </header>
 
-<main class="main">
+<main class="main payment-wrapper">
     <div class="container">
-        <div class="payment-container">
-            <h3 class="text-center mb-4">Xác nhận Thanh toán</h3>
+        <div class="payment-card">
+            <h3 class="text-center mb-4 fw-bold" style="color: #2f5d50;">Xác nhận Thanh toán</h3>
 
             <div id="loading-state" class="text-center py-5">
                 <div class="spinner-border text-primary" role="status"></div>
-                <p class="mt-2">Đang tải thông tin...</p>
-            </div>
-
-            <div id="payment-content" class="d-none">
-                <div class="mb-4">
-                    <div class="info-row">
-                        <span class="text-muted">Mã đặt phòng:</span>
-                        <span class="fw-bold" id="bookingCode">...</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="text-muted">Loại phòng:</span>
-                        <span id="roomInfo">...</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="text-muted">Tổng giá trị:</span>
-                        <span id="totalPrice">...</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="text-muted">Đã thanh toán:</span>
-                        <span class="text-success" id="amountPaid">...</span>
-                    </div>
-                    <div class="info-row total-row">
-                        <span>Còn nợ:</span>
-                        <span class="text-danger" id="remainingAmount">...</span>
-                    </div>
-                </div>
-
-                <form id="paymentForm">
-                    <div class="mb-4">
-                        <label for="inputAmount" class="form-label fw-bold">Nhập số tiền muốn thanh toán</label>
-                        <div class="amount-input-group">
-                            <input type="number" class="form-control form-control-lg" id="inputAmount" required min="10000">
-                            <span class="currency">VND</span>
-                        </div>
-                        <div class="form-text text-muted">
-                            Tối thiểu 10.000 VND. Bạn có thể thanh toán một phần hoặc toàn bộ.
-                        </div>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-lg" id="btnConfirmPay" style="background-color: #2f5d50;color: white">
-                            Thanh toán ngay
-                        </button>
-                        <a href="user-bookings.html" class="btn btn-outline-secondary">Hủy bỏ</a>
-                    </div>
-                </form>
+                <p class="mt-2 text-muted">Đang tải thông tin đơn hàng...</p>
             </div>
 
             <div id="error-state" class="alert alert-danger d-none"></div>
+
+            <div id="payment-content" class="d-none">
+                <div class="row g-4">
+
+                    <div class="col-lg-5 order-2 order-lg-1">
+                        <div id="qr-placeholder">
+                            <i class="bi bi-qr-code"></i>
+                            <p>Mã QR thanh toán sẽ hiển thị ở đây</p>
+                        </div>
+
+                        <div id="vietqr-container" class="d-none h-100 shadow-sm">
+                            <h5 class="mb-3 fw-bold" style="color: #2f5d50;">Quét mã để thanh toán</h5>
+                            <img id="vietqr-image" src="" alt="Đang tạo mã QR..." class="img-fluid mb-3" style="max-width: 320px;">
+
+                            <div class="qr-bank-info">
+                                <p>Ngân hàng: <span><strong id="qr-bank-name">...</strong></span></p>
+                                <p>Chủ tài khoản: <span class="text-uppercase"><strong id="qr-account-name">...</strong></span>
+                                    <button class="copy-btn" onclick="copyText('qr-account-name')"><i class="bi bi-clipboard"></i></button>
+                                </p>
+                                <p>
+                                    Số tài khoản: <span><strong id="qr-account-no" class="qr-highlight">...</strong></span>
+                                    <button class="copy-btn" onclick="copyText('qr-account-no')"><i class="bi bi-clipboard"></i></button>
+                                </p>
+                                <p>
+                                    Số tiền: <span><strong id="qr-amount" class="text-danger qr-highlight fs-5">...</strong></span>
+                                    <button class="copy-btn" onclick="copyText('qr-amount-raw')"><i class="bi bi-clipboard"></i></button>
+                                    <span id="qr-amount-raw" class="d-none"></span>
+                                </p>
+                                <div class="mt-2 pt-2 border-top">
+                                    <span class="d-block text-muted small mb-1">Nội dung chuyển khoản:Thanh toán cho đơn đặt phòng</span>
+                                    <div class="d-flex justify-content-between align-items-center bg-white p-2 rounded border">
+                                        <strong id="qr-content" class="text-start qr-highlight text-break me-2">...</strong>
+                                        <button class="copy-btn" onclick="copyText('qr-content')"><i class="bi bi-clipboard"></i> Copy</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="button" class="btn py-2 fw-bold d-none" id="btnFinishedTransfer" style="font-size: 1.1rem;background-color:#2f5d50;color: white">
+                                    <span id="qrConfirmSpinner" class="spinner-border spinner-border-sm d-none me-2" role="status" aria-hidden="true"></span>
+                                    <i class="bi bi-check-circle-fill me-2" id="qrConfirmIcon"></i> Tôi đã hoàn tất chuyển khoản
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="btnCancelQR">
+                                    <i class="bi bi-arrow-left me-1"></i> Chọn lại số tiền
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7 order-1 order-lg-2 col-divider">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0 text-secondary">Thông tin đơn đặt phòng</h5>
+                        </div>
+
+                        <div class="bg-light p-3 rounded mb-4">
+                            <div class="info-row">
+                                <span class="text-muted">Mã đặt phòng:</span>
+                                <span class="fw-bold " id="bookingCode">...</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="text-muted">Loại phòng:</span>
+                                <span class="fw-bold" id="roomInfo">...</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="text-muted">Tổng giá trị:</span>
+                                <span id="totalPrice">...</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="text-muted">Đã thanh toán:</span>
+                                <span class="text-success" id="amountPaid">...</span>
+                            </div>
+                            <div class="info-row total-row">
+                                <span>Còn nợ:</span>
+                                <span class="text-danger fs-4" id="remainingAmount">...</span>
+                            </div>
+                        </div>
+
+                        <form id="paymentForm">
+                            <div class="mb-4">
+                                <label for="inputAmount" class="form-label fw-bold">Nhập số tiền muốn thanh toán</label>
+                                <div class="amount-input-group">
+                                    <input type="number" class="form-control form-control-lg py-3" id="inputAmount" required min="10000" placeholder="VD: 500000">
+                                    <span class="currency">VND</span>
+                                </div>
+                                <div class="form-text text-muted mt-2">
+                                    <i class="bi bi-info-circle me-1"></i> Tối thiểu 10.000 VND. Bạn có thể thanh toán một phần hoặc toàn bộ số nợ.
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mb-3" id="formSubmitAction">
+                                <button type="submit" class="btn btn-lg py-3 fw-bold" id="btnConfirmPay" style="background-color: #2f5d50; color: white; transition: all 0.3s;">
+                                    <i class="bi bi-qr-code-scan me-2"></i> Tạo mã QR thanh toán
+                                </button>
+                            </div>
+                            <div class="text-center mt-3" id="initial-actions">
+                                <a href="user-bookings.html" class="text-decoration-none text-muted"><i class="bi bi-arrow-left me-1"></i> Quay lại danh sách</a>
+                            </div>
+                        </form>
+
+                        <div id="payment-waiting-status" class="alert alert-info mt-4 d-none d-flex align-items-center shadow-sm">
+                            <span class="spinner-border spinner-border-sm me-3" role="status" aria-hidden="true" style="width: 1.5rem; height: 1.5rem;"></span>
+                            <div>
+                                <strong>Hệ thống đang kiểm tra giao dịch.</strong><br>
+                                Vui lòng quét mã QR và đợi trong giây lát, không tắt trình duyệt...
+                            </div>
+                        </div>
+
+                    </div>
+                </div> </div>
         </div>
     </div>
 </main>
-
 <footer id="footer" class="footer position-relative dark-background">
     <div class="copyright text-center">
         <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
@@ -176,111 +306,270 @@
 <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <script>
+    // ==================================================================
+    // CẤU HÌNH THÔNG TIN NGÂN HÀNG NHẬN TIỀN CỦA BẠN TẠI ĐÂY
+    // ==================================================================
+    const BANK_CONFIG = {
+        BANK_ID: '970422',       // Ví dụ: 970436 (Vietcombank), 970415 (VietinBank), 970422 (MBBank)...
+        BANK_NAME: 'MB Bank', // Tên ngân hàng hiển thị
+        ACCOUNT_NO: '0379416244',// Số tài khoản nhận tiền
+        ACCOUNT_NAME: 'NGUYEN VAN TUYEN', // Tên chủ tài khoản (Viết hoa không dấu)
+        TEMPLATE: 'compact'     // Kiểu mẫu QR
+    };
+    // ==================================================================
+
+    // CẤU HÌNH POLLING (KIỂM TRA TỰ ĐỘNG)
+    let paymentCheckInterval;
+    const POLLING_INTERVAL_MS = 5000; // Kiểm tra mỗi 5 giây
+    const MAX_POLLING_TIME_MS = 15 * 60 * 1000; // Dừng sau 15 phút
+
+    // Biến toàn cục lưu trạng thái
+    let maxPayableAmount = 0;
+    let currentBookingCode = '';
+    let amountToPay = 0;
+    let initialAmountPaid = 0; // Số tiền đã trả lúc bắt đầu phiên giao dịch
+
+    // Hàm tiện ích copy text
+    window.copyText = function(elementId) {
+        const text = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            // Tạo hiệu ứng phản hồi nhỏ
+            const btn = document.querySelector(`button[onclick="copyText('${elementId}')"]`);
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-check"></i>';
+            btn.classList.add('btn-success');
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+                btn.classList.remove('btn-success');
+            }, 1500);
+        }).catch(err => console.error('Không thể sao chép', err));
+    }
+
     document.addEventListener('DOMContentLoaded', async function() {
         const token = localStorage.getItem('customerToken');
-        if (!token) {
-            window.location.href = 'pages-login.html';
-            return;
-        }
+        if (!token) { window.location.href = 'pages-login.html'; return; }
 
         const API_URL = 'http://localhost:8080/api/public/customer';
         const params = new URLSearchParams(window.location.search);
         const bookingId = params.get('bookingId');
 
-        if (!bookingId) {
-            showError("Không tìm thấy mã đặt phòng.");
-            return;
-        }
+        if (!bookingId) { showError("Không tìm thấy mã đặt phòng."); return; }
 
+        // Lấy các elements từ DOM
         const loadingState = document.getElementById('loading-state');
         const contentState = document.getElementById('payment-content');
         const errorState = document.getElementById('error-state');
-        const btnConfirmPay = document.getElementById('btnConfirmPay');
+        const paymentForm = document.getElementById('paymentForm');
+        const formSubmitAction = document.getElementById('formSubmitAction');
+        const initialActions = document.getElementById('initial-actions');
+        const paymentWaitingStatus = document.getElementById('payment-waiting-status');
 
-        let maxPayableAmount = 0;
+        const qrPlaceholder = document.getElementById('qr-placeholder');
+        const vietqrContainer = document.getElementById('vietqr-container');
+        const vietqrImage = document.getElementById('vietqr-image');
+        const inputAmount = document.getElementById('inputAmount');
+        const btnCancelQR = document.getElementById('btnCancelQR');
+        const btnFinishedTransfer = document.getElementById('btnFinishedTransfer');
+        const qrConfirmSpinner = document.getElementById('qrConfirmSpinner');
+        const qrConfirmIcon = document.getElementById('qrConfirmIcon');
 
-        // 1. Tải thông tin booking
+        // --- HÀM KIỂM TRA TRẠNG THÁI THANH TOÁN (POLLING THÔNG MINH) ---
+        async function checkPaymentStatus() {
+            try {
+                // Gọi API lấy chi tiết booking mới nhất
+                const response = await fetch(`${API_URL}/bookings/${bookingId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const bookingData = await response.json();
+                    const currentAmountPaid = bookingData.amountPaid || 0;
+                    const totalPrice = bookingData.totalPrice || 0;
+
+                    console.log(`[Polling] Ban đầu: ${initialAmountPaid}, Hiện tại: ${currentAmountPaid}, Trạng thái: ${bookingData.status}`);
+
+                    // TRƯỜNG HỢP 1: Đã thanh toán xong hoàn toàn
+                    // Ưu tiên 1: Backend báo đã trả hết (isFullyPaid === true)
+                    // Ưu tiên 2 (Bổ sung): Frontend tự tính thấy đã trả đủ (currentAmountPaid >= totalPrice)
+                    if (bookingData.isFullyPaid === true || currentAmountPaid >= totalPrice) {
+                        return 'FULL_PAID';
+                    }
+
+                    // TRƯỜNG HỢP 2: Phát hiện số tiền đã trả TĂNG LÊN (nhưng VẪN CHƯA ĐỦ)
+                    if (currentAmountPaid > initialAmountPaid) {
+                        // Cập nhật lại giao diện số tiền
+                        document.getElementById('amountPaid').textContent = currentAmountPaid.toLocaleString() + ' VND';
+                        const newRemaining = totalPrice - currentAmountPaid; // Sử dụng biến totalPrice mới lấy
+                        document.getElementById('remainingAmount').textContent = newRemaining.toLocaleString() + ' VND';
+
+                        // Tính số tiền vừa nhận được
+                        const receivedAmount = currentAmountPaid - initialAmountPaid;
+                        // Cập nhật lại mốc ban đầu cho lần poll tiếp theo (nếu có)
+                        initialAmountPaid = currentAmountPaid;
+
+                        return { status: 'PARTIAL_PAID', received: receivedAmount };
+                    }
+                }
+            } catch (error) {
+                console.error("Lỗi khi kiểm tra trạng thái thanh toán:", error);
+            }
+            return 'NOT_YET'; // Chưa có thay đổi gì đáng kể
+        }
+
+        // 1. Tải thông tin booking ban đầu
         try {
             const response = await fetch(`${API_URL}/bookings/${bookingId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-
             if (!response.ok) throw new Error('Không thể tải thông tin đặt phòng.');
-
             const booking = await response.json();
             const total = booking.totalPrice || 0;
             const paid = booking.amountPaid || 0;
             const remaining = total - paid;
+
             maxPayableAmount = remaining;
+            currentBookingCode = booking.bookingCode;
+            initialAmountPaid = paid; // Lưu mốc tiền đã trả ban đầu
 
             if (remaining <= 0) {
                 showError("Đơn này đã được thanh toán đầy đủ.");
+                contentState.classList.add('d-none'); // Ẩn luôn content
                 return;
             }
 
-            // Điền dữ liệu
+            // Điền dữ liệu vào giao diện
             document.getElementById('bookingCode').textContent = booking.bookingCode;
             document.getElementById('roomInfo').textContent = `${booking.roomTypeName} - ${booking.roomNumber}`;
             document.getElementById('totalPrice').textContent = total.toLocaleString() + ' VND';
             document.getElementById('amountPaid').textContent = paid.toLocaleString() + ' VND';
             document.getElementById('remainingAmount').textContent = remaining.toLocaleString() + ' VND';
-
-            // Mặc định điền số tiền còn nợ vào ô input
-            document.getElementById('inputAmount').value = remaining;
-            document.getElementById('inputAmount').max = remaining;
+            inputAmount.value = remaining;
+            inputAmount.max = remaining;
 
             loadingState.classList.add('d-none');
             contentState.classList.remove('d-none');
 
-        } catch (error) {
-            showError(error.message);
-        }
+        } catch (error) { showError(error.message); }
 
-        // 2. Xử lý Submit
-        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+        // 2. Xử lý Submit Form -> HIỂN THỊ VIETQR VÀ BẮT ĐẦU POLLING
+        paymentForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const amount = parseFloat(document.getElementById('inputAmount').value);
-
-            if (amount <= 0) {
-                alert("Số tiền phải lớn hơn 0."); return;
-            }
-            if (amount > maxPayableAmount) {
+            const amount = parseFloat(inputAmount.value);
+            if (amount <= 0 || isNaN(amount)) { alert("Vui lòng nhập số tiền hợp lệ."); return; }
+            if (amount > maxPayableAmount + 1000) { // Cho phép sai số nhỏ
                 alert(`Số tiền không được vượt quá số nợ (${maxPayableAmount.toLocaleString()} VND).`); return;
             }
+            amountToPay = amount;
 
-            btnConfirmPay.disabled = true;
-            btnConfirmPay.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang xử lý...';
+            // Tạo link VietQR (Nội dung CK CHỈ LÀ MÃ BOOKING)
+            const transferContent = currentBookingCode;
+            let qrUrl = `https://img.vietqr.io/image/${BANK_CONFIG.BANK_ID}-${BANK_CONFIG.ACCOUNT_NO}-${BANK_CONFIG.TEMPLATE}.png`;
+            qrUrl += `?amount=${amount}&addInfo=${encodeURIComponent(transferContent)}&accountName=${encodeURIComponent(BANK_CONFIG.ACCOUNT_NAME)}`;
+
+            // Cập nhật giao diện QR
+            vietqrImage.src = qrUrl;
+            document.getElementById('qr-bank-name').textContent = BANK_CONFIG.BANK_NAME;
+            document.getElementById('qr-account-name').textContent = BANK_CONFIG.ACCOUNT_NAME;
+            document.getElementById('qr-account-no').textContent = BANK_CONFIG.ACCOUNT_NO;
+            document.getElementById('qr-amount').textContent = amount.toLocaleString() + ' VND';
+            document.getElementById('qr-amount-raw').textContent = amount;
+            document.getElementById('qr-content').textContent = transferContent;
+
+            // --- CHUYỂN ĐỔI TRẠNG THÁI GIAO DIỆN ---
+            qrPlaceholder.classList.add('d-none');
+            vietqrContainer.classList.remove('d-none');
+            formSubmitAction.classList.add('d-none');
+            initialActions.classList.add('d-none');
+
+            // Hiện thông báo chờ và cuộn lên
+            paymentWaitingStatus.classList.remove('d-none');
+            paymentWaitingStatus.classList.replace('alert-warning', 'alert-info');
+            paymentWaitingStatus.innerHTML = `
+                 <span class="spinner-border spinner-border-sm me-3" role="status" aria-hidden="true" style="width: 1.5rem; height: 1.5rem;"></span>
+                 <div><strong>Hệ thống đang kiểm tra giao dịch.</strong><br>Vui lòng quét mã QR và đợi trong giây lát...</div>`;
+            document.querySelector('.payment-card').scrollIntoView({ behavior: 'smooth' });
+
+            // --- BẮT ĐẦU POLLING ---
+            let elapsedTime = 0;
+            if (paymentCheckInterval) clearInterval(paymentCheckInterval);
+
+            // Cập nhật lại mốc tiền gốc trước khi bắt đầu poll mới
+            initialAmountPaid = parseFloat(document.getElementById('amountPaid').textContent.replace(/[^\d]/g, '')) || 0;
+
+            paymentCheckInterval = setInterval(async () => {
+                elapsedTime += POLLING_INTERVAL_MS;
+
+                const result = await checkPaymentStatus();
+
+                if (result === 'FULL_PAID') {
+                    // KẾT THÚC: Đã thanh toán hết
+                    clearInterval(paymentCheckInterval);
+                    alert("Thanh toán thành công! Đơn hàng đã được xác nhận.");
+                    window.location.href = 'user-bookings.html';
+
+                } else if (typeof result === 'object' && result.status === 'PARTIAL_PAID') {
+                    // KẾT THÚC: Vừa nhận được một phần
+                    clearInterval(paymentCheckInterval);
+                    alert(`Hệ thống đã ghi nhận khoản thanh toán ${result.received.toLocaleString()} VND. Vui lòng thanh toán nốt số nợ còn lại.`);
+                    // Reset giao diện để khách chọn trả tiếp
+                    btnCancelQR.click();
+
+                } else if (elapsedTime >= MAX_POLLING_TIME_MS) {
+                    // HẾT GIỜ: Dừng kiểm tra
+                    clearInterval(paymentCheckInterval);
+                    paymentWaitingStatus.classList.replace('alert-info', 'alert-warning');
+                    paymentWaitingStatus.innerHTML = `
+                        <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 1.5rem;"></i>
+                        <div><strong>Quá thời gian chờ tự động.</strong><br>Nếu bạn đã chuyển khoản, vui lòng liên hệ bộ phận CSKH.</div>`;
+                    // Hiện lại nút xác nhận thủ công để dùng làm phương án cuối
+                    btnFinishedTransfer.classList.remove('d-none');
+                }
+            }, POLLING_INTERVAL_MS);
+        });
+
+        // Nút "Hoàn tất chuyển khoản" (Thủ công - Dự phòng)
+        btnFinishedTransfer.addEventListener('click', async () => {
+            if (amountToPay <= 0) return;
+            btnFinishedTransfer.disabled = true;
+            qrConfirmSpinner.classList.remove('d-none');
+            qrConfirmIcon.classList.add('d-none');
 
             try {
-                // Gọi API tạo link thanh toán
-                const res = await fetch(`${API_URL}/create-payment-url`, {
+                const response = await fetch(`${API_URL}/confirm-manual-payment`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        bookingId: bookingId,
-                        amount: amount
-                    })
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ bookingId: bookingId, amount: amountToPay })
                 });
-
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.message || 'Lỗi tạo link thanh toán.');
-
-                // Chuyển hướng
-                window.location.href = data.paymentUrl;
-
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Có lỗi khi ghi nhận thanh toán.');
+                alert(data.message + "\nLưu ý: Đây là xác nhận thủ công và cần chờ nhân viên kiểm tra.");
+                window.location.href = 'user-bookings.html';
             } catch (error) {
                 alert("Lỗi: " + error.message);
-                btnConfirmPay.disabled = false;
-                btnConfirmPay.innerHTML = 'Thanh toán ngay <i class="bi bi-arrow-right"></i>';
+                btnFinishedTransfer.disabled = false;
+                qrConfirmSpinner.classList.add('d-none');
+                qrConfirmIcon.classList.remove('d-none');
             }
+        });
+
+
+        // Nút "Chọn lại số tiền" (Reset giao diện và dừng Polling)
+        btnCancelQR.addEventListener('click', () => {
+            if (paymentCheckInterval) {
+                clearInterval(paymentCheckInterval);
+                console.log("Đã dừng kiểm tra thanh toán.");
+            }
+
+            // Reset giao diện
+            vietqrContainer.classList.add('d-none');
+            qrPlaceholder.classList.remove('d-none');
+            formSubmitAction.classList.remove('d-none');
+            initialActions.classList.remove('d-none');
+            paymentWaitingStatus.classList.add('d-none');
+            btnFinishedTransfer.classList.add('d-none'); // Ẩn nút thủ công đi
         });
 
         function showError(msg) {
             loadingState.classList.add('d-none');
-            contentState.classList.add('d-none');
             errorState.textContent = msg;
             errorState.classList.remove('d-none');
         }

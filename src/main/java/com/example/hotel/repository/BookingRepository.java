@@ -47,5 +47,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
             @Param("checkin") LocalDate checkin,
             @Param("checkout") LocalDate checkout
     );
+    Optional<Booking> findByBookingConfirmationCode(String bookingConfirmationCode);
 }
 

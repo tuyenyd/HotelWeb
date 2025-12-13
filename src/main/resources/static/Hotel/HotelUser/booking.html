@@ -190,14 +190,43 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="inputTotal" class="form-label">Tạm tính (VND)</label>
-                                    <input type="text" class="form-control" id="inputTotal" readonly style="background-color: #e9ecef; font-weight: bold;">
-                                </div>
-
-                                <div class="form-group">
                                     <label for="inputNotes" class="form-label">Yêu cầu bổ sung</label>
                                     <textarea class="form-control" id="inputNotes" rows="3" placeholder="Vui lòng ghi rõ các yêu cầu hoặc sắp xếp đặc biệt..."></textarea>
                                 </div>
+
+                                <div id="member-discount-alert" class="alert alert-info d-flex align-items-center d-none mt-3 mb-2" role="alert" style="background-color: #2f5d50; color: #FFFFFF;">
+                                    <i class="bi bi-gem-fill me-3 fs-4" style="color: #2f5d50;"></i> <div>
+                                    <strong>Thành viên <span id="alert-tier-name"></span>!</strong>
+                                    <br>
+                                    Bạn được hưởng ưu đãi giảm giá <span id="alert-discount-percent" class="fw-bold"></span>% cho đơn đặt phòng này.
+                                </div>
+                                </div>
+
+                                <div class="card bg-light border-0 mb-3 shadow-sm">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-uppercase fw-bold mb-3" style="color: #2f5d50;">Chi tiết thanh toán</h6>
+
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted">Giá gốc:</span>
+                                            <span id="display-original-price" class="fw-bold">0 VNĐ</span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between mb-2 text-success d-none" id="row-discount">
+                                            <span><i class="bi bi-tag-fill me-1"></i>Ưu đãi thành viên:</span>
+                                            <span id="display-discount-amount">- 0 VNĐ</span>
+                                        </div>
+
+                                        <hr class="my-2">
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="h5 mb-0">Tổng cộng:</span>
+                                            <span class="h4 mb-0 text-black fw-bold" id="display-final-price">0 VNĐ</span>
+                                        </div>
+
+                                        <input type="hidden" id="inputTotal" value="0">
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="form-actions">
@@ -328,6 +357,8 @@
 
         // API endpoint chính
         const API_PUBLIC_URL = 'http://localhost:8080/api/public';
+        // API endpoint khách hàng (để lấy profile)
+        const API_CUSTOMER_URL = 'http://localhost:8080/api/public/customer';
 
         // Lấy các element của form
         const form = document.getElementById('publicBookingForm');
@@ -336,7 +367,6 @@
         const inputSoNguoiLon = document.getElementById('inputSoNguoiLon');
         const inputSoTreEm = document.getElementById('inputSoTreEm');
         const inputRoomId = document.getElementById('inputRoomId');
-        const inputTotal = document.getElementById('inputTotal');
         const roomFeedback = document.getElementById('room-feedback');
         const btnSubmitBooking = document.getElementById('btnSubmitBooking');
         const bookingSpinner = document.getElementById('bookingSpinner');
@@ -352,21 +382,39 @@
         const inputCustomerAddress = document.getElementById('inputCustomerAddress');
         const inputCustomerIdNumber = document.getElementById('inputCustomerIdNumber');
 
-        // 1. Tự động điền thông tin nếu đã đăng nhập
-        function autoFillCustomerInfo() {
+        // --- CÁC HÀM MỚI ĐỂ XỬ LÝ CHƯƠNG TRÌNH THÀNH VIÊN ---
+
+        // 1. Tự động điền thông tin và hiển thị ưu đãi thành viên
+        async function autoFillCustomerInfo() {
             const token = localStorage.getItem('customerToken');
-            const customerDataString = localStorage.getItem('currentCustomer');
+            const notice = document.getElementById('login-notice');
+            const alertBox = document.getElementById('member-discount-alert');
 
-            if (token && customerDataString) {
-                try {
-                    const customer = JSON.parse(customerDataString);
+            // Ẩn thông báo ưu đãi trước khi kiểm tra
+            alertBox.classList.add('d-none');
 
+            if (!token) {
+                if(notice) notice.classList.remove('d-none');
+                return;
+            }
+
+            try {
+                // Gọi API lấy profile mới nhất từ server
+                const response = await fetch(`${API_CUSTOMER_URL}/profile`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const customer = await response.json();
+
+                    // Điền thông tin cá nhân
                     inputCustomerName.value = customer.fullName || '';
                     inputCustomerEmail.value = customer.email || '';
                     inputCustomerPhone.value = customer.phone || '';
                     inputCustomerAddress.value = customer.address || '';
                     inputCustomerIdNumber.value = customer.idNumber || '';
 
+                    // Khóa các trường thông tin
                     inputCustomerName.readOnly = true;
                     inputCustomerEmail.readOnly = true;
                     inputCustomerPhone.readOnly = true;
@@ -375,16 +423,22 @@
 
                     if(notice) notice.classList.add('d-none');
 
-                } catch (e) {
-                    console.error("Lỗi đọc thông tin khách hàng:", e);
-                    if(notice) notice.classList.remove('d-none');
+                    // --- LOGIC HIỂN THỊ HỘP THÔNG BÁO XANH ---
+                    // (Giả sử API profile trả về: loyaltyTierName và loyaltyDiscountPercent)
+                    if (customer.loyaltyTierName && customer.loyaltyDiscountPercent > 0) {
+                        document.getElementById('alert-tier-name').textContent = customer.loyaltyTierName;
+                        document.getElementById('alert-discount-percent').textContent = customer.loyaltyDiscountPercent;
+                        alertBox.classList.remove('d-none'); // Hiện hộp thông báo
+                    }
+                    // --------------------------------------------------
                 }
-            } else {
+            } catch (e) {
+                console.error("Lỗi tải thông tin khách hàng:", e);
                 if(notice) notice.classList.remove('d-none');
             }
         }
 
-        // 2. Tải danh sách phòng còn trống (ĐÃ SỬA)
+        // 2. Tải danh sách phòng còn trống (Giữ nguyên logic cũ)
         async function loadAvailableRooms() {
             const checkin = inputCheckin.value;
             const checkout = inputCheckout.value;
@@ -392,7 +446,8 @@
             const children = inputSoTreEm.value;
 
             inputRoomId.innerHTML = '<option value="">-- Chọn phòng --</option>';
-            inputTotal.value = 0;
+            // Reset bảng giá khi tìm phòng mới
+            resetPriceDisplay();
             roomFeedback.classList.add('d-none');
 
             if (!checkin || !checkout) {
@@ -408,7 +463,6 @@
             inputRoomId.innerHTML = '<option value="">-- Đang tìm phòng... --</option>';
 
             try {
-                // Giả sử API này trả về List<RoomDto> có chứa cả basePrice và currentPrice
                 const response = await fetch(`${API_PUBLIC_URL}/rooms/available?checkin=${checkin}&checkout=${checkout}&adults=${adults}&children=${children}`);
 
                 if (!response.ok) {
@@ -426,12 +480,12 @@
 
                 inputRoomId.innerHTML = '<option value="">-- Chọn một phòng --</option>';
                 rooms.forEach(r => {
-                    // SỬA LỖI 1: Hiển thị giá linh động (currentPrice) nếu có
+                    // Hiển thị giá linh động (currentPrice) nếu có
                     const displayPrice = r.currentPrice || r.pricePerNight || 0;
 
                     inputRoomId.innerHTML += `<option
                                             value="${r.id}"
-                                            data-room-type-id="${r.roomTypeId}" > ${r.roomNumber} - ${r.roomTypeName} (Giá hôm nay: ${displayPrice.toLocaleString()} VND/đêm)
+                                            data-room-type-id="${r.roomTypeId}" > ${r.roomNumber} - ${r.roomTypeName} (Giá hôm nay: ${displayPrice.toLocaleString()} VNĐ/đêm)
                                          </option>`;
                 });
 
@@ -443,39 +497,86 @@
             }
         }
 
-        // 3. Tính tổng tiền (VIẾT LẠI HOÀN TOÀN ĐỂ DÙNG API TÍNH GIÁ)
+        // 3. Tính tổng tiền (VIẾT LẠI HOÀN TOÀN - GỌI API TÍNH GIÁ CHI TIẾT)
         async function calculateTotalPrice() {
             const selectedOption = inputRoomId.options[inputRoomId.selectedIndex];
-            const roomId = selectedOption.value;
-            // Lấy roomTypeId từ data attribute đã lưu
+            // Kiểm tra xem có phòng nào được chọn không
+            if (!selectedOption || !selectedOption.value) {
+                resetPriceDisplay();
+                return;
+            }
             const roomTypeId = selectedOption.dataset.roomTypeId;
             const checkin = inputCheckin.value;
             const checkout = inputCheckout.value;
 
-            if (!roomId || !roomTypeId || !checkin || !checkout) {
-                inputTotal.value = 0;
+            // Các element hiển thị giá
+            const originalPriceEl = document.getElementById('display-original-price');
+            const discountRowEl = document.getElementById('row-discount');
+            const discountAmountEl = document.getElementById('display-discount-amount');
+            const finalPriceEl = document.getElementById('display-final-price');
+            const totalInputHidden = document.getElementById('inputTotal');
+
+
+            if (!roomTypeId || !checkin || !checkout) {
+                resetPriceDisplay();
                 return;
             }
 
-            // Hiển thị đang tính...
-            inputTotal.value = "Đang tính toán...";
+            if (new Date(checkin) >= new Date(checkout)) {
+                resetPriceDisplay();
+                return;
+            }
+
+            // Hiển thị trạng thái đang tính
+            finalPriceEl.textContent = "Đang tính...";
 
             try {
-                // SỬA LỖI 2: Gọi API công khai để tính tổng tiền chính xác
-                const response = await fetch(`${API_PUBLIC_URL}/prices/calculate?roomTypeId=${roomTypeId}&checkIn=${checkin}&checkOut=${checkout}`);
+                const token = localStorage.getItem('customerToken');
+                const headers = {};
+                // QUAN TRỌNG: Gửi kèm token để backend biết ai đang hỏi giá và áp dụng giảm giá
+                if (token) headers['Authorization'] = `Bearer ${token}`;
 
-                if (!response.ok) throw new Error('Lỗi tính giá');
+                const params = new URLSearchParams({ roomTypeId, checkIn: checkin, checkOut: checkout });
 
-                const totalPrice = await response.json();
-                inputTotal.value = totalPrice.toLocaleString() + " VND";
+                // GỌI API TÍNH GIÁ CÔNG KHAI (Backend phải trả về DTO chi tiết)
+                const response = await fetch(`${API_PUBLIC_URL}/prices/calculate?${params.toString()}`, {
+                    headers: headers
+                });
+
+                if (!response.ok) throw new Error('Lỗi tính giá từ server.');
+
+                // Nhận về object chi tiết { originalPrice, discountAmount, finalPrice }
+                const priceData = await response.json();
+
+                // Cập nhật hiển thị
+                originalPriceEl.textContent = priceData.originalPrice.toLocaleString() + " VNĐ";
+                finalPriceEl.textContent = priceData.finalPrice.toLocaleString() + " VNĐ";
+                totalInputHidden.value = priceData.finalPrice; // Lưu giá cuối vào input hidden
+
+                // Nếu có giảm giá (> 0) thì hiện dòng ưu đãi
+                if (priceData.discountAmount > 0) {
+                    discountAmountEl.textContent = "- " + priceData.discountAmount.toLocaleString() + " VNĐ";
+                    discountRowEl.classList.remove('d-none');
+                } else {
+                    discountRowEl.classList.add('d-none');
+                }
 
             } catch (error) {
                 console.error("Lỗi khi tính giá:", error);
-                inputTotal.value = "Lỗi tính giá";
+                finalPriceEl.textContent = "Lỗi tính giá";
             }
         }
 
-        // 4. Hàm xử lý Submit (Giữ nguyên)
+        // Hàm phụ để reset hiển thị giá
+        function resetPriceDisplay() {
+            document.getElementById('display-original-price').textContent = "0 VNĐ";
+            document.getElementById('row-discount').classList.add('d-none');
+            document.getElementById('display-final-price').textContent = "0 VNĐ";
+            document.getElementById('inputTotal').value = 0;
+        }
+
+
+        // 4. Hàm xử lý Submit (Cập nhật để lấy tổng tiền từ input hidden mới)
         async function submitBooking(event) {
             event.preventDefault();
 
@@ -495,12 +596,14 @@
 
             setLoading(true);
 
-            // Lấy giá trị tổng tiền (chuyển "1,500,000 VND" thành 1500000)
-            let calculatedTotal = 0;
-            try {
-                calculatedTotal = parseFloat(inputTotal.value.replace(/[^0-9]/g, ''));
-                if (isNaN(calculatedTotal)) calculatedTotal = 0;
-            } catch (e) { calculatedTotal = 0; }
+            // Lấy giá trị tổng tiền từ input hidden mới
+            let calculatedTotal = parseFloat(document.getElementById('inputTotal').value) || 0;
+
+            if (calculatedTotal <= 0) {
+                showAlert('Vui lòng chờ tính toán tổng tiền hợp lệ.', 'warning');
+                setLoading(false);
+                return;
+            }
 
             const bookingData = {
                 roomId: inputRoomId.value,
@@ -508,6 +611,7 @@
                 checkout: inputCheckout.value,
                 soNguoiLon: inputSoNguoiLon.value,
                 soTreEm: inputSoTreEm.value,
+                // Sử dụng giá trị tổng tiền đã tính toán
                 total: calculatedTotal,
                 notes: document.getElementById('inputNotes').value,
                 customerName: inputCustomerName.value,
@@ -535,7 +639,7 @@
 
                 showAlert(`Đặt phòng thành công! Mã đặt phòng của bạn là: ${result.code}. Chúng tôi sẽ sớm liên hệ với bạn.`, 'success');
                 form.reset();
-                inputTotal.value = 0; // Reset tổng tiền
+                resetPriceDisplay(); // Reset bảng giá
                 autoFillCustomerInfo();
 
             } catch (error) {

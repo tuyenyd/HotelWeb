@@ -1,12 +1,11 @@
 package com.example.hotel.service.impl;
 
 import com.example.hotel.dto.PriceAdjustmentDto;
+import com.example.hotel.dto.PriceCalculationResponse;
 import com.example.hotel.dto.PriceRuleDto;
-import com.example.hotel.entity.PriceAdjustment;
-import com.example.hotel.entity.PriceRule;
-import com.example.hotel.entity.Room;
-import com.example.hotel.entity.RoomType;
+import com.example.hotel.entity.*;
 import com.example.hotel.exception.ResourceNotFoundException;
+import com.example.hotel.repository.CustomerRepository;
 import com.example.hotel.repository.PriceRuleRepository;
 import com.example.hotel.repository.RoomRepository;
 import com.example.hotel.repository.RoomTypeRepository;
@@ -33,6 +32,7 @@ public class PriceServiceImpl implements PriceService {
     private final PriceRuleRepository priceRuleRepository;
     private final RoomTypeRepository roomTypeRepository;
     private final RoomRepository roomRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public BigDecimal calculateDailyPrice(RoomType roomType, LocalDate date) {
@@ -186,6 +186,51 @@ public class PriceServiceImpl implements PriceService {
         return totalPrice;
     }
 
+    @Override
+    public PriceCalculationResponse calculateDetailedPrice(Long roomTypeId, LocalDate checkIn, LocalDate checkOut, Long customerId) {
+        // 1. Tính giá gốc (sử dụng lại logic tính theo ngày bạn đã có)
+        RoomType roomType = roomTypeRepository.findById(roomTypeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room type not found"));
+
+        BigDecimal originalPrice = BigDecimal.ZERO;
+        long numOfNights = ChronoUnit.DAYS.between(checkIn, checkOut);
+
+        for (int i = 0; i < numOfNights; i++) {
+            LocalDate currentDate = checkIn.plusDays(i);
+            // Gọi hàm tính giá theo ngày gốc của bạn
+            BigDecimal dailyPrice = this.calculateDailyPrice(roomType, currentDate);
+            originalPrice = originalPrice.add(dailyPrice);
+        }
+
+        // 2. Khởi tạo các giá trị mặc định
+        BigDecimal discountAmount = BigDecimal.ZERO;
+        BigDecimal finalPrice = originalPrice;
+        String discountName = null;
+
+        // 3. Áp dụng giảm giá nếu có khách hàng
+        if (customerId != null && originalPrice.compareTo(BigDecimal.ZERO) > 0) {
+            Customer customer = customerRepository.findById(customerId).orElse(null);
+
+            // Kiểm tra xem khách có hạng và hạng có mức giảm giá > 0 không
+            if (customer != null && customer.getLoyaltyTier() != null) {
+                LoyaltyTier tier = customer.getLoyaltyTier();
+                BigDecimal discountPercent = tier.getDiscountPercentage(); // Giả sử field này là BigDecimal (VD: 10.00 cho 10%)
+
+                if (discountPercent != null && discountPercent.compareTo(BigDecimal.ZERO) > 0) {
+                    // Tính số tiền giảm: Giá gốc * (Phần trăm / 100)
+                    discountAmount = originalPrice.multiply(discountPercent)
+                            .divide(BigDecimal.valueOf(100), 0, RoundingMode.HALF_UP); // Làm tròn số tiền
+
+                    // Tính giá cuối
+                    finalPrice = originalPrice.subtract(discountAmount);
+                    discountName = "Ưu đãi hạng " + tier.getName() + " (-" + discountPercent + "%)";
+                }
+            }
+        }
+
+        // 4. Trả về kết quả chi tiết
+        return new PriceCalculationResponse(originalPrice, discountAmount, finalPrice, discountName);
+    }
     private PriceRuleDto convertToDto(PriceRule entity) {
         PriceRuleDto dto = new PriceRuleDto();
         dto.setId(entity.getId());

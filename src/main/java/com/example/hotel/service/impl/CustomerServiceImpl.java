@@ -213,8 +213,9 @@ public class CustomerServiceImpl implements CustomerService {
             dto.setLoyaltyTierId(entity.getLoyaltyTier().getId());
             dto.setLoyaltyTierName(entity.getLoyaltyTier().getName());
             dto.setLoyaltyBenefitsJson(entity.getLoyaltyTier().getBenefitsJson());
+            dto.setLoyaltyDiscountPercent(entity.getLoyaltyTier().getDiscountPercentage());
         } else {
-            dto.setLoyaltyTierId(null); dto.setLoyaltyTierName("N/A"); dto.setLoyaltyBenefitsJson("[]");
+            dto.setLoyaltyTierId(null); dto.setLoyaltyTierName("N/A"); dto.setLoyaltyBenefitsJson("[]");dto.setLoyaltyDiscountPercent(null);
         }
 
         // === BẮT ĐẦU SỬA LỖI (THÊM LẠI BỘ LỌC) ===
@@ -268,6 +269,7 @@ public class CustomerServiceImpl implements CustomerService {
             dto.setLoyaltyTierId(entity.getLoyaltyTier().getId());
             dto.setLoyaltyTierName(entity.getLoyaltyTier().getName());
             dto.setLoyaltyBenefitsJson(entity.getLoyaltyTier().getBenefitsJson());
+            dto.setLoyaltyDiscountPercent(entity.getLoyaltyTier().getDiscountPercentage());
         } else {
             dto.setLoyaltyTierId(null); dto.setLoyaltyTierName("N/A"); dto.setLoyaltyBenefitsJson("[]");
         }

@@ -1,5 +1,6 @@
 package com.example.hotel.service;
 
+import com.example.hotel.dto.PriceCalculationResponse;
 import com.example.hotel.dto.PriceRuleDto;
 import com.example.hotel.entity.RoomType;
 
@@ -19,4 +20,5 @@ public interface PriceService {
     BigDecimal calculateDailyPrice(RoomType roomType, LocalDate date);
     BigDecimal calculateTotalPrice(RoomType roomType, LocalDate checkIn, LocalDate checkOut);
     BigDecimal calculateTotalBookingPriceById(Long roomId, LocalDate checkIn, LocalDate checkOut);
+    PriceCalculationResponse calculateDetailedPrice(Long roomTypeId, LocalDate checkIn, LocalDate checkOut, Long customerId);
 }

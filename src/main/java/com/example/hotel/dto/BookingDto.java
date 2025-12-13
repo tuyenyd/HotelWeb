@@ -25,4 +25,5 @@ public class BookingDto {
     private int soNguoiLon;
     private int soTreEm;
     private BigDecimal amountPaid;
+    private Boolean isFullyPaid;
 }

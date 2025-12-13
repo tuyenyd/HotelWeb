@@ -3,6 +3,8 @@ package com.example.hotel.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "loyalty_tiers")
 @Data
@@ -24,4 +26,7 @@ public class LoyaltyTier {
     // Lưu các quyền lợi dưới dạng String JSON
     @Column(name = "benefits_json", columnDefinition = "json")
     private String benefitsJson;
+
+    @Column(name = "discount_percentage", precision = 5, scale = 2)
+    private BigDecimal discountPercentage;
 }

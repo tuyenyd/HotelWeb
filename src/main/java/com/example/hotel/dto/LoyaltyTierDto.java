@@ -2,6 +2,8 @@ package com.example.hotel.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 
 @Data
 public class LoyaltyTierDto {
@@ -10,4 +12,5 @@ public class LoyaltyTierDto {
     private Integer pointsRequired;
     private String description;
     private String benefitsJson; // Nhận và gửi String JSON
+    private BigDecimal discountPercentage;
 }
