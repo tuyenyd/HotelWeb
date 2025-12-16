@@ -14,6 +14,15 @@ public class AmenityResponseDTO {
     private BigDecimal price;
     private Boolean isChargeable;
     private LocalDateTime createdAt;
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     // Constructors, Getters and Setters (Đã bỏ qua)
     public Long getId() { return id; }

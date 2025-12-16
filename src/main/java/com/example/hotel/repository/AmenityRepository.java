@@ -10,22 +10,26 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface AmenityRepository extends JpaRepository<Amenity, Long> {
 
-    // Tìm theo từ khóa + loại tiện ích
     @Query("""
-        SELECT a FROM Amenity a 
-        WHERE (LOWER(a.name) LIKE LOWER(CONCAT('%', :query, '%'))
-            OR LOWER(a.description) LIKE LOWER(CONCAT('%', :query, '%')))
-          AND (:type IS NULL OR a.type = :type)
+        SELECT a FROM Amenity a
+        WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', :q, '%'))
+           OR LOWER(a.description) LIKE LOWER(CONCAT('%', :q, '%'))
     """)
-    Page<Amenity> search(
-            @Param("query") String query,
-            @Param("type") String type,
+    Page<Amenity> searchByNameOrDescription(String q, Pageable pageable);
+
+    Page<Amenity> findByCategory(String category, Pageable pageable);
+
+    @Query("""
+        SELECT a FROM Amenity a
+        WHERE (LOWER(a.name) LIKE LOWER(CONCAT('%', :q, '%'))
+           OR LOWER(a.description) LIKE LOWER(CONCAT('%', :q, '%')))
+        AND a.type = :type
+    """)
+    Page<Amenity> searchByNameAndCategory(
+            String q,
+            String category,
             Pageable pageable
     );
-
-    // Tìm theo ID (mặc định JpaRepository đã có, nhưng vẫn để lại cũng không sao)
-    Optional<Amenity> findById(Long id);
 }

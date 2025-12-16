@@ -1,6 +1,7 @@
 -- ===========================================
 -- TẠO DATABASE & CHỌN DATABASE
 -- ===========================================
+-- drop database hotel;
 CREATE DATABASE IF NOT EXISTS hotel;
 USE hotel;
 
@@ -137,6 +138,106 @@ CREATE TABLE users (
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+-- ==========================================================
+-- BẢNG TIỆN ÍCH (AMENITY) - BỔ SUNG THEO YÊU CẦU
+-- ==========================================================
+CREATE TABLE amenity (
+    amenity_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    icon_class VARCHAR(512),
+    description TEXT,	
+    type VARCHAR(100) COMMENT 'Phân loại tiện ích',
+    price DECIMAL(10, 2) NOT NULL DEFAULT 0.00 COMMENT 'Giá của tiện ích/dịch vụ (nếu tính phí)',
+    is_chargeable BOOLEAN NOT NULL DEFAULT FALSE COMMENT 'Tiện ích có tính phí riêng hay không',
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+ALTER TABLE amenity
+ADD COLUMN image_url VARCHAR(255);
+
+-- ==========================================================
+-- BẢNG LIÊN KẾT LOẠI PHÒNG - TIỆN ÍCH (ROOM_TYPE_AMENITY) - BỔ SUNG
+-- ==========================================================
+CREATE TABLE room_type_amenity (
+    room_type_amenity_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    room_type_id BIGINT NOT NULL,
+    amenity_id BIGINT NOT NULL,
+    is_included BOOLEAN NOT NULL DEFAULT TRUE COMMENT 'TRUE: Đã bao gồm trong giá phòng, FALSE: Khách phải trả thêm',
+    notes VARCHAR(255),
+
+    -- Thiết lập Khóa ngoại
+    FOREIGN KEY (room_type_id) REFERENCES room_types(id),
+    FOREIGN KEY (amenity_id) REFERENCES amenity(amenity_id),
+
+    -- Đảm bảo mỗi tiện ích chỉ được cấu hình một lần cho mỗi loại phòng
+    UNIQUE KEY unique_room_amenity (room_type_id, amenity_id)
+);
+
+-- ===========================================
+-- DỮ LIỆU MẪU
+-- ===========================================
+
+INSERT INTO amenity
+(name, type, description, icon_class, image_url, price, is_chargeable)
+VALUES
+-- TIỆN ÍCH KHÁCH SẠN
+('Khu tiếp khách sang trọng', 'Khách sạn',
+ 'Khu vực tiếp khách hiện đại, không gian mở',
+ 'bi-building',
+ '/Hotel/HotelAdmin/assets/img/news-1.jpg',
+ 0, false),
+
+('Sảnh lễ tân', 'Khách sạn',
+ 'Sảnh lễ tân rộng rãi, hỗ trợ khách 24/7',
+ 'bi-person-workspace',
+ '/Hotel/HotelAdmin/assets/img/news-4.jpg',
+ 0, false),
+
+('Phòng họp doanh nghiệp', 'Khách sạn',
+ 'Phòng họp hiện đại, phù hợp hội nghị và đào tạo',
+ 'bi-people',
+ '/Hotel/HotelAdmin/assets/img/news-5.jpg',
+ 500000, true),
+
+-- TIỆN ÍCH PHÒNG
+('Tivi màn hình phẳng', 'Phòng',
+ 'Tivi màn hình lớn với truyền hình cáp',
+ 'bi-tv',
+ '/Hotel/HotelAdmin/assets/img/product-1.jpg',
+ 0, false),
+
+('Tai nghe cách âm', 'Phòng',
+ 'Tai nghe chất lượng cao, cách âm tốt',
+ 'bi-headphones',
+ '/Hotel/HotelAdmin/assets/img/product-2.jpg',
+ 0, false),
+
+('Đồ vệ sinh cá nhân', 'Phòng',
+ 'Bộ đồ vệ sinh cá nhân cao cấp',
+ 'bi-droplet',
+ '/Hotel/HotelAdmin/assets/img/product-3.jpg',
+ 0, false),
+
+-- TIỆN ÍCH KHÁC
+('Dịch vụ tư vấn khách hàng', 'Khách sạn',
+ 'Đội ngũ tư vấn chuyên nghiệp',
+ 'bi-chat-dots',
+ '/Hotel/HotelAdmin/assets/img/messages-1.jpg',
+ 0, false),
+
+('Hỗ trợ khách VIP', 'Khách sạn',
+ 'Nhân viên hỗ trợ riêng cho khách VIP',
+ 'bi-star',
+ '/Hotel/HotelAdmin/assets/img/messages-2.jpg',
+ 0, false),
+
+('Chăm sóc khách hàng', 'Khách sạn',
+ 'Dịch vụ CSKH tận tâm',
+ 'bi-headset',
+ '/Hotel/HotelAdmin/assets/img/messages-3.jpg',
+ 0, false);
 
 -- ===========================================
 -- DỮ LIỆU MẪU

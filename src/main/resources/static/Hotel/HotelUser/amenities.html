@@ -14,8 +14,8 @@
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
     <link
-            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
-            rel="stylesheet">
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
 
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -57,259 +57,341 @@
             font-size: 0.9rem;
             color: #666;
         }
+
+        .facility-card {
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease;
+            cursor: pointer;
+        }
+
+        .facility-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+        }
+
+        .facility-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            transition: transform 0.5s ease;
+        }
+
+        .facility-card:hover .facility-image {
+            transform: scale(1.08);
+        }
+
+        .facility-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    rgba(0, 0, 0, 0.25),
+                    rgba(0, 0, 0, 0.55));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .facility-card:hover .facility-overlay {
+            background: linear-gradient(to bottom,
+                    rgba(0, 0, 0, 0.35),
+                    rgba(0, 0, 0, 0.75));
+        }
+
+        .facility-overlay i {
+            font-size: 42px;
+            color: #fff;
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+        /* .facility-card:hover .facility-overlay i {
+            transform: scale(1.25);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        } */
+
+        .facility-info {
+            padding: 18px;
+            transition: transform 0.35s ease;
+        }
+
+        .facility-card:hover .facility-info {
+            transform: translateY(-4px);
+        }
+
+        .facility-info h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .facility-info p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
 <body class="amenities-page">
 
-<header id="header" class="header sticky-top">
+    <header id="header" class="header sticky-top">
 
-    <div class="branding d-flex align-items-cente">
+        <div class="branding d-flex align-items-cente">
 
-        <div class="container position-relative d-flex align-items-center justify-content-between">
-            <a href="indexes.html" class="logo d-flex align-items-center">
-                <img src="assets/img/img_1.png" alt="logo">
-                <h1 class="sitename">Grandoria</h1>
-            </a>
+            <div class="container position-relative d-flex align-items-center justify-content-between">
+                <a href="indexes.html" class="logo d-flex align-items-center">
+                    <img src="assets/img/img_1.png" alt="logo">
+                    <h1 class="sitename">Grandoria</h1>
+                </a>
 
-            <nav id="navmenu" class="navmenu">
-                <ul>
-                    <li><a href="indexes.html" class="active">Trang chủ</a></li>
-                    <li><a href="about.html">Giới thiệu</a></li>
-                    <li><a href="rooms.html">Phòng</a></li>
-                    <li><a href="amenities.html">Tiện ích</a></li>
-                    <li><a href="location.html">Vị trí</a></li>
-                    <li class="dropdown"><a href="#"><span>Trang</span> <i
-                            class="bi bi-chevron-down toggle-dropdown"></i></a>
-                        <ul>
-                            <li><a href="room-details.html">Chi tiết phòng</a></li>
-                            <li><a href="restaurant.html">Nhà hàng</a></li>
-                            <li><a href="offers.html">Ưu đãi</a></li>
-                            <li><a href="hotel-events.html">Sự kiện</a></li>
-                            <li><a href="gallery.html">Thư viện ảnh</a></li>
-                            <li><a href="booking.html">Đặt phòng</a></li>
-                            <li><a href="terms.html">Điều khoản</a></li>
-                            <li><a href="privacy.html">Chính sách bảo mật</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="contact.html">Liên hệ</a></li>
+                <nav id="navmenu" class="navmenu">
+                    <ul>
+                        <li><a href="indexes.html" class="active">Trang chủ</a></li>
+                        <li><a href="about.html">Giới thiệu</a></li>
+                        <li><a href="rooms.html">Phòng</a></li>
+                        <li><a href="amenities.html">Tiện ích</a></li>
+                        <li><a href="location.html">Vị trí</a></li>
+                        <li class="dropdown"><a href="#"><span>Trang</span> <i
+                                    class="bi bi-chevron-down toggle-dropdown"></i></a>
+                            <ul>
+                                <li><a href="room-details.html">Chi tiết phòng</a></li>
+                                <li><a href="restaurant.html">Nhà hàng</a></li>
+                                <li><a href="offers.html">Ưu đãi</a></li>
+                                <li><a href="hotel-events.html">Sự kiện</a></li>
+                                <li><a href="gallery.html">Thư viện ảnh</a></li>
+                                <li><a href="booking.html">Đặt phòng</a></li>
+                                <li><a href="terms.html">Điều khoản</a></li>
+                                <li><a href="privacy.html">Chính sách bảo mật</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="contact.html">Liên hệ</a></li>
 
-                    <li class="dropdown" id="userProfileMenu" style="display: none;">
-                        <a href="#">
-                            <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
-                            <span id="userProfileName" class="ms-1">Tài khoản</span>
-                            <i class="bi bi-chevron-down toggle-dropdown ms-1"></i>
-                        </a>
-                        <ul>
-                            <li><a href="user-profile.html">Hồ sơ của tôi</a></li>
-                            <li><a href="user-bookings.html">Lịch sử đặt phòng</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a href="#" id="userLogoutButton">Đăng xuất</a></li>
-                        </ul>
-                    </li>
+                        <li class="dropdown" id="userProfileMenu" style="display: none;">
+                            <a href="#">
+                                <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
+                                <span id="userProfileName" class="ms-1">Tài khoản</span>
+                                <i class="bi bi-chevron-down toggle-dropdown ms-1"></i>
+                            </a>
+                            <ul>
+                                <li><a href="user-profile.html">Hồ sơ của tôi</a></li>
+                                <li><a href="user-bookings.html">Lịch sử đặt phòng</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a href="#" id="userLogoutButton">Đăng xuất</a></li>
+                            </ul>
+                        </li>
 
-                    <li id="loginLink"><a href="pages-login.html">Đăng nhập</a></li>
-                    <li id="registerLink"><a href="pages-register.html">Đăng ký</a></li>
+                        <li id="loginLink"><a href="pages-login.html">Đăng nhập</a></li>
+                        <li id="registerLink"><a href="pages-register.html">Đăng ký</a></li>
 
-                </ul>
-                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-            </nav>
-
-        </div>
-
-    </div>
-
-</header>
-
-<main class="main">
-
-    <div class="page-title light-background">
-        <div class="container d-lg-flex justify-content-between align-items-center">
-            <h1 class="mb-2 mb-lg-0">Tiện ích</h1>
-            <nav class="breadcrumbs">
-                <ol>
-                    <li><a href="indexes.html">Trang chủ</a></li>
-                    <li class="current">Tiện ích</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-    <section id="amenities-activity-cards" class="amenities-cards section">
-
-        <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-            <div class="container section-title" data-aos="fade-up">
-                <span class="description-title">Tiện ích</span>
-                <h2>Tiện ích</h2>
+                    </ul>
+                    <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+                </nav>
 
             </div>
 
-            <div class="row g-5" id="dynamic-amenities-container">
-                <div id="loading-amenities" class="col-12 text-center p-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Đang tải...</span>
-                    </div>
+        </div>
+
+    </header>
+
+    <main class="main">
+
+        <div class="page-title light-background">
+            <div class="container d-lg-flex justify-content-between align-items-center">
+                <h1 class="mb-2 mb-lg-0">Tiện ích</h1>
+                <nav class="breadcrumbs">
+                    <ol>
+                        <li><a href="indexes.html">Trang chủ</a></li>
+                        <li class="current">Tiện ích</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <section id="amenities-activity-cards" class="amenities-cards section">
+
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+                <div class="container section-title" data-aos="fade-up">
+                    <span class="description-title">Tiện ích</span>
+                    <h2>Tiện ích</h2>
+
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <section id="call-to-action" class="call-to-action section light-background">
-
-        <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-            <div class="row align-items-center">
-                <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
-                    <div class="content">
-                        <h2>Trải nghiệm sang trọng chưa từng có</h2>
-                        <p>Đắm mình trong sự thoải mái và tinh tế chưa từng có tại khách sạn cao cấp của chúng tôi.
-                            Từ các phòng được trang bị tinh tế đến tiện ích đẳng cấp thế giới, mọi chi tiết đều được
-                            thiết kế để vượt xa mong đợi của bạn. Đặt kỳ nghỉ đặc biệt của bạn ngay hôm nay và tạo
-                            nên những kỷ niệm khó quên.</p>
-                        <ul class="features-list">
-                            <li><i class="bi bi-check-circle"></i> Bữa sáng và Wi-Fi miễn phí</li>
-                            <li><i class="bi bi-check-circle"></i> Dịch vụ lễ tân và phòng 24/7</li>
-                            <li><i class="bi bi-check-circle"></i> Spa và trung tâm thể dục hiện đại</li>
-                            <li><i class="bi bi-check-circle"></i> Vị trí đắc địa với tầm nhìn thành phố tuyệt đẹp
-                            </li>
-                        </ul>
-                        <div class="cta-buttons">
-                            <a href="#" class="btn-primary">Đặt kỳ nghỉ của bạn</a>
-                            <a href="#" class="btn-secondary">Xem phòng</a>
+                <div class="row g-5" id="dynamic-amenities-container">
+                    <div id="loading-amenities" class="col-12 text-center p-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Đang tải...</span>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
-                    <div class="image-wrapper">
-                        <img src="assets/img/hotel/showcase-9.webp" alt="Trải nghiệm khách sạn sang trọng"
-                             class="img-fluid">
-                        <div class="overlay-content">
-                            <div class="special-offer">
-                                <span class="label">Ưu đãi đặc biệt</span>
-                                <span class="discount">Tiết kiệm 30%</span>
+        <section id="call-to-action" class="call-to-action section light-background">
+
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+                <div class="row align-items-center">
+                    <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
+                        <div class="content">
+                            <h2>Trải nghiệm sang trọng chưa từng có</h2>
+                            <p>Đắm mình trong sự thoải mái và tinh tế chưa từng có tại khách sạn cao cấp của chúng tôi.
+                                Từ các phòng được trang bị tinh tế đến tiện ích đẳng cấp thế giới, mọi chi tiết đều được
+                                thiết kế để vượt xa mong đợi của bạn. Đặt kỳ nghỉ đặc biệt của bạn ngay hôm nay và tạo
+                                nên những kỷ niệm khó quên.</p>
+                            <ul class="features-list">
+                                <li><i class="bi bi-check-circle"></i> Bữa sáng và Wi-Fi miễn phí</li>
+                                <li><i class="bi bi-check-circle"></i> Dịch vụ lễ tân và phòng 24/7</li>
+                                <li><i class="bi bi-check-circle"></i> Spa và trung tâm thể dục hiện đại</li>
+                                <li><i class="bi bi-check-circle"></i> Vị trí đắc địa với tầm nhìn thành phố tuyệt đẹp
+                                </li>
+                            </ul>
+                            <div class="cta-buttons">
+                                <a href="#" class="btn-primary">Đặt kỳ nghỉ của bạn</a>
+                                <a href="#" class="btn-secondary">Xem phòng</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
+                        <div class="image-wrapper">
+                            <img src="assets/img/hotel/showcase-9.webp" alt="Trải nghiệm khách sạn sang trọng"
+                                class="img-fluid">
+                            <div class="overlay-content">
+                                <div class="special-offer">
+                                    <span class="label">Ưu đãi đặc biệt</span>
+                                    <span class="discount">Tiết kiệm 30%</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
 
-        </div>
+        </section>
+    </main>
 
-    </section>
-</main>
+    <footer id="footer" class="footer position-relative dark-background">
+    </footer>
 
-<footer id="footer" class="footer position-relative dark-background">
-</footer>
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
 
-<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
-        class="bi bi-arrow-up-short"></i></a>
+    <div id="preloader"></div>
 
-<div id="preloader"></div>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/php-email-form/validate.js"></script>
+    <script src="assets/vendor/aos/aos.js"></script>
+    <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/php-email-form/validate.js"></script>
-<script src="assets/vendor/aos/aos.js"></script>
-<script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-<script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="assets/js/main.js"></script>
 
-<script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
+            const API_URL = '/api/public/amenities';
+            const staticDefaults = [
+                'Wi-Fi Miễn phí', 'Đỗ xe Có Nhân viên', 'Xe đưa đón Sân bay', 'Dịch vụ Phòng 24/7',
+                'Mini Bar', 'Lễ tân Hỗ trợ'
+            ].map(name => name.toLowerCase().trim());
 
-        const API_URL = '/api/public/amenities';
-        const staticDefaults = [
-            'Wi-Fi Miễn phí', 'Đỗ xe Có Nhân viên', 'Xe đưa đón Sân bay', 'Dịch vụ Phòng 24/7',
-            'Mini Bar', 'Lễ tân Hỗ trợ'
-        ].map(name => name.toLowerCase().trim());
-
-        // Hàm helper để loại bỏ Loading Indicator
-        function removeLoadingIndicator(container, loadingElement) {
-            if (loadingElement && container.contains(loadingElement)) {
-                loadingElement.remove();
-            }
-        }
-
-        async function fetchDynamicAmenities() {
-            const container = document.getElementById('dynamic-amenities-container');
-            const loadingIndicator = document.getElementById('loading-amenities');
-
-            if (!container) {
-                console.error("Lỗi: Không tìm thấy phần tử 'dynamic-amenities-container'.");
-                return;
-            }
-
-            try {
-                const response = await fetch(API_URL + '?page=0&size=100');
-
-                if (!response.ok) {
-                    throw new Error(`Lỗi tải dữ liệu: ${response.statusText}`);
+            // Hàm helper để loại bỏ Loading Indicator
+            function removeLoadingIndicator(container, loadingElement) {
+                if (loadingElement && container.contains(loadingElement)) {
+                    loadingElement.remove();
                 }
+            }
 
-                const responseData = await response.json();
+            async function fetchDynamicAmenities() {
+                const container = document.getElementById('dynamic-amenities-container');
+                const loadingIndicator = document.getElementById('loading-amenities');
 
-
-                const amenities = responseData.content || [];
-
-                // Loại bỏ trạng thái tải
-                removeLoadingIndicator(container, loadingIndicator);
-
-                const dynamicAmenities = amenities.filter(a => {
-
-                    const name = (a.name || '').toLowerCase().trim();
-                    return a.name && !staticDefaults.includes(name);
-                });
-
-                if (dynamicAmenities.length === 0) {
-                    container.innerHTML += '<div class="col-12 text-center text-muted"><p>Không có dịch vụ bổ sung nào khác.</p></div>';
+                if (!container) {
+                    console.error("Lỗi: Không tìm thấy phần tử 'dynamic-amenities-container'.");
                     return;
                 }
 
-                dynamicAmenities.forEach(amenity => {
-                    const col = document.createElement('div');
-                    //class nhỏ hơn một chút cho các tiện ích phụ (col-lg-3)
-                    col.className = 'col-lg-3 col-md-4 col-sm-6';
+                try {
+                    const response = await fetch(API_URL + '?page=0&size=100');
 
-                    col.innerHTML = `
+                    if (!response.ok) {
+                        throw new Error(`Lỗi tải dữ liệu: ${response.statusText}`);
+                    }
 
-                    <div class="facility-card" class="service-item" data-aos="fade-up">
-            <div class="facility-image">
-                <div class="facility-overlay" class="service-icon">
-                    <i class="bi ${amenity.iconClass || 'bi-stars'}"></i>
-                </div>
-            </div>
-            <div class="facility-info">
-                <h4>${amenity.name}</h4>
-                <p>${amenity.description}</p>
-                <div class="facility-features">
-                    <span><i class="bi bi-check-circle"></i></span>
-                    <span> ${amenity.type}</span>
-                </div>
-            </div>
-        </div>
-                `;
-                    container.appendChild(col);
-                });
+                    const responseData = await response.json();
 
-            } catch (error) {
-                removeLoadingIndicator(container, loadingIndicator);
-                container.innerHTML += `<div class="col-12 text-center text-danger">
+
+                    const amenities = responseData.content || [];
+
+                    // Loại bỏ trạng thái tải
+                    removeLoadingIndicator(container, loadingIndicator);
+
+                    const dynamicAmenities = amenities.filter(a => {
+
+                        const name = (a.name || '').toLowerCase().trim();
+                        return a.name && !staticDefaults.includes(name);
+                    });
+
+                    if (dynamicAmenities.length === 0) {
+                        container.innerHTML += '<div class="col-12 text-center text-muted"><p>Không có dịch vụ bổ sung nào khác.</p></div>';
+                        return;
+                    }
+
+                    dynamicAmenities.forEach(amenity => {
+                        const col = document.createElement('div');
+                        //class nhỏ hơn một chút cho các tiện ích phụ (col-lg-3)
+                        col.className = 'col-lg-3 col-md-4 col-sm-6';
+
+                        col.innerHTML = `
+
+                    <div class="facility-card service-item" data-aos="fade-up">
+                        <div 
+                            class="facility-image"
+                            style="background-image: url('${amenity.imageUrl || '/img/default-amenity.jpg'}');">
+                            <div class="facility-overlay">
+                                <i class="bi ${amenity.iconClass || 'bi-stars'}"></i>
+                            </div>
+                        </div>
+
+                        <div class="facility-info">
+                            <h4>${amenity.name}</h4>
+                            <p>${amenity.description}</p>
+                            <div class="facility-features">
+                                <span><i class="bi bi-check-circle"></i></span>
+                                <span>${amenity.type}</span>
+                            </div>
+                        </div>
+                    </div>
+`;
+                        container.appendChild(col);
+                    });
+
+                }
+                catch (error) {
+                    removeLoadingIndicator(container, loadingIndicator);
+                    container.innerHTML += `<div class="col-12 text-center text-danger">
                 <i class="bi bi-exclamation-octagon"></i>
                 <p class="mt-2">Lỗi tải dữ liệu. Vui lòng thử lại sau.</p>
             </div>`;
-                console.error("Lỗi khi tải tiện ích:", error);
+                    console.error("Lỗi khi tải tiện ích:", error);
+                }
             }
-        }
 
-        fetchDynamicAmenities();
-    });
-</script>
+            fetchDynamicAmenities();
+        });
+    </script>
 
 </body>
 

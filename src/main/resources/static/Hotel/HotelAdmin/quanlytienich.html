@@ -26,6 +26,28 @@
             box-shadow: 0 5px 30px rgba(1, 41, 112, 0.15);
         }
 
+        .amenity-image {
+            height: 140px;
+            background-color: #f4f6fb;
+            border-radius: 6px 6px 0 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .amenity-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .4s ease;
+        }
+
+        .amenity-card:hover .amenity-image img {
+            transform: scale(1.08);
+        }
+
+
         .icon-box {
             font-size: 2rem;
             color: #4154f1;
@@ -45,713 +67,871 @@
 
 <body>
 
-<header id="header" class="header fixed-top d-flex align-items-center">
+    <header id="header" class="header fixed-top d-flex align-items-center">
 
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="index.html" class="logo d-flex align-items-center">
-            <img src="assets/img/logo.png" alt="Logo">
-            <span class="d-none d-lg-block">Grandoria</span>
-        </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div>
-    <div class="search-bar">
-        <form class="search-form d-flex align-items-center" method="POST" action="#">
-            <input type="text" name="query" placeholder="Tìm kiếm đặt phòng, khách hàng..."
-                   title="Nhập từ khóa tìm kiếm">
-            <button type="submit" title="Tìm kiếm"><i class="bi bi-search"></i></button>
-        </form>
-    </div>
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="index.html" class="logo d-flex align-items-center">
+                <img src="assets/img/logo.png" alt="Logo">
+                <span class="d-none d-lg-block">Grandoria</span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div>
+        <div class="search-bar">
+            <form class="search-form d-flex align-items-center" method="POST" action="#">
+                <input type="text" name="query" placeholder="Tìm kiếm đặt phòng, khách hàng..."
+                    title="Nhập từ khóa tìm kiếm">
+                <button type="submit" title="Tìm kiếm"><i class="bi bi-search"></i></button>
+            </form>
+        </div>
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
 
-            <li class="nav-item d-block d-lg-none">
-                <a class="nav-link nav-icon search-bar-toggle " href="#">
-                    <i class="bi bi-search"></i>
+                <li class="nav-item d-block d-lg-none">
+                    <a class="nav-link nav-icon search-bar-toggle " href="#">
+                        <i class="bi bi-search"></i>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                        <i class="bi bi-bell"></i>
+                        <span class="badge bg-primary badge-number">3</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+                        <li class="dropdown-header">
+                            Bạn có 3 thông báo mới
+                            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">Xem tất cả</span></a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="notification-item">
+                            <i class="bi bi-exclamation-circle text-warning"></i>
+                            <div>
+                                <h4>Đặt phòng mới</h4>
+                                <p>Khách hàng Nguyễn Văn A vừa đặt phòng Deluxe</p>
+                                <p>5 phút trước</p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="notification-item">
+                            <i class="bi bi-x-circle text-danger"></i>
+                            <div>
+                                <h4>Hủy đặt phòng</h4>
+                                <p>Đặt phòng #2457 đã bị hủy</p>
+                                <p>2 giờ trước</p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li class="notification-item">
+                            <i class="bi bi-check-circle text-success"></i>
+                            <div>
+                                <h4>Phản hồi mới</h4>
+                                <p>Bạn có 2 đánh giá mới từ khách hàng</p>
+                                <p>4 giờ trước</p>
+                            </div>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li class="dropdown-footer">
+                            <a href="#">Hiển thị tất cả thông báo</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown pe-3">
+
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                        <img src="assets/img/profile-img.jpg" alt="Hồ sơ" class="rounded-circle">
+                        <span class="d-none d-md-block dropdown-toggle ps-2" id="profileName">Đang tải...</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                        <li class="dropdown-header">
+                            <h6 id="profileDropdownName">...</h6>
+                            <span id="profileDropdownRole">...</span>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                                <i class="bi bi-person"></i>
+                                <span>Hồ sơ của tôi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                                <i class="bi bi-gear"></i>
+                                <span>Cài đặt tài khoản</span>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="pages-login.html"
+                                id="logoutButton">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Đăng xuất</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link " href="index.html">
+                    <i class="bi bi-house-door"></i>
+                    <span>Bảng Điều Khiển</span>
                 </a>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge bg-primary badge-number">3</span>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#booking-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-calendar-check"></i><span>Quản lý Đặt phòng</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                        Bạn có 3 thông báo mới
-                        <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">Xem tất cả</span></a>
+                <ul id="booking-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="tatcadatphong.html">
+                            <i class="bi bi-circle"></i><span>Tất cả đặt phòng</span>
+                        </a>
                     </li>
                     <li>
-                        <hr class="dropdown-divider">
+                        <a href="checkin.html">
+                            <i class="bi bi-circle"></i><span>Check-in</span>
+                        </a>
                     </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-exclamation-circle text-warning"></i>
-                        <div>
-                            <h4>Đặt phòng mới</h4>
-                            <p>Khách hàng Nguyễn Văn A vừa đặt phòng Deluxe</p>
-                            <p>5 phút trước</p>
-                        </div>
-                    </li>
-
                     <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-x-circle text-danger"></i>
-                        <div>
-                            <h4>Hủy đặt phòng</h4>
-                            <p>Đặt phòng #2457 đã bị hủy</p>
-                            <p>2 giờ trước</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                        <i class="bi bi-check-circle text-success"></i>
-                        <div>
-                            <h4>Phản hồi mới</h4>
-                            <p>Bạn có 2 đánh giá mới từ khách hàng</p>
-                            <p>4 giờ trước</p>
-                        </div>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li class="dropdown-footer">
-                        <a href="#">Hiển thị tất cả thông báo</a>
+                        <a href="checkout.html">
+                            <i class="bi bi-circle"></i><span>Check-out</span>
+                        </a>
                     </li>
                 </ul>
             </li>
-            <li class="nav-item dropdown pe-3">
-
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="assets/img/profile-img.jpg" alt="Hồ sơ" class="rounded-circle">
-                    <span class="d-none d-md-block dropdown-toggle ps-2" id="profileName">Đang tải...</span>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#room-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-door-closed"></i><span>Quản lý Phòng</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li class="dropdown-header">
-                        <h6 id="profileDropdownName">...</h6>
-                        <span id="profileDropdownRole">...</span>
-                    </li>
+                <ul id="room-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                            <i class="bi bi-person"></i>
-                            <span>Hồ sơ của tôi</span>
+                        <a href="danhsachphong.html">
+                            <i class="bi bi-circle"></i><span>Danh sách phòng</span>
                         </a>
                     </li>
                     <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                            <i class="bi bi-gear"></i>
-                            <span>Cài đặt tài khoản</span>
+                        <a href="loaiphong.html">
+                            <i class="bi bi-circle"></i><span>Loại phòng</span>
                         </a>
                     </li>
                     <li>
-                        <hr class="dropdown-divider">
+                        <a href="tinhtrangphong.html">
+                            <i class="bi bi-circle"></i><span>Tình trạng phòng</span>
+                        </a>
                     </li>
-
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="pages-login.html"
-                           id="logoutButton">
-                            <i class="bi bi-box-arrow-right"></i>
-                            <span>Đăng xuất</span>
+                        <a href="giaphong.html">
+                            <i class="bi bi-circle"></i><span>Giá phòng</span>
                         </a>
                     </li>
                 </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#customer-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-people"></i><span>Quản lý Khách hàng</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="customer-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="danhsachkhachhang.html">
+                            <i class="bi bi-circle"></i><span>Danh sách khách hàng</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="chuongtrinhthanhvien.html">
+                            <i class="bi bi-circle"></i><span>Chương trình thành viên</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="danhgia&phanhoi.html">
+                            <i class="bi bi-circle"></i><span>Đánh giá & Phản hồi</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#amenity-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-gift"></i><span>Quản lý Tiện ích</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="amenity-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="quanlytienich.html">
+                            <i class="bi bi-circle"></i><span>Danh sách Tiện ích</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="danhmuctienich.html">
+                            <i class="bi bi-circle"></i><span>Danh mục (Phụ)</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="baocao&thongke.html">
+                    <i class="bi bi-bar-chart"></i>
+                    <span>Báo cáo & Thống kê</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-cash-coin"></i><span>Tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="finance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a href="finance-invoices.html">
+                            <i class="bi bi-circle"></i><span>Hóa đơn</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="finance-payments.html">
+                            <i class="bi bi-circle"></i><span>Thanh toán</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="finance-revenue.html">
+                            <i class="bi bi-circle"></i><span>Doanh thu</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-heading">Trang</li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="users-profile.html">
+                    <i class="bi bi-person"></i>
+                    <span>Hồ sơ</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="pages-contact.html">
+                    <i class="bi bi-envelope"></i>
+                    <span>Liên hệ</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="users.html">
+                    <i class="bi bi-person-gear"></i>
+                    <span>Nhân viên</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="taikhoan.html">
+                    <i class="bi bi-person-badge"></i>
+                    <span>Tài khoản</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="settings.html">
+                    <i class="bi bi-gear"></i>
+                    <span>Cài đặt</span>
+                </a>
             </li>
         </ul>
-    </nav>
-</header>
-<aside id="sidebar" class="sidebar">
 
-    <ul class="sidebar-nav" id="sidebar-nav">
+    </aside>
+    <main id="main" class="main">
+        <div class="pagetitle d-flex justify-content-between align-items-center">
+            <h1>Quản lý Tiện ích</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item">Quản lý Phòng</li>
+                    <li class="breadcrumb-item active">Quản lý Tiện ích</li>
+                </ol>
+            </nav>
+        </div>
 
-        <li class="nav-item">
-            <a class="nav-link " href="index.html">
-                <i class="bi bi-house-door"></i>
-                <span>Bảng Điều Khiển</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#booking-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-calendar-check"></i><span>Quản lý Đặt phòng</span><i
-                    class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="booking-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="tatcadatphong.html">
-                        <i class="bi bi-circle"></i><span>Tất cả đặt phòng</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="checkin.html">
-                        <i class="bi bi-circle"></i><span>Check-in</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="checkout.html">
-                        <i class="bi bi-circle"></i><span>Check-out</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#room-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-door-closed"></i><span>Quản lý Phòng</span><i
-                    class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="room-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="danhsachphong.html">
-                        <i class="bi bi-circle"></i><span>Danh sách phòng</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="loaiphong.html">
-                        <i class="bi bi-circle"></i><span>Loại phòng</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="tinhtrangphong.html">
-                        <i class="bi bi-circle"></i><span>Tình trạng phòng</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="giaphong.html">
-                        <i class="bi bi-circle"></i><span>Giá phòng</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#customer-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-people"></i><span>Quản lý Khách hàng</span><i
-                    class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="customer-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="danhsachkhachhang.html">
-                        <i class="bi bi-circle"></i><span>Danh sách khách hàng</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="chuongtrinhthanhvien.html">
-                        <i class="bi bi-circle"></i><span>Chương trình thành viên</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="danhgia&phanhoi.html">
-                        <i class="bi bi-circle"></i><span>Đánh giá & Phản hồi</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#amenity-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-gift"></i><span>Quản lý Tiện ích</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="amenity-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="quanlytienich.html">
-                        <i class="bi bi-circle"></i><span>Danh sách Tiện ích</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="danhmuctienich.html">
-                        <i class="bi bi-circle"></i><span>Danh mục (Phụ)</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="baocao&thongke.html">
-                <i class="bi bi-bar-chart"></i>
-                <span>Báo cáo & Thống kê</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#finance-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-cash-coin"></i><span>Tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="finance-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="finance-invoices.html">
-                        <i class="bi bi-circle"></i><span>Hóa đơn</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="finance-payments.html">
-                        <i class="bi bi-circle"></i><span>Thanh toán</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="finance-revenue.html">
-                        <i class="bi bi-circle"></i><span>Doanh thu</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="nav-heading">Trang</li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="users-profile.html">
-                <i class="bi bi-person"></i>
-                <span>Hồ sơ</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-contact.html">
-                <i class="bi bi-envelope"></i>
-                <span>Liên hệ</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="users.html">
-                <i class="bi bi-person-gear"></i>
-                <span>Nhân viên</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="taikhoan.html">
-                <i class="bi bi-person-badge"></i>
-                <span>Tài khoản</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="settings.html">
-                <i class="bi bi-gear"></i>
-                <span>Cài đặt</span>
-            </a>
-        </li>
-    </ul>
-
-</aside>
-<main id="main" class="main">
-    <div class="pagetitle d-flex justify-content-between align-items-center">
-        <h1>Quản lý Tiện ích</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
-                <li class="breadcrumb-item">Quản lý Phòng</li>
-                <li class="breadcrumb-item active">Quản lý Tiện ích</li>
-            </ol>
-        </nav>
-    </div>
-
-    <section class="section">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="card-title">Danh sách Tiện ích Khách sạn</h5>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAmenityModal"
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="card-title">Danh sách Tiện ích Khách sạn</h5>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAmenityModal"
                                     id="btnAddAmenity">
-                                <i class="bi bi-plus-circle"></i> Thêm Tiện ích mới
-                            </button>
-                        </div>
-
-                        <div class="row mb-4">
-                            <div class="col-md-5">
-                                <input type="text" class="form-control" id="searchAmenity"
-                                       placeholder="Tìm theo tên tiện ích, mô tả...">
+                                    <i class="bi bi-plus-circle"></i> Thêm Tiện ích mới
+                                </button>
                             </div>
-                            <div class="col-md-3">
-                                <select class="form-select" id="filterAmenityType">
-                                    <option value="">Tất cả loại</option>
+
+                            <div class="row mb-4">
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="searchAmenity"
+                                        placeholder="Tìm theo tên tiện ích, mô tả...">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="filterAmenityType">
+                                        <option value="">Tất cả loại</option>
+                                        <option value="In-room">Trong phòng</option>
+                                        <option value="Out-room">Khách sạn</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-outline-primary w-100" id="searchButton">Tìm kiếm &
+                                        Lọc</button>
+                                </div>
+                            </div>
+
+                            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="amenityGridView">
+                                <div class="text-center p-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Đang tải...</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="noAmenityResult" class="text-center text-muted my-4" style="display:none;">
+                                <i class="bi bi-emoji-frown fs-2"></i><br>
+                                Không tìm thấy tiện ích nào phù hợp.
+                            </div>
+
+                            <nav aria-label="Page navigation" id="amenityPagination">
+                                <ul class="pagination justify-content-center"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal fade" id="addAmenityModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="amenityModalTitle">Thêm Tiện ích mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="amenityForm">
+                        <input type="hidden" id="amenityId">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="amenityName" class="form-label">Tên Tiện ích *</label>
+                                <input type="text" class="form-control" id="amenityName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="amenityType" class="form-label">Loại Tiện ích *</label>
+                                <select class="form-select" id="amenityType" required>
                                     <option value="In-room">Trong phòng</option>
                                     <option value="Out-room">Khách sạn</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
-                                <button class="btn btn-outline-primary w-100" id="searchButton">Tìm kiếm &
-                                    Lọc</button>
+                            <div class="col-12">
+                                <label for="amenityDescription" class="form-label">Mô tả chi tiết</label>
+                                <textarea class="form-control" id="amenityDescription" rows="3"></textarea>
                             </div>
-                        </div>
+                            <div class="col-12">
+                                <label for="amenityIcon" class="form-label">Tên Icon Bootstrap (tùy chọn)</label>
+                                <input type="text" class="form-control" id="amenityIcon"
+                                    placeholder="Vd: bi-wifi, bi-tv, bi-swimming-pool">
+                                <small class="form-text text-muted">Tham khảo: <a href="https://icons.getbootstrap.com/"
+                                        target="_blank">Bootstrap Icons</a></small>
+                            </div>
+                            <!-- Ảnh tiện ích -->
+                            <div class="col-12">
+                                <label class="form-label">Ảnh tiện ích</label>
 
-                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="amenityGridView">
-                            <div class="text-center p-5">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Đang tải...</span>
+                                <div class="d-flex align-items-start gap-3">
+                                    <img id="amenityImagePreview" src="assets/img/no-image.png" class="rounded border"
+                                        style="width:120px;height:80px;object-fit:cover">
+
+                                    <div>
+                                        <button type="button" class="btn btn-outline-primary mb-2"
+                                            onclick="openImageSelector()">
+                                            <i class="bi bi-image"></i> Chọn ảnh
+                                        </button>
+
+                                        <input type="hidden" id="amenityImageUrl">
+                                        <div class="text-muted small">
+                                            Ảnh được chọn từ thư viện hệ thống
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div id="noAmenityResult" class="text-center text-muted my-4" style="display:none;">
-                            <i class="bi bi-emoji-frown fs-2"></i><br>
-                            Không tìm thấy tiện ích nào phù hợp.
-                        </div>
 
-                        <nav aria-label="Page navigation" id="amenityPagination">
-                            <ul class="pagination justify-content-center"></ul>
-                        </nav>
-                    </div>
+
+
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="amenityPrice" class="form-label">Giá Dịch vụ (VND)</label>
+                                <input type="number" class="form-control" id="amenityPrice" value="0.00" min="0">
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end">
+                                <div class="form-check pb-2">
+                                    <input class="form-check-input" type="checkbox" value="true" id="isChargeableCheck">
+                                    <label class="form-check-label" for="isChargeableCheck">
+                                        Tiện ích có tính phí riêng?
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="saveAmenityBtn">Lưu</button>
                 </div>
             </div>
         </div>
-    </section>
-</main>
+    </div>
 
-<div class="modal fade" id="addAmenityModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="amenityModalTitle">Thêm Tiện ích mới</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="amenityForm">
-                    <input type="hidden" id="amenityId">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="amenityName" class="form-label">Tên Tiện ích *</label>
-                            <input type="text" class="form-control" id="amenityName" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="amenityType" class="form-label">Loại Tiện ích *</label>
-                            <select class="form-select" id="amenityType" required>
-                                <option value="In-room">Trong phòng</option>
-                                <option value="Out-room">Khách sạn</option>
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <label for="amenityDescription" class="form-label">Mô tả chi tiết</label>
-                            <textarea class="form-control" id="amenityDescription" rows="3"></textarea>
-                        </div>
-                        <div class="col-12">
-                            <label for="amenityIcon" class="form-label">Tên Icon Bootstrap (tùy chọn)</label>
-                            <input type="text" class="form-control" id="amenityIcon"
-                                   placeholder="Vd: bi-wifi, bi-tv, bi-swimming-pool">
-                            <small class="form-text text-muted">Tham khảo: <a href="https://icons.getbootstrap.com/"
-                                                                              target="_blank">Bootstrap Icons</a></small>
-                        </div>
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="amenityPrice" class="form-label">Giá Dịch vụ (VND)</label>
-                            <input type="number" class="form-control" id="amenityPrice" value="0.00" min="0">
-                        </div>
-                        <div class="col-md-6 d-flex align-items-end">
-                            <div class="form-check pb-2">
-                                <input class="form-check-input" type="checkbox" value="true" id="isChargeableCheck">
-                                <label class="form-check-label" for="isChargeableCheck">
-                                    Tiện ích có tính phí riêng?
-                                </label>
-                            </div>
-                        </div>
-
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" id="saveAmenityBtn">Lưu</button>
-            </div>
+    <footer id="footer" class="footer">
+        <div class="copyright"> &copy; Bản quyền <strong><span>HotelAdmin</span></strong>. Tất cả các quyền được bảo lưu
         </div>
-    </div>
-</div>
+        <div class="credits"> Thiết kế bởi <a href="#">Nhóm Phát triển</a> </div>
+    </footer>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
 
-<footer id="footer" class="footer">
-    <div class="copyright"> &copy; Bản quyền <strong><span>HotelAdmin</span></strong>. Tất cả các quyền được bảo lưu
-    </div>
-    <div class="credits"> Thiết kế bởi <a href="#">Nhóm Phát triển</a> </div>
-</footer>
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-        class="bi bi-arrow-up-short"></i></a>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/auth.js"></script>
 
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/main.js"></script>
-<script src="assets/js/auth.js"></script>
+    <script>
+        const API_URL = '/api/admin/amenities';
+        let allAmenities = [];
+        let currentPage = 1;
+        let totalPages = 1;
+        const PAGE_SIZE = 6;
 
-<script>
-    const API_URL = '/api/admin/amenities';
-    let allAmenities = []; // Mảng lưu trữ dữ liệu hiện tại từ API
-    let currentPage = 1;
-    let totalPages = 1;
-    const PAGE_SIZE = 6;
+        function getAuthHeader() {
+            const adminToken = localStorage.getItem("jwtToken");
 
-    function getAuthHeader() {
-    const adminToken = localStorage.getItem("jwtToken");
+            if (!adminToken) {
+                alert("Phiên đăng nhập ADMIN đã hết hạn. Vui lòng đăng nhập lại!");
+                window.location.href = "pages-login.html";
+                throw new Error("NO_ADMIN_TOKEN");
+            }
 
-    if (!adminToken) {
-        alert("Phiên đăng nhập ADMIN đã hết hạn. Vui lòng đăng nhập lại!");
-        window.location.href = "pages-login.html";
-        throw new Error("NO_ADMIN_TOKEN");
-    }
-
-    return {
-        'Authorization': 'Bearer ' + adminToken
-    };
-}
-
-
-
-    function renderPagination(totalPagesCount, currentPage) {
-        const pag = document.querySelector('#amenityPagination ul');
-        pag.innerHTML = '';
-        if (totalPagesCount <= 1) return;
-
-        pag.innerHTML += `<li class="page-item${currentPage === 1 ? ' disabled' : ''}"><a class="page-link" href="#" data-page="${currentPage - 1}">Trước</a></li>`;
-        for (let i = 1; i <= totalPagesCount; i++) {
-            pag.innerHTML += `<li class="page-item${i === currentPage ? ' active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
-        }
-        pag.innerHTML += `<li class="page-item${currentPage === totalPagesCount ? ' disabled' : ''}"><a class="page-link" href="#" data-page="${currentPage + 1}">Tiếp</a></li>`;
-    }
-
-    function renderAmenities(list, page, totalPagesCount) {
-        const grid = document.getElementById('amenityGridView');
-        grid.innerHTML = '';
-        const noResult = document.getElementById('noAmenityResult');
-        const paginationEl = document.getElementById('amenityPagination');
-
-        if (!list || list.length === 0) {
-            noResult.style.display = 'block';
-            paginationEl.style.display = 'none';
-            return;
+            return {
+                'Authorization': 'Bearer ' + adminToken
+            };
         }
 
-        noResult.style.display = 'none';
-        paginationEl.style.display = 'block';
+        function openImageSelector() {
+            const modalEl = document.getElementById('selectImageModal');
+            const modal = new bootstrap.Modal(modalEl);
 
-        // --- Render Items ---
-        list.forEach(a => {
-            const iconClass = a.iconClass || 'bi-gear';
-            grid.innerHTML += `
-                <div class="col">
-                    <div class="card amenity-card h-100" data-id="${a.id}">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="icon-box me-3"><i class="bi ${iconClass}"></i></div>
-                                <div>
-                                    <h5 class="card-title pt-0 pb-0 mb-1">${a.name}</h5>
-                                    <span class="badge bg-secondary">${a.type || 'Chưa phân loại'}</span>
-                                </div>
-                            </div>
-                            <p class="text-muted text-truncate-2" title="${a.description || 'Không có mô tả.'}">${a.description || 'Không có mô tả.'}</p>
-                            <div class="d-flex justify-content-end pt-2">
-                                <button class="btn btn-sm btn-outline-warning me-2 edit-amenity" data-id="${a.id}" title="Sửa"><i class="bi bi-pencil"></i></button>
-                                <button class="btn btn-sm btn-outline-danger delete-amenity" data-id="${a.id}" title="Xóa"><i class="bi bi-trash"></i></button>
-                            </div>
-                        </div>
+            modal.show();
+            loadImagesFromServer();
+        }
+        function selectImage(url) {
+            // Lưu URL ảnh
+            document.getElementById('amenityImageUrl').value = url;
+
+            // Preview
+            const preview = document.getElementById('amenityImagePreview');
+            preview.src = url;
+
+            // Đóng modal
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('selectImageModal')
+            );
+            modal.hide();
+        }
+        async function loadImagesFromServer() {
+            try {
+                const res = await fetch('/api/admin/images', {
+                    headers: getAuthHeader()
+                });
+
+                if (!res.ok) throw new Error('Không tải được ảnh');
+
+                const images = await res.json();
+                const grid = document.getElementById('imageGrid');
+                grid.innerHTML = '';
+
+                if (!images || images.length === 0) {
+                    grid.innerHTML = `
+                <div class="text-center text-muted p-5">
+                    Không có ảnh trong thư viện
+                </div>`;
+                    return;
+                }
+
+                images.forEach(url => {
+                    grid.innerHTML += `
+                <div class="col-md-3 col-lg-2 mb-4">
+                    <div class="card image-select h-100"
+                         onclick="selectImage('${url}')"
+                         style="cursor:pointer">
+                        <img src="${url}"
+                             class="img-fluid rounded"
+                             style="height:120px;object-fit:cover">
                     </div>
                 </div>
             `;
-        });
+                });
 
-        renderPagination(totalPagesCount, page);
-    }
-
-    function populateEditModal(id) {
-        const amenity = allAmenities.find(a => a.id === id);
-        if (!amenity) return;
-
-        document.getElementById('amenityModalTitle').textContent = `Sửa Tiện ích: ${amenity.name}`;
-        document.getElementById('amenityId').value = amenity.id;
-        document.getElementById('amenityName').value = amenity.name;
-        document.getElementById('amenityType').value = amenity.type || 'Phòng';
-        document.getElementById('amenityDescription').value = amenity.description || '';
-        document.getElementById('amenityIcon').value = amenity.iconClass || '';
+            } catch (err) {
+                console.error(err);
+                document.getElementById('imageGrid').innerHTML = `
+            <div class="text-center text-danger p-5">
+                Lỗi tải ảnh
+            </div>`;
+            }
+        }
 
 
-        new bootstrap.Modal(document.getElementById('addAmenityModal')).show();
-    }
 
-    async function fetchAllAmenities(page = 1, searchQuery = '', typeFilter = '') {
-        const url = `${API_URL}?page=${page - 1}&size=${PAGE_SIZE}&q=${searchQuery}&type=${typeFilter}`;
-        const grid = document.getElementById('amenityGridView');
+        // document.getElementById('amenityImage').addEventListener('input', function () {
+        //     const img = this.value.trim();
+        //     document.getElementById('amenityPreview').src =
+        //         img || 'assets/img/no-image.png';
+        // });
 
-        grid.innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Đang tải...</span></div></div>';
 
-        try {
-            const headers = getAuthHeader();
-            const response = await fetch(url, { headers: headers });
+        function renderPagination(totalPagesCount, currentPage) {
+            const pag = document.querySelector('#amenityPagination ul');
+            pag.innerHTML = '';
+            if (totalPagesCount <= 1) return;
 
-            if (response.status === 401 || response.status === 403) {
-                alert('Phiên đăng nhập hết hạn hoặc không có quyền truy cập.');
-                window.location.href = 'pages-login.html';
+            const start = Math.max(1, currentPage - 2);
+            const end = Math.min(totalPagesCount, currentPage + 2);
+
+            if (currentPage > 1) {
+                pag.innerHTML += `
+        <li class="page-item">
+            <a class="page-link" href="#" data-page="${currentPage - 1}">Trước</a>
+        </li>`;
+            }
+
+            for (let i = start; i <= end; i++) {
+                pag.innerHTML += `
+        <li class="page-item ${i === currentPage ? 'active' : ''}">
+            <a class="page-link" href="#" data-page="${i}">${i}</a>
+        </li>`;
+            }
+
+            if (currentPage < totalPagesCount) {
+                pag.innerHTML += `
+        <li class="page-item">
+            <a class="page-link" href="#" data-page="${currentPage + 1}">Tiếp</a>
+        </li>`;
+            }
+        }
+
+
+        function renderAmenities(list, page, totalPagesCount) {
+            const grid = document.getElementById('amenityGridView');
+            grid.innerHTML = '';
+            const noResult = document.getElementById('noAmenityResult');
+            const paginationEl = document.getElementById('amenityPagination');
+
+            if (!list || list.length === 0) {
+                noResult.style.display = 'block';
+                paginationEl.style.display = 'none';
                 return;
             }
-            if (!response.ok) {
-                throw new Error(`Lỗi API: ${response.status}`);
-            }
 
-            const data = await response.json();
+            noResult.style.display = 'none';
+            paginationEl.style.display = 'block';
 
-            allAmenities = data.content;
-            currentPage = data.number + 1;
-            totalPages = data.totalPages;
+            // --- Render Items ---
+            list.forEach(a => {
+                const iconClass = a.iconClass || 'bi-gear';
+                const imageUrl = a.imageUrl || 'assets/img/no-image.png';
 
-            renderAmenities(allAmenities, currentPage, totalPages);
+                grid.innerHTML += `
+<div class="col">
+    <div class="card amenity-card h-100" data-id="${a.id}">
+        <div class="amenity-image">
+            <img src="${imageUrl}" alt="${a.name}">
+        </div>
+        <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+                <div class="icon-box me-3">
+                    <i class="bi ${iconClass}"></i>
+                </div>
+                <div>
+                    <h5 class="card-title mb-1">${a.name}</h5>
+                    <span class="badge bg-secondary">${a.type}</span>
+                </div>
+            </div>
+            <p class="text-muted text-truncate-2">
+                ${a.description || 'Không có mô tả.'}
+            </p>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-sm btn-outline-warning me-2 edit-amenity" data-id="${a.id}">
+                    <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger delete-amenity" data-id="${a.id}">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>`;
 
-        } catch (error) {
-            console.error("Lỗi khi tải dữ liệu tiện ích:", error);
-            grid.innerHTML = `<div class="col-12 text-center text-danger p-5">Lỗi kết nối Server. Vui lòng kiểm tra console.</div>`;
-        }
-    }
-
-    async function handleSaveAmenity() {
-        const id = document.getElementById('amenityId').value;
-        const isEdit = !!id;
-
-        const name = document.getElementById('amenityName').value.trim();
-        const type = document.getElementById('amenityType').value;
-        const description = document.getElementById('amenityDescription').value.trim();
-        const iconClass = document.getElementById('amenityIcon').value.trim() || 'bi-gear';
-
-        if (!name || !type) {
-             alert('Vui lòng nhập Tên và Loại tiện ích.');
-             return;
-        }
-
-        const payload = {
-            id: isEdit ? Number(id) : undefined,
-            name: name,
-            type: type,
-            description: description,
-            iconClass: iconClass,
-        };
-
-        const method = isEdit ? 'PUT' : 'POST';
-        const finalUrl = isEdit ? `${API_URL}/${id}` : API_URL;
-
-        try {
-            const response = await fetch(finalUrl, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...getAuthHeader(),
-                },
-                body: JSON.stringify(payload)
             });
 
-            if (response.status === 401 || response.status === 403) {
-                 alert('Không có quyền thực hiện thao tác này. Vui lòng đăng nhập lại.');
-                 window.location.href = 'pages-login.html';
-                 return;
-            }
-            if (!response.ok) {
-                const errorData = await response.json();
-                const errorMessage = errorData.message || `Lỗi không xác định: ${response.status}`;
-                throw new Error(errorMessage);
-            }
-
-            alert('Lưu thành công!');
-            const modalInstance = bootstrap.Modal.getInstance(document.getElementById('addAmenityModal'));
-            if (modalInstance) {
-                modalInstance.hide();
-            }
-
-            fetchAllAmenities(currentPage);
-
-        } catch (error) {
-            alert(`Lỗi: Không thể lưu tiện ích. ${error.message}`);
-            console.error("Lỗi khi gửi dữ liệu:", error);
+            renderPagination(totalPagesCount, page);
         }
-    }
 
-    async function handleDeleteAmenity(id) {
-        const amenity = allAmenities.find(a => a.id === id);
-        if (!amenity) return;
+        function populateEditModal(id) {
+            const amenity = allAmenities.find(a => a.id === id);
+            if (!amenity) return;
 
-        if (!confirm(`Bạn có chắc chắn muốn xóa tiện ích "${amenity.name}"? Thao tác này không thể hoàn tác.`)) return;
+            document.getElementById('amenityModalTitle').textContent = `Sửa Tiện ích: ${amenity.name}`;
+            document.getElementById('amenityId').value = amenity.id;
+            document.getElementById('amenityName').value = amenity.name;
+            document.getElementById('amenityType').value = amenity.type || 'Phòng';
+            document.getElementById('amenityDescription').value = amenity.description || '';
+            document.getElementById('amenityIcon').value = amenity.iconClass || '';
+            document.getElementById('amenityImageUrl').value = amenity.imageUrl || '';
+            document.getElementById('amenityImagePreview').src = 'assets/img/no-image.png';
 
-        try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'DELETE',
-                headers: getAuthHeader(),
+
+
+            new bootstrap.Modal(document.getElementById('addAmenityModal')).show();
+        }
+
+        async function fetchAllAmenities(page = 1, searchQuery = '', typeFilter = '') {
+            const url = `${API_URL}?page=${page - 1}&size=${PAGE_SIZE}&q=${searchQuery}&type=${typeFilter}`;
+            const grid = document.getElementById('amenityGridView');
+
+            grid.innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Đang tải...</span></div></div>';
+
+            try {
+                const headers = getAuthHeader();
+                const response = await fetch(url, { headers: headers });
+
+                if (response.status === 401 || response.status === 403) {
+                    alert('Phiên đăng nhập hết hạn hoặc không có quyền truy cập.');
+                    window.location.href = 'pages-login.html';
+                    return;
+                }
+                if (!response.ok) {
+                    throw new Error(`Lỗi API: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                allAmenities = data.content;
+                currentPage = data.number + 1;
+                totalPages = data.totalPages;
+
+                renderAmenities(allAmenities, currentPage, totalPages);
+
+            } catch (error) {
+                console.error("Lỗi khi tải dữ liệu tiện ích:", error);
+                grid.innerHTML = `<div class="col-12 text-center text-danger p-5">Lỗi kết nối Server. Vui lòng kiểm tra console.</div>`;
+            }
+        }
+
+        async function handleSaveAmenity() {
+            const id = document.getElementById('amenityId').value;
+            const isEdit = !!id;
+            const imageUrl = document.getElementById('amenityImageUrl').value.trim();
+
+            const name = document.getElementById('amenityName').value.trim();
+            const type = document.getElementById('amenityType').value;
+            const description = document.getElementById('amenityDescription').value.trim();
+            const iconClass = document.getElementById('amenityIcon').value.trim() || 'bi-gear';
+
+            if (!name || !type) {
+                alert('Vui lòng nhập Tên và Loại tiện ích.');
+                return;
+            }
+
+            const payload = {
+                id: isEdit ? Number(id) : undefined,
+                name,
+                type,
+                description,
+                iconClass,
+                imageUrl: document.getElementById('amenityImageUrl').value
+            };
+
+
+            const method = isEdit ? 'PUT' : 'POST';
+            const finalUrl = isEdit ? `${API_URL}/${id}` : API_URL;
+
+            try {
+                const response = await fetch(finalUrl, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...getAuthHeader(),
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    alert('Không có quyền thực hiện thao tác này. Vui lòng đăng nhập lại.');
+                    window.location.href = 'pages-login.html';
+                    return;
+                }
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    const errorMessage = errorData.message || `Lỗi không xác định: ${response.status}`;
+                    throw new Error(errorMessage);
+                }
+
+                alert('Lưu thành công!');
+                const modalInstance = bootstrap.Modal.getInstance(document.getElementById('addAmenityModal'));
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+
+                fetchAllAmenities(currentPage);
+
+            } catch (error) {
+                alert(`Lỗi: Không thể lưu tiện ích. ${error.message}`);
+                console.error("Lỗi khi gửi dữ liệu:", error);
+            }
+        }
+
+        async function handleDeleteAmenity(id) {
+            const amenity = allAmenities.find(a => a.id === id);
+            if (!amenity) return;
+
+            if (!confirm(`Bạn có chắc chắn muốn xóa tiện ích "${amenity.name}"? Thao tác này không thể hoàn tác.`)) return;
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE',
+                    headers: getAuthHeader(),
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    alert('Không có quyền thực hiện thao tác này. Vui lòng đăng nhập lại.');
+                    window.location.href = 'pages-login.html';
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`Lỗi xóa tiện ích: ${response.status}`);
+                }
+
+                alert('Xóa tiện ích thành công.');
+                fetchAllAmenities(currentPage);
+
+            } catch (error) {
+                alert(`Lỗi: Không thể xóa tiện ích. ${error.message}`);
+                console.error("Lỗi khi xóa dữ liệu:", error);
+            }
+        }
+
+        //tim kiem
+        function filterAndRender(e) {
+            if (e && e.preventDefault) e.preventDefault();
+
+            const q = document.getElementById('searchAmenity').value.trim();
+            const type = document.getElementById('filterAmenityType').value;
+
+            fetchAllAmenities(1, q, type);
+
+        }
+
+        function gotoPage(page) {
+            if (page < 1 || page > totalPages) return;
+
+            const q = document.getElementById('searchAmenity').value.trim();
+            const type = document.getElementById('filterAmenityType').value;
+
+            fetchAllAmenities(page, q, type);
+        }
+
+        function setupEventListeners() {
+            document.getElementById('saveAmenityBtn').onclick = handleSaveAmenity;
+            document.getElementById('amenityImagePreview').src = 'assets/img/no-image.png';
+
+            document.getElementById('addAmenityModal').addEventListener('hidden.bs.modal', () => {
+                document.getElementById('amenityForm').reset();
+                document.getElementById('amenityId').value = '';
+                document.getElementById('amenityModalTitle').textContent = 'Thêm Tiện ích mới';
             });
 
-            if (response.status === 401 || response.status === 403) {
-                 alert('Không có quyền thực hiện thao tác này. Vui lòng đăng nhập lại.');
-                 window.location.href = 'pages-login.html';
-                 return;
-            }
+            document.getElementById('searchButton').onclick = filterAndRender;
+            document.getElementById('searchAmenity').addEventListener('input', filterAndRender);
+            document.getElementById('filterAmenityType').addEventListener('change', filterAndRender);
 
-            if (!response.ok) {
-                 throw new Error(`Lỗi xóa tiện ích: ${response.status}`);
-            }
+            document.getElementById('amenityPagination').onclick = (e) => {
+                e.preventDefault();
+                if (e.target.classList.contains('page-link')) {
+                    const page = Number(e.target.getAttribute('data-page'));
+                    gotoPage(page);
+                }
+            };
 
-            alert('Xóa tiện ích thành công.');
-            fetchAllAmenities(currentPage);
-
-        } catch (error) {
-            alert(`Lỗi: Không thể xóa tiện ích. ${error.message}`);
-            console.error("Lỗi khi xóa dữ liệu:", error);
+            document.getElementById('amenityGridView').addEventListener('click', (e) => {
+                const editBtn = e.target.closest('.edit-amenity');
+                const deleteBtn = e.target.closest('.delete-amenity');
+                if (editBtn) {
+                    const id = Number(editBtn.getAttribute('data-id'));
+                    populateEditModal(id);
+                } else if (deleteBtn) {
+                    const id = Number(deleteBtn.getAttribute('data-id'));
+                    handleDeleteAmenity(id);
+                }
+            });
         }
-    }
 
-//tim kiem
-    function filterAndRender(e) {
-        if (e && e.preventDefault) e.preventDefault();
 
-        const q = document.getElementById('searchAmenity').value.trim();
-        const type = document.getElementById('filterAmenityType').value;
-
-        fetchAllAmenities(1, q, type);
-
-    }
-
-    function gotoPage(page) {
-        if (page < 1 || page > totalPages) return;
-
-        const q = document.getElementById('searchAmenity').value.trim();
-        const type = document.getElementById('filterAmenityType').value;
-
-        fetchAllAmenities(page, q, type);
-    }
-
-    function setupEventListeners() {
-        document.getElementById('saveAmenityBtn').onclick = handleSaveAmenity;
-
-        document.getElementById('addAmenityModal').addEventListener('hidden.bs.modal', () => {
-            document.getElementById('amenityForm').reset();
-            document.getElementById('amenityId').value = '';
-            document.getElementById('amenityModalTitle').textContent = 'Thêm Tiện ích mới';
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAllAmenities(1, '', '');
+            setupEventListeners();
         });
+    </script>
 
-        document.getElementById('searchButton').onclick = filterAndRender;
-        document.getElementById('searchAmenity').addEventListener('input', filterAndRender);
-        document.getElementById('filterAmenityType').addEventListener('change', filterAndRender);
+<div class="modal fade" id="selectImageModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
 
-        document.getElementById('amenityPagination').onclick = (e) => {
-            e.preventDefault();
-            if (e.target.classList.contains('page-link')) {
-                const page = Number(e.target.getAttribute('data-page'));
-                gotoPage(page);
-            }
-        };
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-images"></i> Chọn ảnh tiện ích
+                </h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
 
-        document.getElementById('amenityGridView').addEventListener('click', (e) => {
-            const editBtn = e.target.closest('.edit-amenity');
-            const deleteBtn = e.target.closest('.delete-amenity');
-            if (editBtn) {
-                const id = Number(editBtn.getAttribute('data-id'));
-                populateEditModal(id);
-            } else if (deleteBtn) {
-                const id = Number(deleteBtn.getAttribute('data-id'));
-                handleDeleteAmenity(id);
-            }
-        });
-    }
+            <div class="modal-body">
+                <div class="row" id="imageGrid">
+                    <div class="text-center text-muted p-5">
+                        Đang tải ảnh...
+                    </div>
+                </div>
+            </div>
 
-
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchAllAmenities(1, '', '');
-        setupEventListeners();
-    });
-</script>
+        </div>
+    </div>
+</div>
 
 </body>
 
