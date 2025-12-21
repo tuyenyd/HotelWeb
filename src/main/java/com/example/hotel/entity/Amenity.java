@@ -1,9 +1,6 @@
 package com.example.hotel.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -11,15 +8,11 @@ import java.time.LocalDateTime;
 @Table(name = "amenity")
 public class Amenity {
 
-    @Setter
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "amenity_id")
     private Long id;
 
-    @Setter
-    @Getter
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
@@ -27,33 +20,24 @@ public class Amenity {
     @Column(name = "type", nullable = false, length = 50)
     private String type;
 
-    @Setter
-    @Getter
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Setter
-    @Getter
     @Column(name = "icon_class", length = 100)
     private String iconClass;
 
-    @Setter
-    @Getter
     @Column(name = "price", precision = 10, scale = 2, nullable = false)
     private BigDecimal price = BigDecimal.ZERO;
 
-    @Setter
-    @Getter
     @Column(name = "is_chargeable", nullable = false)
     private Boolean isChargeable = false;
 
-    @Setter
-    @Getter
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @Setter
-    @Getter
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
@@ -70,7 +54,47 @@ public class Amenity {
     }
 
 
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
     public String getCategory() { return type; }
     public void setCategory(String category) { this.type = category; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getIconClass() { return iconClass; }
+    public void setIconClass(String iconClass) { this.iconClass = iconClass; }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
+    public Boolean getIsChargeable() { return isChargeable; }
+    public void setIsChargeable(Boolean isChargeable) { this.isChargeable = isChargeable; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Boolean getChargeable() {
+        return isChargeable;
+    }
+
+    public void setChargeable(Boolean chargeable) {
+        isChargeable = chargeable;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
