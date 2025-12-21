@@ -15,6 +15,16 @@ public class AmenityRequestDTO {
 
     private String description;
 
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     private String iconClass;
 
     private BigDecimal price;

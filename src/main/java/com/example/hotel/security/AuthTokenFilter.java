@@ -47,6 +47,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         String contextPath = request.getContextPath();
         String servletPath = path.substring(contextPath.length());
 
+        if (servletPath.startsWith("/api/amenities")
+                || servletPath.startsWith("/api/public")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         try {
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {

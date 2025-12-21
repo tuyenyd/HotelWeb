@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin/amenities")
+@PreAuthorize("hasRole('STAFF')")
 public class AmenityController {
 
     @Autowired
@@ -23,7 +24,7 @@ public class AmenityController {
 
     // --- 1. LẤY DANH SÁCH (READ) ---
     @GetMapping
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('MANAGER','LEADER','STAFF')")
     public ResponseEntity<Page<AmenityResponseDTO>> getAllAmenities(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) String type,
@@ -35,7 +36,7 @@ public class AmenityController {
 
     // --- 2. TẠO MỚI (CREATE) ---
     @PostMapping
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('MANAGER','LEADER','STAFF')")
     public ResponseEntity<AmenityResponseDTO> createAmenity(
             @Valid @RequestBody AmenityRequestDTO amenityDto
     ) {
@@ -45,7 +46,7 @@ public class AmenityController {
 
     // --- 3. CẬP NHẬT (UPDATE) ---
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('MANAGER','LEADER','STAFF')")
     public ResponseEntity<AmenityResponseDTO> updateAmenity(
             @PathVariable Long id,
             @Valid @RequestBody AmenityRequestDTO amenityDto
@@ -60,7 +61,7 @@ public class AmenityController {
 
     // --- 4. XÓA (DELETE) ---
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('MANAGER','LEADER','STAFF')")
     public ResponseEntity<Void> deleteAmenity(@PathVariable Long id) {
         try {
             amenityService.deleteAmenity(id);

@@ -90,7 +90,6 @@ public class SecurityConfig {
                         // --- API CÔNG KHAI (Không cần đăng nhập) ---
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/api/webhook/**").permitAll()
 
                         // --- TÀI NGUYÊN TĨNH (Ảnh, CSS, JS...) ---
                         .requestMatchers("/avatars/**", "/assets/**", "/css/**", "/js/**").permitAll()
@@ -106,6 +105,7 @@ public class SecurityConfig {
                         // Mọi request khác bắt buộc phải xác thực
                         .anyRequest().authenticated()
                 )
+
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
