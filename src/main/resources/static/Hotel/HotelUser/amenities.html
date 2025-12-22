@@ -234,49 +234,7 @@
         </div>
     </section>
 
-    <section id="call-to-action" class="call-to-action section light-background">
 
-        <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-            <div class="row align-items-center">
-                <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
-                    <div class="content">
-                        <h2>Trải nghiệm sang trọng chưa từng có</h2>
-                        <p>Đắm mình trong sự thoải mái và tinh tế chưa từng có tại khách sạn cao cấp của chúng tôi.
-                            Từ các phòng được trang bị tinh tế đến tiện ích đẳng cấp thế giới, mọi chi tiết đều được
-                            thiết kế để vượt xa mong đợi của bạn. Đặt kỳ nghỉ đặc biệt của bạn ngay hôm nay và tạo
-                            nên những kỷ niệm khó quên.</p>
-                        <ul class="features-list">
-                            <li><i class="bi bi-check-circle"></i> Bữa sáng và Wi-Fi miễn phí</li>
-                            <li><i class="bi bi-check-circle"></i> Dịch vụ lễ tân và phòng 24/7</li>
-                            <li><i class="bi bi-check-circle"></i> Spa và trung tâm thể dục hiện đại</li>
-                            <li><i class="bi bi-check-circle"></i> Vị trí đắc địa với tầm nhìn thành phố tuyệt đẹp
-                            </li>
-                        </ul>
-                        <div class="cta-buttons">
-                            <a href="#" class="btn-primary">Đặt kỳ nghỉ của bạn</a>
-                            <a href="#" class="btn-secondary">Xem phòng</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
-                    <div class="image-wrapper">
-                        <img src="assets/img/hotel/showcase-9.webp" alt="Trải nghiệm khách sạn sang trọng"
-                             class="img-fluid">
-                        <div class="overlay-content">
-                            <div class="special-offer">
-                                <span class="label">Ưu đãi đặc biệt</span>
-                                <span class="discount">Tiết kiệm 30%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </section>
 </main>
 
 <footer id="footer" class="footer position-relative dark-background">
@@ -352,7 +310,7 @@
                 dynamicAmenities.forEach(amenity => {
                     const col = document.createElement('div');
                     //class nhỏ hơn một chút cho các tiện ích phụ (col-lg-3)
-                    col.className = 'col-lg-3 col-md-4 col-sm-6';
+                    col.className = 'col-lg-6 col-md-6 col-sm-12';
 
                     col.innerHTML = `
 
@@ -360,9 +318,6 @@
                     <div
                         class="facility-image"
                         style="background-image: url('${amenity.imageUrl || '/img/default-amenity.jpg'}');">
-                        <div class="facility-overlay">
-                            <i class="bi ${amenity.iconClass || 'bi-stars'}"></i>
-                        </div>
                     </div>
 
                     <div class="facility-info">

@@ -664,7 +664,7 @@
 
         // --- Render Items ---
         list.forEach(a => {
-            const iconClass = a.iconClass || 'bi-gear';
+            const iconClass = a.iconClass ;
             const imageUrl = a.imageUrl || 'assets/img/no-image.png';
 
             grid.innerHTML += `
@@ -762,7 +762,7 @@
         const name = document.getElementById('amenityName').value.trim();
         const type = document.getElementById('amenityType').value;
         const description = document.getElementById('amenityDescription').value.trim();
-        const iconClass = document.getElementById('amenityIcon').value.trim() || 'bi-gear';
+        const iconClass = document.getElementById('amenityIcon').value.trim() ;
 
         if (!name || !type) {
             alert('Vui lòng nhập Tên và Loại tiện ích.');
