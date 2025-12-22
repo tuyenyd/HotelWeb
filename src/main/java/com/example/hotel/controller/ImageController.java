@@ -13,7 +13,7 @@ import java.util.List;
 public class ImageController {
 
     private static final String IMAGE_DIR =
-            "src/main/resources/static/Hotel/HotelAdmin/assets/img";
+            "src/main/resources/static/Hotel/HotelUser/assets/img/hotel";
 
     @GetMapping
     public List<String> getImages() {
@@ -31,7 +31,7 @@ public class ImageController {
                                         || file.getName().endsWith(".jpeg")
                                         || file.getName().endsWith(".webp")))
                 .map(file ->
-                        "/Hotel/HotelAdmin/assets/img/" + file.getName()
+                        "/Hotel/HotelUser/assets/img/hotel/" + file.getName()
                 )
                 .toList();
     }
